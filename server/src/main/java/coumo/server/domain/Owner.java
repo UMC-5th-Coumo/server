@@ -26,6 +26,8 @@ public class Owner extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer loginId;
+
     @Column(nullable = false, length = 64)
     private String name;
 

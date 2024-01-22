@@ -32,9 +32,6 @@ public class Store extends BaseEntity {
     private String name;
 
     @Column(nullable = false, length = 50)
-    private String workingHours; //영업 시간
-
-    @Column(nullable = false, length = 50)
     private String telephone; //매장 전화 번호
 
     @Column(nullable = false, length = 256)
