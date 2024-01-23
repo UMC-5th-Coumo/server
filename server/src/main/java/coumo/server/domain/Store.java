@@ -5,6 +5,10 @@ import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +51,9 @@ public class Store extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(16)")
     private StoreType storeType; //매장 종류
 
+    @Column(columnDefinition = "POINT SRID 4326")
+    private Point point;
+
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Menu> menuList = new ArrayList<>();
 
@@ -62,4 +69,11 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<CustomerStore> customerStoreList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<Timetable> timetableList = new ArrayList<>();
+
+    public Point createPoint(double latitude, double longitude) {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+    }
 }
