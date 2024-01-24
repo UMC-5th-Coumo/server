@@ -1,15 +1,14 @@
 package coumo.server.converter;
 
 import coumo.server.domain.Store;
-import coumo.server.web.dto.StoreRequestDTO;
 import coumo.server.web.dto.StoreResponseDTO;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class StoreConverter {
-    public static StoreResponseDTO.resultBasicDTO toResultBasicDTO(Store store){
-        StoreResponseDTO.resultBasicDTO resultBasicDTO = StoreResponseDTO.resultBasicDTO.builder()
+    public static StoreResponseDTO.StoreBasicDTO toResultBasicDTO(Store store){
+        StoreResponseDTO.StoreBasicDTO storeBasicDTO = StoreResponseDTO.StoreBasicDTO.builder()
                                                             .name(store.getName())
                                                             .telePhone(store.getTelephone())
                                                             .longitude(String.valueOf(store.getPoint().getX()))
@@ -19,27 +18,27 @@ public class StoreConverter {
                                                             .category(store.getStoreType().toString())
                                                             .build();
         store.getTimetableList().stream()
-                .map(item -> resultBasicDTO.getTime()
-                        .add(new StoreResponseDTO.time(item.getDay(), item.getStartTime(), item.getEndTime())))
+                .map(item -> storeBasicDTO.getTime()
+                        .add(new StoreResponseDTO.TimeInfo(item.getDay(), item.getStartTime(), item.getEndTime())))
                 .collect(Collectors.toList());
 
-        return resultBasicDTO;
+        return storeBasicDTO;
     }
 
-    public static StoreResponseDTO.resultDetailDTO toResultDetailDTO(Store store){
-        StoreResponseDTO.resultDetailDTO resultDetailDTO = StoreResponseDTO.resultDetailDTO.builder()
+    public static StoreResponseDTO.StoreDetailDTO toResultDetailDTO(Store store){
+        StoreResponseDTO.StoreDetailDTO storeDetailDTO = StoreResponseDTO.StoreDetailDTO.builder()
                                                                 .storeImages(new ArrayList<>())
                                                                 .menus(new ArrayList<>())
                                                                 .description(store.getStoreDescription())
                                                                 .build();
         store.getStoreImageList().stream().
-                map(item -> resultDetailDTO.getStoreImages().add(item.getStoreImage()))
+                map(item -> storeDetailDTO.getStoreImages().add(item.getStoreImage()))
                 .collect(Collectors.toList());
 
         store.getMenuList().stream().
-                map(item -> resultDetailDTO.getMenus()
-                        .add(new StoreResponseDTO.menu(item.getName(), item.getMenuImage(), item.getMenuDescription())))
+                map(item -> storeDetailDTO.getMenus()
+                        .add(new StoreResponseDTO.MenuInfo(item.getName(), item.getMenuImage(), item.getMenuDescription())))
                 .collect(Collectors.toList());
-        return resultDetailDTO;
+        return storeDetailDTO;
     }
 }

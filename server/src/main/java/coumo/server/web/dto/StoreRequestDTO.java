@@ -1,19 +1,17 @@
 package coumo.server.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 public class StoreRequestDTO {
 
+    //==============웹==============
     //가게 수정(기본 정보)
     @Getter
-    public static class updateBasicDTO{
+    public static class UpdateBasicDTO {
         public String name;
-        public List<time> time;
+        public List<TimeInfo> time;
         public String telePhone;
         public String category;
         public String location;
@@ -22,7 +20,7 @@ public class StoreRequestDTO {
     }
 
     @Getter
-    public static class time{
+    public static class TimeInfo {
         String day;
         String startTime;
         String endTime;
@@ -32,5 +30,13 @@ public class StoreRequestDTO {
     public static class MenuDetail{
         String name;
         String description;
+    }
+
+    //==============앱==============
+
+    @Getter
+    public static class PointDTO{
+        public String longitude;
+        public String latitude;
     }
 }

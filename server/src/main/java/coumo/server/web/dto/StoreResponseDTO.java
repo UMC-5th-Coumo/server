@@ -5,18 +5,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class StoreResponseDTO {
+
+    //==============웹==============
 
     //가게 (기본 정보)
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class resultBasicDTO{
+    public static class StoreBasicDTO {
         String name;
-        List<time> time;
+        List<TimeInfo> time;
         String telePhone;
         String category;
         String location;
@@ -29,17 +32,17 @@ public class StoreResponseDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class resultDetailDTO{
+    public static class StoreDetailDTO {
         List<String> storeImages;
         String description;
-        List<menu> menus;
+        List<MenuInfo> menus;
     }
 
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class menu{
+    public static class MenuInfo {
         String name;
         String image;
         String description;
@@ -49,9 +52,61 @@ public class StoreResponseDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class time{
+    public static class TimeInfo {
         String day;
         String startTime;
         String endTime;
+    }
+
+    //==============앱==============
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class FamousStoreDTO {
+        Long storeId;
+        String name;
+        String location;
+        String description;
+        String storeImage;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MoreDetailStoreDTO{
+        String name;
+        String description;
+        String location;
+        String longitude;
+        String latitude;
+        Coupon coupon;
+        List<String> images;
+        List<MenuMoreDate> menus;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Coupon{
+        String title;
+        Integer cnt;
+        String stampType;
+        String color;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MenuMoreDate{
+        String name;
+        String description;
+        String image;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
     }
 }

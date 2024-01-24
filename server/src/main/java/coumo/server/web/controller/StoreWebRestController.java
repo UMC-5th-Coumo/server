@@ -6,8 +6,6 @@ import coumo.server.web.dto.StoreResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/owner/store")
-public class StoreRestController {
+public class StoreWebRestController {
 
     @GetMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 조회 API",
@@ -28,10 +26,10 @@ public class StoreRestController {
     @Parameters({
             @Parameter(name = "storeId", description = "가게 아이디, path variable 입니다!"),
     })
-    public ApiResponse<StoreResponseDTO.resultBasicDTO> getBasic(
+    public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        return ApiResponse.onSuccess(StoreResponseDTO.resultBasicDTO.builder().build());
+        return ApiResponse.onSuccess(StoreResponseDTO.StoreBasicDTO.builder().build());
     }
 
     @GetMapping("/{storeId}/detail")
@@ -44,10 +42,10 @@ public class StoreRestController {
     @Parameters({
             @Parameter(name = "storeId", description = "가게 아이디, path variable 입니다!"),
     })
-    public ApiResponse<StoreResponseDTO.resultDetailDTO> getDetail(
+    public ApiResponse<StoreResponseDTO.StoreDetailDTO> getDetail(
             @PathVariable("storeId") Long storeId){
 
-        return ApiResponse.onSuccess(StoreResponseDTO.resultDetailDTO.builder().build());
+        return ApiResponse.onSuccess(StoreResponseDTO.StoreDetailDTO.builder().build());
     }
 
     @PatchMapping("/{storeId}/basic")
@@ -60,7 +58,7 @@ public class StoreRestController {
     @Parameters({
             @Parameter(name = "updateBasicDTO", description = "가게에 대한 정보가 담긴 json"),
     })
-    public ApiResponse<Long> updateBasic(@RequestBody StoreRequestDTO.updateBasicDTO updateBasicDTO){
+    public ApiResponse<Long> updateBasic(@RequestBody StoreRequestDTO.UpdateBasicDTO updateBasicDTO){
         return ApiResponse.onSuccess(0L);
     }
 
