@@ -58,12 +58,16 @@ public class Owner extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(32)")
     private State state;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Store> storeList = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Store store;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<OwnerCoupon> ownerCouponList = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<SubscriptionReceipt> subscriptionReceiptList = new ArrayList<>();
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }

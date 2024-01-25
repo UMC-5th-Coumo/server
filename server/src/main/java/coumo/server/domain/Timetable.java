@@ -3,6 +3,7 @@ package coumo.server.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Getter
 @Builder
@@ -25,4 +26,8 @@ public class Timetable {
 
     @Column(nullable = false, length = 32)
     private String endTime; //종료 시간
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }

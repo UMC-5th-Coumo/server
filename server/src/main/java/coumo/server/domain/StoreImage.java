@@ -20,4 +20,8 @@ public class StoreImage extends BaseEntity {
 
     @Column(nullable = false, length = 256)
     private String storeImage; //매장 이미지
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }
