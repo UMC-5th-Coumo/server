@@ -58,7 +58,7 @@ public class Owner extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(32)")
     private State state;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Store store;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)

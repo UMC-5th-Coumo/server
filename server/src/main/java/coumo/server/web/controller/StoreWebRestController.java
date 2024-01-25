@@ -38,7 +38,7 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        Store store = storeQueryService.findStoreInfoBasic(storeId).orElseThrow();
+        Store store = storeQueryService.findStore(storeId).orElseThrow();
 
         return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store));
     }
@@ -56,7 +56,7 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreDetailDTO> getDetail(
             @PathVariable("storeId") Long storeId){
 
-        Store store = storeQueryService.findStoreInfoBasic(storeId).orElseThrow();
+        Store store = storeQueryService.findStore(storeId).orElseThrow();
 
         return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store ));
     }
