@@ -1,6 +1,10 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.converter.StoreConverter;
+import coumo.server.domain.Store;
+import coumo.server.service.store.StoreCommandService;
+import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreRequestDTO;
 import coumo.server.web.dto.StoreResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,10 +15,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/owner/store")
 public class StoreWebRestController {
+
+    private final StoreCommandService storeCommandService;
+    private final StoreQueryService storeQueryService;
 
     @GetMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 조회 API",
@@ -29,7 +38,9 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        return ApiResponse.onSuccess(StoreResponseDTO.StoreBasicDTO.builder().build());
+        Store store = storeQueryService.findStoreInfoBasic(storeId).orElseThrow();
+
+        return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store));
     }
 
     @GetMapping("/{storeId}/detail")
@@ -45,7 +56,9 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreDetailDTO> getDetail(
             @PathVariable("storeId") Long storeId){
 
-        return ApiResponse.onSuccess(StoreResponseDTO.StoreDetailDTO.builder().build());
+        Store store = storeQueryService.findStoreInfoBasic(storeId).orElseThrow();
+
+        return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store ));
     }
 
     @PatchMapping("/{storeId}/basic")
@@ -58,8 +71,9 @@ public class StoreWebRestController {
     @Parameters({
             @Parameter(name = "updateBasicDTO", description = "가게에 대한 정보가 담긴 json"),
     })
-    public ApiResponse<Long> updateBasic(@RequestBody StoreRequestDTO.UpdateBasicDTO updateBasicDTO){
-        return ApiResponse.onSuccess(0L);
+    public ApiResponse<Long> updateBasic(@PathVariable("storeId") Long storeId, @RequestBody StoreRequestDTO.UpdateBasicDTO updateBasicDTO){
+        storeCommandService.updateStore(storeId, updateBasicDTO);
+        return ApiResponse.onSuccess(storeId);
     }
 
     @PatchMapping("/{storeId}/detail")
@@ -77,12 +91,19 @@ public class StoreWebRestController {
             @Parameter(name = "menuDetail", description = "가게 메뉴 이름과 설명(가격)이 담긴 객체 배열입니다!"),
     })
     public ApiResponse<Long> updateDetail(
+            @PathVariable("storeId") Long storeId,
             @RequestParam("storeImages")MultipartFile[] storeImages,
             @RequestParam("menuImages")MultipartFile[] menuImages,
             @RequestParam("description")String description,
             @RequestParam("menuDetail")StoreRequestDTO.MenuDetail[] menuDetail
             ){
-        return ApiResponse.onSuccess(0L);
+
+        //<수정 필요>
+        String[] storeImageUrl = {"", ""};
+        String[] menuImageUrl = {"", ""};
+
+        storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetail);
+        return ApiResponse.onSuccess(storeId);
     }
 
 }
