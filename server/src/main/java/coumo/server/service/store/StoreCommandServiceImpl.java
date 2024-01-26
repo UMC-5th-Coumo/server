@@ -1,23 +1,29 @@
 package coumo.server.service.store;
 
+import coumo.server.apiPayload.code.status.ErrorStatus;
+import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.*;
+import coumo.server.repository.OwnerRepository;
 import coumo.server.repository.StoreRepository;
 import coumo.server.web.dto.StoreRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StoreCommandServiceImpl implements StoreCommandService{
     private final StoreRepository storeRepository;
+    private final OwnerRepository ownerRepository;
 
     @Override
     @Transactional
     public Store createStore(Long ownerId) {
         //엔티티 조회
-        Owner owner = Owner.builder().build(); //<수정 필요>
+        Owner owner = ownerRepository.findById(ownerId).orElseThrow();
 
         //가게 생성
         Store store = Store.createStore(owner);
@@ -48,6 +54,8 @@ public class StoreCommandServiceImpl implements StoreCommandService{
     @Override
     @Transactional
     public void updateStore(Long storeId, String description, String[] storeImages, String[] menuImages, StoreRequestDTO.MenuDetail[] menuDetail) {
+        if(menuImages.length != menuDetail.length) throw new StoreHandler(ErrorStatus.STORE_MENU_COUNT_BAD_REQUEST);
+
         //엔티티 조회
         Store store = storeRepository.findById(storeId).orElseThrow();
 

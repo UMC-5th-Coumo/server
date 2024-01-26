@@ -3,6 +3,8 @@ package coumo.server.web.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.apiPayload.code.status.ErrorStatus;
+import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
 import coumo.server.domain.Store;
 import coumo.server.service.store.StoreCommandService;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -75,7 +78,7 @@ public class StoreWebRestController {
     @Parameters({
             @Parameter(name = "updateBasicDTO", description = "가게에 대한 정보가 담긴 json"),
     })
-    public ApiResponse<Long> updateBasic(@PathVariable("storeId") Long storeId, @RequestBody StoreRequestDTO.UpdateBasicDTO updateBasicDTO){
+    public ApiResponse<Long> updateBasic(@PathVariable("storeId") Long storeId, @Valid @RequestBody StoreRequestDTO.UpdateBasicDTO updateBasicDTO){
         storeCommandService.updateStore(storeId, updateBasicDTO);
         return ApiResponse.onSuccess(storeId);
     }
@@ -105,10 +108,8 @@ public class StoreWebRestController {
         //<수정 필요>
         String[] storeImageUrl = {"", ""};
         String[] menuImageUrl = {"", ""};
-
         //[   {"name": "메뉴1", "description": "설명1"},   {"name": "메뉴2", "description": "설명2"} ]
         StoreRequestDTO.MenuDetail[] menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
-
         storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetails);
         return ApiResponse.onSuccess(storeId);
     }
