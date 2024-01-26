@@ -117,7 +117,7 @@ public class Store extends BaseEntity {
                         .storeLocation("")
                         .storeDescription("")
                         .businessNumber("")
-                        .storeType(null)
+                        .storeType(StoreType.NONE)
                         .menuList(new ArrayList<>())
                         .noticeList(new ArrayList<>())
                         .storeImageList(new ArrayList<>())

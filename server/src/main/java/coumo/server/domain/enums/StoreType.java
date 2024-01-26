@@ -1,6 +1,7 @@
 package coumo.server.domain.enums;
 
 public enum StoreType {
+    NONE("NONE"),
     ENTERTAINMENT("ENTERTAINMENT"),
     CAFE("CAFE"),
     RETAIL("RETAIL"),
