@@ -6,13 +6,11 @@ import coumo.server.web.dto.CustomerDTO;
 
 public class StatisticsConverter {
     public static CustomerDTO toDTO(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
-
-        customerDTO.setId(customer.getId());
-        customerDTO.setName(customer.getName());
-        customerDTO.setGender(customer.getGender());
-        customerDTO.setBirthday(customer.getBirthday());
-
-        return customerDTO;
+        return CustomerDTO.builder()
+                .id(customer.getId())
+                .name(customer.getName())
+                .gender(customer.getGender())
+                .birthday(customer.getBirthday())
+                .build();
     }
 }

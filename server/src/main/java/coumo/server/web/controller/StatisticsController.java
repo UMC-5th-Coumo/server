@@ -25,9 +25,7 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @GetMapping("/{storeId}/customer")
-    public ResponseEntity<?> getAllCustomers(@PathVariable Long storeId) {
-        Map<String, Object> result = statisticsService.getAllCustomers(storeId);
-        ApiResponse<Map<String, Object>> response = ApiResponse.onSuccess(result);
-        return ResponseEntity.ok(response);
+    public ApiResponse<Map<String, Object>> getAllCustomers(@PathVariable Long storeId) {
+        return ApiResponse.onSuccess(statisticsService.getAllCustomers(storeId));
     }
 }
