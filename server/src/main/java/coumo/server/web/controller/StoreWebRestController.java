@@ -103,13 +103,18 @@ public class StoreWebRestController {
             @RequestPart("menuImages")MultipartFile[] menuImages,
             @RequestPart("description")String description,
             @RequestPart("menuDetail") String menuDetailJson
-            ) throws JsonProcessingException {
+            ){
 
         //<수정 필요>
         String[] storeImageUrl = {"", ""};
         String[] menuImageUrl = {"", ""};
         //[   {"name": "메뉴1", "description": "설명1"},   {"name": "메뉴2", "description": "설명2"} ]
-        StoreRequestDTO.MenuDetail[] menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
+        StoreRequestDTO.MenuDetail[] menuDetails;
+        try{
+            menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
+        } catch (JsonProcessingException e){
+            throw new StoreHandler(ErrorStatus.STORE_MENU_BAD_REQUEST);
+        }
         storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetails);
         return ApiResponse.onSuccess(storeId);
     }
