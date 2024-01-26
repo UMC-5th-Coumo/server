@@ -1,5 +1,7 @@
 package coumo.server.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.StoreConverter;
 import coumo.server.domain.Store;
@@ -12,18 +14,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.swing.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/owner/store")
+@Slf4j
 public class StoreWebRestController {
 
     private final StoreCommandService storeCommandService;
     private final StoreQueryService storeQueryService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 조회 API",
@@ -76,7 +80,7 @@ public class StoreWebRestController {
         return ApiResponse.onSuccess(storeId);
     }
 
-    @PatchMapping("/{storeId}/detail")
+    @PatchMapping(value = "/{storeId}/detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "사장님이 작성한 가게 정보(매장 설명) 저장 API",
             description = "사장님이 가게 정보를 저장한 정보를 저장하는 API입니다. 가게에 대한 정보를 FormData으로 보내주세요.")
     @ApiResponses({
@@ -92,17 +96,20 @@ public class StoreWebRestController {
     })
     public ApiResponse<Long> updateDetail(
             @PathVariable("storeId") Long storeId,
-            @RequestParam("storeImages")MultipartFile[] storeImages,
-            @RequestParam("menuImages")MultipartFile[] menuImages,
-            @RequestParam("description")String description,
-            @RequestParam("menuDetail")StoreRequestDTO.MenuDetail[] menuDetail
-            ){
+            @RequestPart("storeImages")MultipartFile[] storeImages,
+            @RequestPart("menuImages")MultipartFile[] menuImages,
+            @RequestPart("description")String description,
+            @RequestPart("menuDetail") String menuDetailJson
+            ) throws JsonProcessingException {
 
         //<수정 필요>
         String[] storeImageUrl = {"", ""};
         String[] menuImageUrl = {"", ""};
 
-        storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetail);
+        //[   {"name": "메뉴1", "description": "설명1"},   {"name": "메뉴2", "description": "설명2"} ]
+        StoreRequestDTO.MenuDetail[] menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
+
+        storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetails);
         return ApiResponse.onSuccess(storeId);
     }
 
