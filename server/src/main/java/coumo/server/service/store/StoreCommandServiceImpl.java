@@ -3,8 +3,7 @@ package coumo.server.service.store;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.*;
-import coumo.server.repository.OwnerRepository;
-import coumo.server.repository.StoreRepository;
+import coumo.server.repository.*;
 import coumo.server.web.dto.StoreRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,9 @@ import java.util.Optional;
 public class StoreCommandServiceImpl implements StoreCommandService{
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
+    private final TimetableRepository timetableRepository;
+    private final MenuRepository menuRepository;
+    private final StoreImageRepository storeImageRepository;
 
     @Override
     @Transactional
@@ -40,6 +42,10 @@ public class StoreCommandServiceImpl implements StoreCommandService{
         //엔티티 조회
         Store store = storeRepository.findById(storeId).orElseThrow();
 
+        //삭제
+        timetableRepository.deleteAllByStore(store);
+        store.getTimetableList().clear();
+
         //엔티티 업데이트
         for (StoreRequestDTO.TimeInfo item: updateBasicDTO.getTime()) {
             store.addTimeTable(Timetable.builder()
@@ -58,6 +64,12 @@ public class StoreCommandServiceImpl implements StoreCommandService{
 
         //엔티티 조회
         Store store = storeRepository.findById(storeId).orElseThrow();
+
+        //삭제
+        storeImageRepository.deleteAllByStore(store);
+        menuRepository.deleteAllByStore(store);
+        store.getStoreImageList().clear();
+        store.getMenuList().clear();
 
         //엔티티 업데이트
         for(String image : storeImages){
