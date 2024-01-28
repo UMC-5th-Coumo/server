@@ -35,6 +35,10 @@ public class Notice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(16)")
     private NoticeType noticeType; //게시글 종류
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }
 
 

@@ -26,4 +26,8 @@ public class Menu extends BaseEntity {
 
     @Column(nullable = false, length = 2048)
     private String menuDescription; //메뉴 설명
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }
