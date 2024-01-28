@@ -1,7 +1,6 @@
 package coumo.server.web.dto;
 
 import coumo.server.domain.enums.NoticeType;
-import coumo.server.domain.enums.StoreType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class NoticeResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     // 내가 쓴 글 리스트 읽기
-    public static class myNoticeListDTO{
+    public static class MyNoticeListDTO {
         public Integer total;
         public List<NoticeThumbInfo> notice;
     }
@@ -28,7 +27,7 @@ public class NoticeResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     // 내가 쓴 글 세부내용 읽기
-    public static class myNoticeDetail{
+    public static class MyNoticeDetail {
         public NoticeType noticeType;
         public String title;
         public String noticeContent;

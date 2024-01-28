@@ -1,12 +1,18 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.domain.Store;
 import coumo.server.service.notice.NoticeService;
+import coumo.server.service.owner.OwnerService;
+import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.NoticeRequestDTO;
+import coumo.server.web.dto.NoticeResponseDTO;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,20 +20,31 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final OwnerService ownerService;
+    private final StoreQueryService storeQueryService;
 
     // 동네소식 - 글쓰기
     @PostMapping("/{ownerId}/post")
     @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> postNotice(@PathVariable("ownerId") Integer ownerId, NoticeRequestDTO.updateNoticeDTO dto){
-        noticeService.postNotice(ownerId, dto);
+    public ApiResponse<?> postNotice(@PathVariable("ownerId") Long ownerId, @RequestBody NoticeRequestDTO.updateNoticeDTO dto){
+
+
+        ownerService.findOwner(ownerId);                                // owner 존재 여부
+        Optional<Store> store = storeQueryService.findStore(ownerId);   // store 존재 여부
+        noticeService.postNotice(store.get(), dto);                     // 글 저장
+
         return ApiResponse.onSuccess(0L);
     }
 
     // 동네소식 - 내가 쓴 글 보기
     @GetMapping("/{ownerId}/list")
     @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> readNotice(@PathVariable("ownerId") Integer ownerId) {
-        noticeService.readNotice(ownerId);
+    public ApiResponse<?> readNotice(@PathVariable("ownerId") Long ownerId) {
+
+        ownerService.findOwner(ownerId);                                // owner 존재 여부
+        Optional<Store> store = storeQueryService.findStore(ownerId);   // store 존재 여부
+        NoticeResponseDTO.MyNoticeListDTO myNoticeListDTO = noticeService.readNotice(store.get()); // 내가 쓴 글 보기
+
         return ApiResponse.onSuccess(0L);
     }
 
@@ -37,8 +54,13 @@ public class NoticeController {
             @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
             @Parameter(name = "noticeId", description = "게시물 번호, path variable"),
     })
-    public ApiResponse<?> readNoticeDetail(@PathVariable("ownerId") Integer ownerId, @PathVariable("noticeId") Integer noticeId){
-        noticeService.readNoticeDetail(ownerId, noticeId);
+    public ApiResponse<?> readNoticeDetail(@PathVariable("ownerId") Long ownerId, @PathVariable("noticeId") Long noticeId){
+
+        ownerService.findOwner(ownerId);            // owner 존재 여부
+        storeQueryService.findStore(ownerId);       // store 존재 여부
+        noticeService.findNotice(noticeId);         // 글 존재 여부
+        noticeService.readNoticeDetail(noticeId);   // 내가 쓴 글 세부내용 보기
+
         return ApiResponse.onSuccess(0L);
     }
 
@@ -48,8 +70,13 @@ public class NoticeController {
             @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
             @Parameter(name = "noticeId", description = "게시물 번호, path variable"),
     })
-    public ApiResponse<?> updateNotice(@PathVariable("ownerId") Integer ownerId, @PathVariable("noticeId") Integer noticeId, NoticeRequestDTO.updateNoticeDTO dto){
-        noticeService.updateNotice(ownerId, noticeId, dto);
+    public ApiResponse<?> updateNotice(@PathVariable("ownerId") Long ownerId, @PathVariable("noticeId") Long noticeId, @RequestBody NoticeRequestDTO.updateNoticeDTO dto){
+
+        ownerService.findOwner(ownerId);            // owner 존재 여부
+        storeQueryService.findStore(ownerId);       // store 존재 여부
+        noticeService.findNotice(noticeId);         // 글 존재 여부
+        noticeService.updateNotice(noticeId, dto);  // 수정
+
         return ApiResponse.onSuccess(0L);
     }
 
@@ -59,8 +86,13 @@ public class NoticeController {
             @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
             @Parameter(name = "noticeId", description = "게시물 번호, path variable"),
     })
-    public ApiResponse<?> deleteNotice(@PathVariable("ownerId") Integer ownerId, @PathVariable("noticeId") Integer noticeId){
-        noticeService.deleteNotice(ownerId, noticeId);
+    public ApiResponse<?> deleteNotice(@PathVariable("ownerId") Long ownerId, @PathVariable("noticeId") Long noticeId){
+
+        ownerService.findOwner(ownerId);            // owner 존재 여부
+        storeQueryService.findStore(ownerId);       // store 존재 여부
+        noticeService.findNotice(noticeId);         // 글 존재 여부
+        noticeService.deleteNotice(noticeId);       // 글 삭제
+
         return ApiResponse.onSuccess(0L);
     }
 
