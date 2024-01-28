@@ -21,6 +21,7 @@ import coumo.server.apiPayload.code.status.ErrorStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -63,6 +64,13 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
         ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         return handleExceptionInternal(generalException,errorReasonHttpStatus,null,request);
+    }
+
+    @ExceptionHandler(value = NoSuchElementException.class)
+    public ResponseEntity NoSuchElementException(NoSuchElementException noSuchElementException, HttpServletRequest request) {
+        GeneralException generalException = new GeneralException(ErrorStatus._BAD_REQUEST_NOT_FOUND);
+        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
+        return handleExceptionInternal(noSuchElementException, errorReasonHttpStatus,null,request);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
