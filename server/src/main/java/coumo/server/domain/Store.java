@@ -3,7 +3,6 @@ package coumo.server.domain;
 import coumo.server.domain.common.BaseEntity;
 import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
-import coumo.server.web.dto.StoreRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Coordinate;
@@ -27,7 +26,7 @@ import java.util.List;
 public class Store extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

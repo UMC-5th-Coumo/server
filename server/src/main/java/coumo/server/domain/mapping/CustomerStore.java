@@ -6,7 +6,6 @@ import coumo.server.domain.common.BaseEntity;
 import coumo.server.domain.enums.StampMax;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 
 @Entity
 @Getter
@@ -16,7 +15,7 @@ import org.hibernate.annotations.Fetch;
 public class CustomerStore extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
