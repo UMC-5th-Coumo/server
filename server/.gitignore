@@ -39,3 +39,5 @@ out/
 ### yml files ###
 src/main/**/*.yml
 src/test/**/*.yml
+
+src/main/resources/data.sql
