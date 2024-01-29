@@ -1,6 +1,7 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.domain.Notice;
 import coumo.server.domain.Store;
 import coumo.server.service.notice.NoticeService;
 import coumo.server.service.owner.OwnerService;
@@ -31,9 +32,9 @@ public class NoticeController {
 
         ownerService.findOwner(ownerId);                                // owner 존재 여부
         Optional<Store> store = storeQueryService.findStore(ownerId);   // store 존재 여부
-        noticeService.postNotice(store.get(), dto);                     // 글 저장
+        Notice newNotice = noticeService.postNotice(store.get(), dto).get();                     // 글 저장
 
-        return ApiResponse.onSuccess(0L);
+        return ApiResponse.onSuccess(newNotice.getId());
     }
 
     // 동네소식 - 내가 쓴 글 보기
@@ -45,7 +46,7 @@ public class NoticeController {
         Optional<Store> store = storeQueryService.findStore(ownerId);   // store 존재 여부
         NoticeResponseDTO.MyNoticeListDTO myNoticeListDTO = noticeService.readNotice(store.get()); // 내가 쓴 글 보기
 
-        return ApiResponse.onSuccess(0L);
+        return ApiResponse.onSuccess(myNoticeListDTO);
     }
 
     // 동네소식 - 내가 쓴 글 세부내용 보기
@@ -59,9 +60,9 @@ public class NoticeController {
         ownerService.findOwner(ownerId);            // owner 존재 여부
         storeQueryService.findStore(ownerId);       // store 존재 여부
         noticeService.findNotice(noticeId);         // 글 존재 여부
-        noticeService.readNoticeDetail(noticeId);   // 내가 쓴 글 세부내용 보기
+        NoticeResponseDTO.MyNoticeDetail myNoticeDetail = noticeService.readNoticeDetail(noticeId);   // 내가 쓴 글 세부내용 보기
 
-        return ApiResponse.onSuccess(0L);
+        return ApiResponse.onSuccess(myNoticeDetail);
     }
 
     // 동네소식 - 수정 완료 버튼
@@ -77,7 +78,7 @@ public class NoticeController {
         noticeService.findNotice(noticeId);         // 글 존재 여부
         noticeService.updateNotice(noticeId, dto);  // 수정
 
-        return ApiResponse.onSuccess(0L);
+        return ApiResponse.onSuccess(noticeId);
     }
 
     // 동네소식 - 내가 쓴 글 삭제
@@ -93,7 +94,7 @@ public class NoticeController {
         noticeService.findNotice(noticeId);         // 글 존재 여부
         noticeService.deleteNotice(noticeId);       // 글 삭제
 
-        return ApiResponse.onSuccess(0L);
+        return ApiResponse.onSuccess(noticeId);
     }
 
 }

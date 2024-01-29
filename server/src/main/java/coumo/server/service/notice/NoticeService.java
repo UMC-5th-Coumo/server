@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NoticeService {
-    void postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto);
+    Optional<Notice> postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto);
 
     NoticeResponseDTO.MyNoticeListDTO readNotice(Store store);
 
