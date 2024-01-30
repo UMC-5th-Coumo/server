@@ -21,6 +21,7 @@ public enum StoreType {
                 return type;
             }
         }
-        return null; // or throw IllegalArgumentException
+        return StoreType.NONE;
+        //return null; // or throw IllegalArgumentException
     }
 }

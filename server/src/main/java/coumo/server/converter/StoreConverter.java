@@ -37,7 +37,7 @@ public class StoreConverter {
 
         store.getMenuList().stream().
                 map(item -> storeDetailDTO.getMenus()
-                        .add(new StoreResponseDTO.MenuInfo(item.getName(), item.getMenuImage(), item.getMenuDescription())))
+                        .add(new StoreResponseDTO.MenuInfo(item.getName(), item.getMenuImage(), item.getMenuDescription(), item.getIsNew())))
                 .collect(Collectors.toList());
         return storeDetailDTO;
     }
