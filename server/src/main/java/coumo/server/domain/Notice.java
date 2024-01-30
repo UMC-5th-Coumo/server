@@ -17,7 +17,7 @@ import lombok.*;
 public class Notice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
@@ -26,7 +26,7 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String title; //제목
 
-    @Column(nullable = true, length = 50)
+    @Column(length = 50)
     private String image; //게시글 이미지
 
     @Column(nullable = false, length = 2048)

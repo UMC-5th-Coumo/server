@@ -1,7 +1,6 @@
 package coumo.server.domain;
 
 import coumo.server.domain.common.BaseEntity;
-import coumo.server.domain.enums.Gender;
 import coumo.server.domain.enums.State;
 import coumo.server.domain.enums.SubscriptionType;
 import jakarta.persistence.*;
@@ -24,18 +23,12 @@ import java.util.List;
 public class Owner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private Integer loginId;
+    private Long loginId;
 
     @Column(nullable = false, length = 64)
     private String name;
-
-    @Column(nullable = false, length = 16)
-    private String birthday;
-
-    @Column(nullable = false, length = 32)
-    private String nickname;
 
     @Column(nullable = false, length = 16)
     private String phone;
@@ -45,10 +38,6 @@ public class Owner extends BaseEntity {
 
     @Column(nullable = false, length = 32)
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(8)")
-    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(16)")
