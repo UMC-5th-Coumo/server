@@ -2,15 +2,15 @@ package coumo.server.converter;
 
 import coumo.server.domain.Customer;
 import coumo.server.domain.mapping.CustomerStore;
-import coumo.server.web.dto.CustomerDTO;
+import coumo.server.web.dto.CustomerResponseDTO;
 
 import java.time.LocalDateTime;
 
 public class StatisticsConverter {
-    public static CustomerDTO toDTO(Customer customer, CustomerStore customerStore) {
+    public static CustomerResponseDTO toDTO(Customer customer, CustomerStore customerStore) {
         String ageGroup = calcAgeGroup(customer.getBirthday());
 
-        return CustomerDTO.builder()
+        return CustomerResponseDTO.builder()
                 .id(customer.getId())
                 .name(customer.getName())
                 .gender(customer.getGender())
