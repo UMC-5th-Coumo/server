@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, Long> {
-    CustomerStore findByCustomerIdAndStoreId(Integer id, Long storeId);
+    CustomerStore findByCustomerIdAndStoreId(Long id, Long storeId);
 }
