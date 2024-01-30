@@ -2,7 +2,6 @@ package coumo.server.service.statistics;
 
 import coumo.server.converter.StatisticsConverter;
 import coumo.server.domain.Customer;
-import coumo.server.domain.Store;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.CustomerStoreRepository;
 import coumo.server.repository.StatisticsRepository;
@@ -11,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneId;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,5 +83,4 @@ public class StatisticsService {
                 })
                 .collect(Collectors.toList());
     }
-
 }

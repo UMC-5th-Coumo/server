@@ -23,18 +23,15 @@ import java.util.List;
 public class Customer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private Integer loginId;
+    private Long loginId;
 
     @Column(nullable = false, length = 64)
     private String name;
 
     @Column(nullable = false, length = 16)
     private String birthday;
-
-    @Column(nullable = false, length = 32)
-    private String nickname;
 
     @Column(nullable = false, length = 16)
     private String phone;
