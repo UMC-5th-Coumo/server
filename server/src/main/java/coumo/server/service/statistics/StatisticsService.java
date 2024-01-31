@@ -12,8 +12,6 @@ import coumo.server.repository.StoreRepository;
 import coumo.server.repository.TimetableRepository;
 import coumo.server.web.dto.CustomerResponseDTO;
 import coumo.server.web.dto.StatisticsResponseDTO;
-import coumo.server.web.dto.TimeResponseDTO;
-import coumo.server.web.dto.WeekResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +100,7 @@ public class StatisticsService {
      * 요일 별 방문 통계 조회
      * @param storeId 매장 ID
      */
-    public List<WeekResponseDTO> getWeekStatistics(Long storeId) {
+    public List<StatisticsResponseDTO.WeekResponseDTO> getWeekStatistics(Long storeId) {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(6);
 
@@ -118,13 +116,13 @@ public class StatisticsService {
                         result -> (Long) result[1]
                 ));
 
-        List<WeekResponseDTO> weekStatistics = new ArrayList<>();
+        List<StatisticsResponseDTO.WeekResponseDTO> weekStatistics = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             LocalDate date = startDate.plusDays(i);
             String day = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase();
             long totalCustomer = resultByDate.getOrDefault(date, 0L);
 
-            WeekResponseDTO weekResponseDto = new WeekResponseDTO(day, date, totalCustomer);
+            StatisticsResponseDTO.WeekResponseDTO weekResponseDto = new StatisticsResponseDTO.WeekResponseDTO(day, date, totalCustomer);
             weekStatistics.add(weekResponseDto);
         }
 
@@ -136,7 +134,7 @@ public class StatisticsService {
      * 시간대 별 방문 통계 조회
      * @param storeId 매장 ID
      */
-    public List<TimeResponseDTO> getTimeStatistics(Long storeId) {
+    public List<StatisticsResponseDTO.TimeResponseDTO> getTimeStatistics(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("매장이 올바르지 않습니다."));
 
@@ -149,15 +147,15 @@ public class StatisticsService {
         LocalTime startTime = LocalTime.parse(timetable.getStartTime());
         LocalTime endTime = LocalTime.parse(timetable.getEndTime());
 
-        List<TimeResponseDTO> result = new ArrayList<>();
+        List<StatisticsResponseDTO.TimeResponseDTO> result = new ArrayList<>();
 
         for (int i = startTime.getHour(); i <= endTime.getHour(); i++) {
             LocalTime time = LocalTime.of(i, 0);
             if (time.isAfter(currentTime.minusHours(1))) {
-                result.add(new TimeResponseDTO(time, null));
+                result.add(new StatisticsResponseDTO.TimeResponseDTO(time, null));
             } else {
                 int totalCustomer = customerStoreRepository.countCustomersByHour(store, i, LocalDate.now());
-                result.add(new TimeResponseDTO(time, totalCustomer));
+                result.add(new StatisticsResponseDTO.TimeResponseDTO(time, totalCustomer));
             }
         }
         return result;
