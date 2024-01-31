@@ -4,12 +4,14 @@ import coumo.server.converter.StatisticsConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Store;
 import coumo.server.domain.Timetable;
+import coumo.server.domain.enums.Gender;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.CustomerStoreRepository;
 import coumo.server.repository.StatisticsRepository;
 import coumo.server.repository.StoreRepository;
 import coumo.server.repository.TimetableRepository;
 import coumo.server.web.dto.CustomerResponseDTO;
+import coumo.server.web.dto.StatisticsResponseDTO;
 import coumo.server.web.dto.TimeResponseDTO;
 import coumo.server.web.dto.WeekResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +84,7 @@ public class StatisticsService {
     private List<CustomerResponseDTO> createCustomerDtoList(List<Customer> customers, Long storeId) {
         List<CustomerResponseDTO> customerResponseDtoList = new ArrayList<>();
         for (Customer customer : customers) {
-            List<CustomerStore> customerStores = customerStoreRepository.findAllByCustomerIdAndStoreId(customer.getId(), storeId);
+            List<CustomerStore> customerStores = customerStoreRepository.findByCustomerIdAndStoreId(customer.getId(), storeId);
             for (CustomerStore customerStore : customerStores) {
                 int totalStamp = (customerStore != null) ? customerStore.getStampTotal() : 0;
 
@@ -154,12 +156,123 @@ public class StatisticsService {
             if (time.isAfter(currentTime.minusHours(1))) {
                 result.add(new TimeResponseDTO(time, null));
             } else {
-                int totalCustomer = customerStoreRepository.countByStoreAndHourAndDate(store, i, LocalDate.now());
+                int totalCustomer = customerStoreRepository.countCustomersByHour(store, i, LocalDate.now());
                 result.add(new TimeResponseDTO(time, totalCustomer));
             }
         }
-
-
         return result;
+    }
+
+    /**
+     * 인구통계별 방문 통계 조회 - 성별 원형 그래프
+     * @param storeId 매장 ID
+     * @param period 통계 기간 ('today', 'week', 'month', 'quarter')
+     * @param startDate 통계 시작 날짜
+     * @param endDate 통계 종료 날짜
+     */
+    public StatisticsResponseDTO.GenderRatioDTO getGenderRatio(Long storeId, String period, LocalDate startDate, LocalDate endDate) {
+        if (period != null) {
+            switch (period) {
+                case "today":
+                    startDate = endDate = LocalDate.now();
+                    break;
+                case "week":
+                    startDate = LocalDate.now().minusWeeks(1);
+                    endDate = LocalDate.now();
+                    break;
+                case "month":
+                    startDate = LocalDate.now().minusMonths(1);
+                    endDate = LocalDate.now();
+                    break;
+                case "quarter":
+                    startDate = LocalDate.now().minusMonths(3);
+                    endDate = LocalDate.now();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid period: " + period);
+            }
+        }
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        Gender maleGender = Gender.valueOf("MALE");
+        Gender femaleGender = Gender.valueOf("FEMALE");
+
+        int maleCount = customerStoreRepository.countGenderByDate(storeId, maleGender, startDateTime, endDateTime);
+        int femaleCount = customerStoreRepository.countGenderByDate(storeId, femaleGender, startDateTime, endDateTime);
+
+        int totalCount = maleCount + femaleCount;
+
+        double maleRatio = (double) maleCount / totalCount * 100;
+        double femaleRatio = (double) femaleCount / totalCount * 100;
+
+        return StatisticsResponseDTO.GenderRatioDTO.builder()
+                .male(maleRatio)
+                .female(femaleRatio)
+                .build();
+    }
+
+    /**
+     * 인구통계별 방문 통계 조회 - 연령대별 막대그래프
+     * @param storeId 매장 ID
+     * @param period 통계 기간 ('today', 'week', 'month', 'quarter')
+     * @param startDate 통계 시작 날짜
+     * @param endDate 통계 종료 날짜
+     */
+    public List<StatisticsResponseDTO.AgeGroupDTO> getAgeGroup(Long storeId, String period, LocalDate startDate, LocalDate endDate) {
+        if (period != null) {
+            switch (period) {
+                case "today":
+                    startDate = endDate = LocalDate.now();
+                    break;
+                case "week":
+                    startDate = LocalDate.now().minusWeeks(1);
+                    endDate = LocalDate.now();
+                    break;
+                case "month":
+                    startDate = LocalDate.now().minusMonths(1);
+                    endDate = LocalDate.now();
+                    break;
+                case "quarter":
+                    startDate = LocalDate.now().minusMonths(3);
+                    endDate = LocalDate.now();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid period: " + period);
+            }
+        }
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        List<String> maleBirthdays = customerStoreRepository.findCustomerBirthday(storeId, Gender.MALE, startDateTime, endDateTime);
+        List<String> femaleBirthdays = customerStoreRepository.findCustomerBirthday(storeId, Gender.FEMALE, startDateTime, endDateTime);
+
+        Map<String, StatisticsResponseDTO.AgeGroupDTO> ageGroupDTOMap = new HashMap<>();
+        for (String birthday : maleBirthdays) {
+            String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
+            StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
+            ageGroupDTO.setMaleRatio(ageGroupDTO.getMaleRatio() + 1);
+            ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
+            ageGroupDTOMap.put(ageGroup, ageGroupDTO);
+        }
+        for (String birthday : femaleBirthdays) {
+            String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
+            StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
+            ageGroupDTO.setFemaleRatio(ageGroupDTO.getFemaleRatio() + 1);
+            ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
+            ageGroupDTOMap.put(ageGroup, ageGroupDTO);
+        }
+
+        List<StatisticsResponseDTO.AgeGroupDTO> ageGroupDTOs = new ArrayList<>(ageGroupDTOMap.values());
+        for (StatisticsResponseDTO.AgeGroupDTO ageGroupDTO : ageGroupDTOs) {
+            int totalCount = ageGroupDTO.getTotal();
+            ageGroupDTO.setMaleRatio((ageGroupDTO.getMaleRatio() / totalCount) * 100);
+            ageGroupDTO.setFemaleRatio((ageGroupDTO.getFemaleRatio() / totalCount) * 100);
+        }
+
+        return ageGroupDTOs;
+
     }
 }

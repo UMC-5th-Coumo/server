@@ -3,11 +3,10 @@ package coumo.server.web.controller;
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.service.statistics.StatisticsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -38,5 +37,19 @@ public class StatisticsController {
     @GetMapping("/{storeId}/time")
     public ApiResponse<?> getTimeStatistics(@PathVariable Long storeId) {
         return ApiResponse.onSuccess(statisticsService.getTimeStatistics(storeId));
+    }
+
+    @GetMapping("/{storeId}/gender")
+    public ApiResponse<?> getGenderRatio(@PathVariable Long storeId, @RequestParam(required = false) String period,
+                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return ApiResponse.onSuccess(statisticsService.getGenderRatio(storeId, period, startDate, endDate));
+    }
+
+    @GetMapping("/{storeId}/age")
+    public ApiResponse<?> getAgeGroup(@PathVariable Long storeId, @RequestParam(required = false) String period,
+                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return ApiResponse.onSuccess(statisticsService.getAgeGroup(storeId, period, startDate, endDate));
     }
 }
