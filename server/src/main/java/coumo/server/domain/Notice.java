@@ -4,6 +4,8 @@ import coumo.server.domain.common.BaseEntity;
 import coumo.server.domain.enums.NoticeType;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,6 +37,9 @@ public class Notice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(16)")
     private NoticeType noticeType; //게시글 종류
+
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
+    private List<NoticeImage> noticeImageList = new ArrayList<>();
 
     public void setStore(Store store) {
         this.store = store;
