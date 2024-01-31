@@ -4,6 +4,7 @@ import coumo.server.domain.Store;
 import coumo.server.web.dto.StoreResponseDTO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,17 +44,17 @@ public class StoreConverter {
         return storeDetailDTO;
     }
 
-    public static List<StoreResponseDTO.FamousStoreDTO> toFamousStoreDTO(List<Store> stores){
-        if(stores.size() == 0) return null;
+    public static List<StoreResponseDTO.FamousStoreDTO> toFamousStoreDTO(List<StoreResponseDTO.StoreStampInfo> storeStampInfoList){
+        if(storeStampInfoList.isEmpty()) return Collections.emptyList();
 
         List<StoreResponseDTO.FamousStoreDTO> resultList = new ArrayList<>();
-
-        stores.stream()
+        storeStampInfoList.stream()
                 .map(item -> resultList.add(StoreResponseDTO.FamousStoreDTO.builder()
-                        .storeId(item.getId())
-                        .name(item.getName())
-                        .description(item.getStoreDescription())
-                        .storeImage(item.getStoreImageList().get(0).getStoreImage())
+                        .storeId(item.getStore().getId())
+                        .name(item.getStore().getName())
+                        .description(item.getStore().getStoreDescription())
+                        .location(item.getStore().getStoreLocation())
+                        .storeImage(item.getStore().getStoreImageList().get(0).getStoreImage())
                         .build()))
                 .collect(Collectors.toList());
 

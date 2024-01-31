@@ -107,6 +107,11 @@ public class Store extends BaseEntity {
         timetable.setStore(this);
     }
 
+    public void addCustomerStore(CustomerStore customerStore){
+        customerStoreList.add(customerStore);
+        customerStore.setStore(this);
+    }
+
     //======== 생성 메서드 ========
     public static Store createStore(Owner owner){
         Point point = createPoint(0f, 0f);

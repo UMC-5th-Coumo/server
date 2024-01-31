@@ -1,5 +1,6 @@
 package coumo.server.web.dto;
 
+import coumo.server.domain.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -86,6 +87,14 @@ public class StoreResponseDTO {
         Coupon coupon;
         List<String> images;
         List<MenuMoreDate> menus;
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StoreStampInfo {
+        private Store store;
+        private int stampTotal;
     }
 
     @Builder
