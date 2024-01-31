@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
-public class CustomerDTO {
+public class CustomerResponseDTO {
     private Long id;
     private String name;
     private Gender gender;
@@ -18,7 +18,7 @@ public class CustomerDTO {
     private LocalDateTime updatedAt;
 
     @Builder
-    public CustomerDTO(Long id, String name, Gender gender, String birthday, String ageGroup, String phone, Integer totalStamp, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public CustomerResponseDTO(Long id, String name, Gender gender, String birthday, String ageGroup, String phone, Integer totalStamp, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id=id;
         this.name=name;
         this.gender=gender;

@@ -19,4 +19,10 @@ public interface StatisticsRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT cs.customer FROM CustomerStore cs WHERE cs.store.id = :storeId AND cs.stampTotal >= 10")
     List<Customer> getRegularCustomers(@Param("storeId") Long storeId);
 
+    @Query("SELECT DATE(cs.updatedAt) AS date, COUNT(DISTINCT cs.customer.id) " +
+            "FROM CustomerStore cs " +
+            "WHERE cs.store.id = :storeId AND DATE(cs.updatedAt) BETWEEN :startDate AND :endDate " +
+            "GROUP BY date")
+    List<Object[]> getWeekStatistics(Long storeId, LocalDate startDate, LocalDate endDate);
+
 }

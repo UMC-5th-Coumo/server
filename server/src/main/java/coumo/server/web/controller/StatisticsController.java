@@ -29,4 +29,14 @@ public class StatisticsController {
     public ApiResponse<Map<String, Object>> getRegularCustomers(@PathVariable Long storeId) {
         return ApiResponse.onSuccess(statisticsService.getRegularCustomers(storeId));
     }
+
+    @GetMapping("/{storeId}/day")
+    public ApiResponse<?> getDayStatistics(@PathVariable Long storeId) {
+        return ApiResponse.onSuccess(statisticsService.getWeekStatistics(storeId));
+    }
+
+    @GetMapping("/{storeId}/time")
+    public ApiResponse<?> getTimeStatistics(@PathVariable Long storeId) {
+        return ApiResponse.onSuccess(statisticsService.getTimeStatistics(storeId));
+    }
 }
