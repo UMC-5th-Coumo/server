@@ -46,6 +46,7 @@ public class StoreResponseDTO {
         String name;
         String image;
         String description;
+        Boolean isNew;
     }
 
     @Builder

@@ -52,7 +52,6 @@ public class StoreCommandServiceImpl implements StoreCommandService{
                                 .day(item.getDay()).startTime(item.getStartTime()).endTime(item.getEndTime())
                                 .build());
         }
-
         store.updateStore(updateBasicDTO.getName(), updateBasicDTO.getTelePhone(), updateBasicDTO.getLocation(),
                 updateBasicDTO.getCategory(), updateBasicDTO.getLongitude(), updateBasicDTO.getLatitude());
     }
@@ -82,6 +81,7 @@ public class StoreCommandServiceImpl implements StoreCommandService{
                     .menuImage(menuImages[i])
                     .menuDescription(menuDetail[i].getDescription())
                     .name(menuDetail[i].getName())
+                    .isNew(menuDetail[i].getIsNew())
                     .store(store)
                     .build();
 

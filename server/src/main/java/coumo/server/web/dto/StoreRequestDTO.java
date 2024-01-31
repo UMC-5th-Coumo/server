@@ -39,6 +39,7 @@ public class StoreRequestDTO {
     public static class MenuDetail{
         String name;
         String description;
+        Boolean isNew;
     }
 
     //==============앱==============
