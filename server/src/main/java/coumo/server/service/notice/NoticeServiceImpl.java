@@ -3,11 +3,11 @@ package coumo.server.service.notice;
 import coumo.server.domain.Notice;
 import coumo.server.domain.Store;
 import coumo.server.repository.NoticeRepository;
-import coumo.server.repository.OwnerRepository;
-import coumo.server.repository.StoreRepository;
 import coumo.server.web.dto.NoticeRequestDTO;
 import coumo.server.web.dto.NoticeResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,30 +29,23 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeResponseDTO.MyNoticeListDTO readNotice(Store store) {
+    public Page<Notice> findOwnerNotice(Store store, Pageable pageable) {
 
-        Optional<List<NoticeResponseDTO.NoticeThumbInfo>> noticeThumbInfo = noticeRepository.findAllByStore(store);
-
-        NoticeResponseDTO.MyNoticeListDTO myNoticeListDTO = NoticeResponseDTO.MyNoticeListDTO.builder()
-                .total(noticeThumbInfo.get().size())
-                .notice(noticeThumbInfo.get())
-                .build();
-
-        return myNoticeListDTO;
+        return noticeRepository.findAllByStore(store, pageable);
     }
 
     @Override
-    public NoticeResponseDTO.MyNoticeDetail readNoticeDetail(Long noticeId) {
+    public NoticeResponseDTO.OwnerNoticeDetail readNoticeDetail(Long noticeId) {
 
         Notice notice = noticeRepository.findById(noticeId).get();
-        NoticeResponseDTO.MyNoticeDetail myNoticeDetail = NoticeResponseDTO.MyNoticeDetail.builder()
+        NoticeResponseDTO.OwnerNoticeDetail ownerNoticeDetail = NoticeResponseDTO.OwnerNoticeDetail.builder()
                 .noticeType(notice.getNoticeType())
                 .title(notice.getTitle())
                 .noticeContent(notice.getNoticeContent())
                 .image(notice.getImage())
                 .build();
 
-        return myNoticeDetail;
+        return ownerNoticeDetail;
     }
 
     @Override

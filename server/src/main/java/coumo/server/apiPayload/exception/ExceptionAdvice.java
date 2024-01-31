@@ -2,6 +2,7 @@ package coumo.server.apiPayload.exception;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -19,14 +20,18 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.apiPayload.code.ErrorReasonDTO;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+
+
+
+
+
+
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {

@@ -20,15 +20,21 @@ public enum ErrorStatus implements BaseErrorCode {
 
     STORE_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","가게를 찾을 수 없습니다"),
     STORE_MENU_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","menu json 형식이 잘 못 되었습니다"),
-    STORE_MENU_COUNT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","메뉴 이미지 개수와 메뉴 json 개수가 다릅니다. 개수를 동일하게 설정해주세요");
+    STORE_MENU_COUNT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","메뉴 이미지 개수와 메뉴 json 개수가 다릅니다. 개수를 동일하게 설정해주세요"),
 
+    OWNER_BAD_REQUEST(HttpStatus.BAD_REQUEST, "STORE400", "사장님을 찾을 수 없습니다."),
 
+    NOTICE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "NOTICE400", "게시글을 찾을 수 없습니다.");
 
     // 예시,,,
     // 멤버 관려 에러
     //MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     //NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
     //ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
+
+
+
+
 
     private final HttpStatus httpStatus;
     private final String code;
