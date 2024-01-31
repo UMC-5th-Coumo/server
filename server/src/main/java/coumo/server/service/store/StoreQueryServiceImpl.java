@@ -28,7 +28,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public Page<Store> findFamousStore(double longitude, double latitude, double distance) {
+    public Page<Store> findFamousStore(double longitude, double latitude, double distance, Pageable pageable) {
         Location northEast = GeometryUtil.calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
         Location southWest = GeometryUtil.calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
 
@@ -37,8 +37,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         double x2 = southWest.getLatitude();
         double y2 = southWest.getLongitude();
 
-        Pageable pageable = PageRequest.of(0, 10);
-        return  storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
+        return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
     }
 
     @Override
