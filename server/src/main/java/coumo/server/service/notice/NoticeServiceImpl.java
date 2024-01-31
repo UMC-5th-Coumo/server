@@ -22,7 +22,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
 
     @Override
-    public Optional<Notice> postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto) {
+    public Notice postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto) {
 
         Notice newNotice = dto.toEntity(store);
         return noticeRepository.save(newNotice);

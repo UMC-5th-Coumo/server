@@ -32,7 +32,7 @@ public class NoticeController {
 
         ownerService.findOwner(ownerId);                                // owner 존재 여부
         Optional<Store> store = storeQueryService.findStore(ownerId);   // store 존재 여부
-        Notice newNotice = noticeService.postNotice(store.get(), dto).get();                     // 글 저장
+        Notice newNotice = noticeService.postNotice(store.get(), dto);  // 글 저장
 
         return ApiResponse.onSuccess(newNotice.getId());
     }
