@@ -13,7 +13,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     @Override
     Optional<Notice> findById(Long noticeId);
 
-    Optional<Notice> save(Notice notice);
+    Notice save(Notice notice);
 
     Optional<List<NoticeResponseDTO.NoticeThumbInfo>> findAllByStore(Store store);
 }
