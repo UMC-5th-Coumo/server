@@ -6,7 +6,6 @@ import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
 import coumo.server.domain.OwnerCoupon;
 import coumo.server.domain.Store;
-import coumo.server.domain.enums.StoreType;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreResponseDTO;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

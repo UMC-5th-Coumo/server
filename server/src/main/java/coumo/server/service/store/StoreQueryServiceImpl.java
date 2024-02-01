@@ -68,9 +68,4 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         if (category.isPresent()) return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
         else return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
     }
-
-    @Override
-    public Optional<Store> findStoreInfoMoreDetail(Long storeId, Long customerId) {
-        return Optional.empty();
-    }
 }

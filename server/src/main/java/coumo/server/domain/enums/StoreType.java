@@ -1,5 +1,9 @@
 package coumo.server.domain.enums;
 
+import coumo.server.apiPayload.code.BaseErrorCode;
+import coumo.server.apiPayload.code.status.ErrorStatus;
+import coumo.server.apiPayload.exception.handler.StoreHandler;
+
 public enum StoreType {
     NONE("NONE"),
     ENTERTAINMENT("ENTERTAINMENT"),
@@ -18,10 +22,13 @@ public enum StoreType {
     public static StoreType fromString(String value) {
         for (StoreType type : StoreType.values()) {
             if (type.value.equalsIgnoreCase(value)) {
+                if (type.equals(StoreType.NONE)) throw new StoreHandler(ErrorStatus.STORE_CATEGORY_BAD_REQUEST);
                 return type;
             }
         }
-        return StoreType.NONE;
+
+        throw new StoreHandler(ErrorStatus.STORE_CATEGORY_BAD_REQUEST);
+        //return StoreType.NONE;
         //return null; // or throw IllegalArgumentException
     }
 }

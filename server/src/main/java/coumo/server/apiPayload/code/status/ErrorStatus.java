@@ -21,7 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     STORE_NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE,"STORE406","가게에 대한 자세한 정보가 없습니다. (사장님이 아직 쿠폰이나 가게 설정 부족)"),
-    STORE_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","가게를 찾을 수 없습니다"),
+    STORE_CATEGORY_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","카테고리 입력이 잘 못 되었습니다"),
     STORE_IMAGE_NOT_EXIST(HttpStatus.BAD_REQUEST,"STORE400","최소 하나의 매장 사진을 넣어주세요."),
     STORE_MENU_NOT_EXIST(HttpStatus.BAD_REQUEST,"STORE400","최소 하나의 메뉴는 입력해주세요."),
     STORE_MENU_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","menu json 형식이 잘 못 되었습니다"),
