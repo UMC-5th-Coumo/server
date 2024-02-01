@@ -116,7 +116,7 @@ public class Store extends BaseEntity {
     //======== 비즈니스 로직 메서드 ========
     public int getCustomerCouponLength(Long customerId){
         for (CustomerStore item : customerStoreList){
-            if(item.getStore().equals(this)){
+            if(item.getStore().equals(this) && item.getCustomer().getId().equals(customerId)){
                 return item.getStampCurrent();
             }
         }
@@ -125,7 +125,7 @@ public class Store extends BaseEntity {
 
     //======== 생성 메서드 ========
     public static Store createStore(Owner owner){
-        Point point = createPoint(0f, 0f);
+        Point point = createPoint(0.0, 0.0);
         Store store = Store.builder()
                         .name("")
                         .telephone("")

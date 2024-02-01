@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StoreQueryServiceImpl implements StoreQueryService{
     private final StoreRepository storeRepository;
-    private final CustomerStoreRepository customerStoreRepository;
 
     @Override
     public Optional<Store> findStore(Long storeId) {
@@ -66,11 +65,8 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         double x2 = southWest.getLatitude();
         double y2 = southWest.getLongitude();
 
-        if (category.isPresent()) {
-            return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
-        } else {
-            return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
-        }
+        if (category.isPresent()) return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
+        else return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
     }
 
     @Override

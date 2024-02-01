@@ -2,6 +2,7 @@ package coumo.server.domain;
 
 import coumo.server.domain.common.BaseEntity;
 import coumo.server.domain.enums.StampMax;
+import coumo.server.domain.mapping.CustomerStore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +36,12 @@ public class OwnerCoupon extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(8)")
     private StampMax stampMax; //최대 스탬프 개수
+
+    //======== 비즈니스 로직 메서드 ========
+    public boolean isAvailable(){
+        if (color.isEmpty() || color.equals("") || store_name.isEmpty()
+                || store_name.equals("") || stampImage.isEmpty() || stampImage.equals(""))
+            return false;
+        return true;
+    }
 }

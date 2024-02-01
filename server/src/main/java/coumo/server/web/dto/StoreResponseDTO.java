@@ -98,7 +98,7 @@ public class StoreResponseDTO {
         String latitude;
         Coupon coupon;
         List<String> images;
-        List<MenuMoreDate> menus;
+        List<MenuInfo> menus;
     }
     @Builder
     @Getter
@@ -118,17 +118,5 @@ public class StoreResponseDTO {
         Integer cnt;
         String stampType;
         String color;
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class MenuMoreDate{
-        String name;
-        String description;
-        String image;
-        LocalDateTime createdAt;
-        LocalDateTime updatedAt;
     }
 }
