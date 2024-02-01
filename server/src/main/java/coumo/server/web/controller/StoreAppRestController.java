@@ -4,6 +4,7 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
+import coumo.server.domain.OwnerCoupon;
 import coumo.server.domain.Store;
 import coumo.server.domain.enums.StoreType;
 import coumo.server.service.store.StoreCommandService;
@@ -48,10 +49,18 @@ public class StoreAppRestController {
     }
 
     @GetMapping("/{customerId}/store/{storeId}/detail")
-    public ApiResponse<List<StoreResponseDTO.MoreDetailStoreDTO>> getStoreDetail
+    public ApiResponse<StoreResponseDTO.MoreDetailStoreDTO> getStoreDetail
             (@PathVariable("customerId") Long customerId,
              @PathVariable("storeId") Long storeId) {
-        return ApiResponse.onSuccess(new ArrayList<>());
+        Store store = storeQueryService.findStore(storeId).orElseThrow();
+        // <수정 필요> 유저도 없으면 예외 날려야 하니 위에 처럼 작성해야 됌.
+
+        //가게 사장이 쿠폰에 대한 정보가 부족하다면 자세한 정보를 조회 할 수 없으니!
+        List<OwnerCoupon> ownerCouponList = store.getOwner().getOwnerCouponList();
+        if (ownerCouponList.isEmpty() || ownerCouponList.get(0).isAvailable() == false)
+            throw new StoreHandler(ErrorStatus.STORE_NOT_ACCEPTABLE);
+
+        return ApiResponse.onSuccess(StoreConverter.toMoreDetailStoreDTO(store, customerId));
     }
 
     @GetMapping("/test")

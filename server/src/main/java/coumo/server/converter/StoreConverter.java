@@ -1,5 +1,6 @@
 package coumo.server.converter;
 
+import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.Store;
 import coumo.server.web.dto.StoreResponseDTO;
 import org.springframework.data.domain.Page;
@@ -80,5 +81,37 @@ public class StoreConverter {
                 .collect(Collectors.toList());
 
         return resultList;
+    }
+
+    public static StoreResponseDTO.MoreDetailStoreDTO toMoreDetailStoreDTO(Store store, Long customerId){
+        StoreResponseDTO.MoreDetailStoreDTO result = StoreResponseDTO.MoreDetailStoreDTO.builder()
+                .name(store.getName())
+                .location(store.getStoreLocation())
+                .description(store.getStoreDescription())
+                .longitude(String.valueOf(store.getPoint().getX()))
+                .latitude(String.valueOf(store.getPoint().getY()))
+                .coupon(StoreResponseDTO.Coupon.builder()
+                        .title(store.getOwner().getOwnerCouponList().get(0).getStore_name())
+                        .cnt(store.getCustomerCouponLength(customerId))
+                        .color(store.getOwner().getOwnerCouponList().get(0).getColor())
+                        .build())
+                .images(new ArrayList<>())
+                .menus(new ArrayList<>())
+                .build();
+
+        store.getStoreImageList().stream()
+                .map(item->result.getImages().add(item.getStoreImage()))
+                .collect(Collectors.toList());
+
+        store.getMenuList().stream()
+                .map(item->result.getMenus().add(StoreResponseDTO.MenuInfo.builder()
+                                .name(item.getName())
+                                .description(item.getMenuDescription())
+                                .image(item.getMenuImage())
+                                .isNew(item.getIsNew())
+                        .build()))
+                .collect(Collectors.toList());
+
+        return result;
     }
 }
