@@ -1,6 +1,7 @@
 package coumo.server.service.store;
 
 import coumo.server.domain.Store;
+import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.CustomerStoreRepository;
 import coumo.server.repository.StoreRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     @Override
     public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double longitude, double latitude, double distance, Pageable pageable) {
         //근처 매장 찾기
-        Page<Store> pageStore = findNearestStore(longitude, latitude, distance, pageable);
+        Page<Store> pageStore = findNearestStore(longitude, latitude, distance, Optional.empty(), pageable);
         if (pageStore.isEmpty()) return Collections.emptyList();
 
         //쿠폰 도장이 기준
@@ -55,7 +57,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public Page<Store> findNearestStore(double longitude, double latitude, double distance, Pageable pageable) {
+    public Page<Store> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable) {
         Location northEast = GeometryUtil.calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
         Location southWest = GeometryUtil.calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
 
@@ -64,12 +66,11 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         double x2 = southWest.getLatitude();
         double y2 = southWest.getLongitude();
 
-        return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
-    }
-
-    @Override
-    public Optional<List<Store>> findNearestStore(double longitude, double latitude, String category, Long customerId) {
-        return Optional.empty();
+        if (category.isPresent()) {
+            return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
+        } else {
+            return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
+        }
     }
 
     @Override

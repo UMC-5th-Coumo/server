@@ -78,6 +78,18 @@ public class StoreResponseDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class NearestStoreDTO {
+        Long storeId;
+        String name;
+        String location;
+        Integer couponCnt;
+        String storeImage;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MoreDetailStoreDTO{
         String name;
         String description;

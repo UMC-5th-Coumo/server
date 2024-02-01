@@ -2,6 +2,7 @@ package coumo.server.converter;
 
 import coumo.server.domain.Store;
 import coumo.server.web.dto.StoreResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +48,7 @@ public class StoreConverter {
     public static List<StoreResponseDTO.FamousStoreDTO> toFamousStoreDTO(List<StoreResponseDTO.StoreStampInfo> storeStampInfoList){
         if(storeStampInfoList.isEmpty()) return Collections.emptyList();
 
+        //이미지 개수 예외처리 시급함
         List<StoreResponseDTO.FamousStoreDTO> resultList = new ArrayList<>();
         storeStampInfoList.stream()
                 .map(item -> resultList.add(StoreResponseDTO.FamousStoreDTO.builder()
@@ -55,6 +57,25 @@ public class StoreConverter {
                         .description(item.getStore().getStoreDescription())
                         .location(item.getStore().getStoreLocation())
                         .storeImage(item.getStore().getStoreImageList().get(0).getStoreImage())
+                        .build()))
+                .collect(Collectors.toList());
+
+        return resultList;
+    }
+
+    public static List<StoreResponseDTO.NearestStoreDTO> toNearestStoreDTO(Page<Store> storePage, Long customerId){
+        if(storePage.isEmpty()) return Collections.emptyList();
+
+        List<StoreResponseDTO.NearestStoreDTO> resultList = new ArrayList<>();
+        List<Store> storeList = storePage.getContent();
+        //이미지 개수 예외처리 시급함
+        storeList.stream()
+                .map(item -> resultList.add(StoreResponseDTO.NearestStoreDTO.builder()
+                                .storeId(item.getId())
+                                .storeImage(item.getStoreImageList().get(0).getStoreImage())
+                                .location(item.getStoreLocation())
+                                .couponCnt(item.getCustomerCouponLength(customerId))
+                                .name(item.getName())
                         .build()))
                 .collect(Collectors.toList());
 

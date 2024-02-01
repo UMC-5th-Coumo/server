@@ -17,8 +17,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST_NOT_FOUND(HttpStatus.BAD_REQUEST,"COMMON400","데이터를 찾을 수 없습니다"),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
+    _PAGE_OVER_RANGE(HttpStatus.BAD_REQUEST, "COMMON400", "페이징 범위를 넘었습니다. 페이징 0 부터 시작합니다."),
 
     STORE_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","가게를 찾을 수 없습니다"),
+    STORE_IMAGE_NOT_EXIST(HttpStatus.BAD_REQUEST,"STORE400","최소 하나의 매장 사진을 넣어주세요."),
+    STORE_MENU_NOT_EXIST(HttpStatus.BAD_REQUEST,"STORE400","최소 하나의 메뉴는 입력해주세요."),
     STORE_MENU_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","menu json 형식이 잘 못 되었습니다"),
     STORE_MENU_COUNT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","메뉴 이미지 개수와 메뉴 json 개수가 다릅니다. 개수를 동일하게 설정해주세요"),
     STORE_POINT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","위도는 -90부터 90까지, 경도는 -180부터 180까지의 값을 가져야 합니다.");

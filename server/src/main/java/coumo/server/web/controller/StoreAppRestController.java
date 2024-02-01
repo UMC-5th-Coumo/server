@@ -11,11 +11,13 @@ import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,20 +30,21 @@ public class StoreAppRestController {
     @GetMapping("/store")
     public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude) {
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
-
         List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(longitude, latitude, 0.5, PageRequest.of(0, 5));
-
         return ApiResponse.onSuccess(StoreConverter.toFamousStoreDTO(famousStore));
     }
 
 
     @GetMapping("/{customerId}/store/{storeId}")
-    public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getNearestStore
+    public ApiResponse<List<StoreResponseDTO.NearestStoreDTO>> getNearestStore
             (@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude,
-             @RequestParam("category") StoreType category,
-             @PathVariable("customerId") Long customerId, @PathVariable("storeId") Long storeId) {
+             @RequestParam("category") String category, @RequestParam("page") Integer page,
+             @PathVariable("customerId") Long customerId) {
+        if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
+        if (page < 0) throw new StoreHandler(ErrorStatus._PAGE_OVER_RANGE);
 
-        return ApiResponse.onSuccess(new ArrayList<>());
+        Page<Store> nearestStore = storeQueryService.findNearestStore(longitude, latitude, 0.5, Optional.of(category), PageRequest.of(page, 10));
+        return ApiResponse.onSuccess(StoreConverter.toNearestStoreDTO(nearestStore, customerId));
     }
 
     @GetMapping("/{customerId}/store/{storeId}/detail")
