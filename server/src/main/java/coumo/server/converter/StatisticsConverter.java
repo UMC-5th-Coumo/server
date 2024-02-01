@@ -21,23 +21,23 @@ public class StatisticsConverter {
                 .updatedAt(customerStore.getUpdatedAt())
                 .build();
     }
-    private static String calcAgeGroup(String birthday) {
+    public static String calcAgeGroup(String birthday) {
         int birthYear = Integer.parseInt(birthday.substring(0, 4));
         int currentYear = LocalDateTime.now().getYear();
         int age = currentYear - birthYear + 1;
 
         if (age < 20) {
-            return "10대";
+            return "10s";
         } else if (age < 30) {
-            return "20대";
+            return "20s";
         } else if (age < 40) {
-            return "30대";
+            return "30s";
         } else if (age < 50) {
-            return "40대";
+            return "40s";
         } else if (age < 60) {
-            return "50대";
+            return "50s";
         } else {
-            return "60대 이상";
+            return "60s";
         }
     }
 }
