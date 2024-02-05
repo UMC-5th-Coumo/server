@@ -42,3 +42,11 @@ application-dev.yml
 .DS_Store
 
 src/main/resources/data.sql
+
+# Ignore all .yml files under resources
+src/main/resources/*.yml
+
+# But do not ignore these files
+!src/main/resources/application.yml
+!src/main/resources/application-prod.yml
+
