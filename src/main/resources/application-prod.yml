@@ -9,8 +9,8 @@ spring:
   datasource:
     url: jdbc:mysql://coumo-dev.ce0edxmnrjvb.ap-northeast-2.rds.amazonaws.com:3306/coumo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${RDS_USERNAME}
-    password: ${RDS_PASSWORD}
+    username: ${secrets.RDS_USERNAME}
+    password: ${secrets.RDS_PASSWORD}
   jpa:
     open-in-view: false
     hibernate:
@@ -31,8 +31,8 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: ${S3_ACCESS_KEY}
-      secretKey: ${S3_SECRET_KEY}
+      accessKey: ${secrets.S3_ACCESS_KEY}
+      secretKey: ${secrets.S3_SECRET_KEY}
     s3:
       bucket:
     region:
