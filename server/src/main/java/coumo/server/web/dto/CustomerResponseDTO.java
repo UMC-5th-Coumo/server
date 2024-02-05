@@ -29,5 +29,25 @@ public class CustomerResponseDTO {
         this.createdAt=createdAt;
         this.updatedAt=updatedAt;
     }
+
+    // 회원가입
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CustomerJoinResultDTO {
+        long id;
+        String loginId;
+        String name;
+        LocalDateTime createdAt;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class CustomerLoginResultDTO{
+        Long customerId;
+        private final String token;
+    }
 }
 

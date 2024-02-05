@@ -5,6 +5,8 @@ import coumo.server.domain.enums.State;
 import coumo.server.domain.enums.SubscriptionType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class Owner extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long loginId;
+    private String loginId;
 
     @Column(nullable = false, length = 64)
     private String name;
@@ -36,7 +38,7 @@ public class Owner extends BaseEntity {
     @Column(nullable = false, length = 64)
     private String email;
 
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 64)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -58,5 +60,13 @@ public class Owner extends BaseEntity {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
