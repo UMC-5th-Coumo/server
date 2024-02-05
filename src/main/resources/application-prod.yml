@@ -9,8 +9,8 @@ spring:
   datasource:
     url: jdbc:mysql://coumo-dev.ce0edxmnrjvb.ap-northeast-2.rds.amazonaws.com:3306/coumo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${secrets.RDS_USERNAME}
-    password: ${secrets.RDS_PASSWORD}
+    username: ${{ secrets.RDS_USERNAME }}
+    password: ${{ secrets.RDS_PASSWORD }}
   jpa:
     open-in-view: false
     hibernate:
@@ -21,24 +21,24 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   jwt:
     secret:
-      key = ${secrets.JWT_KEY}
+      key = ${{ secrets.JWT_KEY }}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   servlet:
     multipart:
       max-file-size: 100MB
-cloud:
-  aws:
-    credentials:
-      accessKey: ${secrets.S3_ACCESS_KEY}
-      secretKey: ${secrets.S3_SECRET_KEY}
-    s3:
-      bucket:
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
+#cloud:
+#  aws:
+#    credentials:
+#      accessKey: ${secrets.S3_ACCESS_KEY}
+#      secretKey: ${secrets.S3_SECRET_KEY}
+#    s3:
+#      bucket:
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
 logging:
   level:
     '[kr.co.moneybridge]': INFO
