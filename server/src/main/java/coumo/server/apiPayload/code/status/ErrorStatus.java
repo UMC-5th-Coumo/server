@@ -25,7 +25,7 @@ public enum ErrorStatus implements BaseErrorCode {
     STORE_MENU_NOT_EXIST(HttpStatus.BAD_REQUEST,"STORE400","최소 하나의 메뉴는 입력해주세요."),
     STORE_MENU_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","menu json 형식이 잘 못 되었습니다"),
     STORE_MENU_COUNT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","메뉴 이미지 개수와 메뉴 json 개수가 다릅니다. 개수를 동일하게 설정해주세요"),
-    STORE_POINT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","위도는 -90부터 90까지, 경도는 -180부터 180까지의 값을 가져야 합니다.");
+    STORE_POINT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","위도는 -90부터 90까지, 경도는 -180부터 180까지의 값을 가져야 합니다."),
     STORE_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","가게를 찾을 수 없습니다"),
   
     OWNER_BAD_REQUEST(HttpStatus.BAD_REQUEST, "STORE400", "사장님을 찾을 수 없습니다."),
