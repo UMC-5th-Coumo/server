@@ -3,6 +3,7 @@ package coumo.server.service.owner;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Owner;
 import coumo.server.repository.OwnerRepository;
+import coumo.server.service.store.StoreCommandService;
 import coumo.server.web.dto.OwnerRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final StoreCommandService storeCommandService;
 
     // Id로 사장님 찾기
     @Override
@@ -40,7 +42,9 @@ public class OwnerServiceImpl implements OwnerService{
         Owner newOwner = OwnerConverter.toOwner(request);
         // 비밀번호를 BCrypt로 인코딩
         newOwner.setPassword(passwordEncoder.encode(request.getPassword()));
-        return ownerRepository.save(newOwner);
+        Owner owner = ownerRepository.save(newOwner);
+        storeCommandService.createStore(owner.getId());
+        return owner;
     }
 
     // 로그인 기능

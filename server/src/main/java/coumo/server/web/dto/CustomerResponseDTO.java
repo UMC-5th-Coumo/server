@@ -46,12 +46,8 @@ public class CustomerResponseDTO {
     @Getter
     @AllArgsConstructor
     public static class CustomerLoginResultDTO{
-        Long id;
-        String loginId;
-        String password;
+        Long customerId;
         private final String token;
-        LocalDateTime createdAt;
-
     }
 }
 

@@ -23,11 +23,8 @@ public class OwnerResponseDTO {
     @Getter
     @AllArgsConstructor
     public static class LoginResultDTO{
-        Long id;
-        String loginId;
-        String password;
+        Long ownerId;
+        Long storeId;
         private final String token;
-        LocalDateTime createdAt;
-
     }
 }

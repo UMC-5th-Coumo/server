@@ -19,11 +19,9 @@ public class OwnerConverter {
 
     public static OwnerResponseDTO.LoginResultDTO toLoginResultDTO(Owner owner, String token){
         return OwnerResponseDTO.LoginResultDTO.builder()
-                .id(owner.getId())
-                .loginId(owner.getLoginId())
-                .password(owner.getPassword())
+                .ownerId(owner.getId())
+                .storeId(owner.getStore().getId())
                 .token(token)
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 

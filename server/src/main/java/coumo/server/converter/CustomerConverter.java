@@ -20,11 +20,8 @@ public class CustomerConverter {
 
     public static CustomerResponseDTO.CustomerLoginResultDTO toCustomerLoginResultDTO(Customer customer, String token){
         return CustomerResponseDTO.CustomerLoginResultDTO.builder()
-                .id(customer.getId())
-                .loginId(customer.getLoginId())
-                .password(customer.getPassword())
+                .customerId(customer.getId())
                 .token(token)
-                .createdAt(LocalDateTime.now())
                 .build();
     }
     public static Customer toCustomer(CustomerRequestDTO.CustomerJoinDTO request){
