@@ -10,14 +10,17 @@ import java.util.List;
 
 public class NoticeResponseDTO {
 
+
     // --------WEB-----------------------
+
+    // 나 = 사장님
 
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     // 내가 쓴 글 리스트 읽기
-    public static class MyNoticeListDTO {
+    public static class OwnerNoticeList {
         public Integer total;
         public List<NoticeThumbInfo> notice;
     }
@@ -27,7 +30,7 @@ public class NoticeResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     // 내가 쓴 글 세부내용 읽기
-    public static class MyNoticeDetail {
+    public static class OwnerNoticeDetail {
         public NoticeType noticeType;
         public String title;
         public String noticeContent;
@@ -40,7 +43,7 @@ public class NoticeResponseDTO {
     @NoArgsConstructor
     // 내가 쓴 글 리스트를 위한 썸네일 컨텐츠
     public static class NoticeThumbInfo{
-        public Integer noticeId;
+        public Long noticeId;
         public NoticeType noticeType;
         public String title;
         public String contentThumb;

@@ -23,4 +23,9 @@ public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, L
     @Query("SELECT cs.customer.birthday FROM CustomerStore cs WHERE cs.store.id = :storeId AND cs.customer.gender = :gender AND cs.updatedAt BETWEEN :startDate AND :endDate")
     List<String> findCustomerBirthday(@Param("storeId") Long storeId, @Param("gender") Gender gender, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query("SELECT FUNCTION('DAYNAME', cs.updatedAt) AS day, COUNT(cs) as totalCustomer " +
+            "FROM CustomerStore cs " +
+            "WHERE cs.store.id = :storeId AND FUNCTION('YEAR', cs.updatedAt) = :year AND FUNCTION('MONTH', cs.updatedAt) = :month " +
+            "GROUP BY day")
+    List<Object[]> findCustomerCountPerDay(Long storeId, int year, int month);
 }

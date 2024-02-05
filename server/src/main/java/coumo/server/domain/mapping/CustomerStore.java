@@ -32,4 +32,8 @@ public class CustomerStore extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(8)")
     private StampMax stampMax; //최대 스탬프 개수
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 }

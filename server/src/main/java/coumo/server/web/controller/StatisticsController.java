@@ -52,4 +52,20 @@ public class StatisticsController {
                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return ApiResponse.onSuccess(statisticsService.getAgeGroup(storeId, period, startDate, endDate));
     }
+
+    @GetMapping("/{storeId}/month-statistics")
+    public ApiResponse<?> getMonthStatistics(@PathVariable Long storeId, @RequestParam int year,@RequestParam int month) {
+        return ApiResponse.onSuccess(statisticsService.getMonthStatistics(storeId, year, month));
+    }
+
+    @GetMapping("/{storeId}/month-age")
+    public ApiResponse<?> getMonthAgeStatistics(@PathVariable Long storeId, @RequestParam int year,@RequestParam int month) {
+        return ApiResponse.onSuccess(statisticsService.getMonthAgeGroup(storeId, year, month));
+    }
+
+    @GetMapping("/{storeId}/month-day")
+    public ApiResponse<?> getMonthDayStatistics(@PathVariable Long storeId, @RequestParam int year, @RequestParam int month) {
+        return ApiResponse.onSuccess(statisticsService.getMonthDayGroup(storeId, year, month));
+    }
+
 }

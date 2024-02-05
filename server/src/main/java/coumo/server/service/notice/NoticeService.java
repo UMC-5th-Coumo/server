@@ -4,16 +4,15 @@ import coumo.server.domain.Notice;
 import coumo.server.domain.Store;
 import coumo.server.web.dto.NoticeRequestDTO;
 import coumo.server.web.dto.NoticeResponseDTO;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface NoticeService {
     Notice postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto);
 
-    NoticeResponseDTO.MyNoticeListDTO readNotice(Store store);
+    Page<Notice> findOwnerNotice(Store store, Pageable pageable);
 
-    NoticeResponseDTO.MyNoticeDetail readNoticeDetail(Long noticeId);
+    NoticeResponseDTO.OwnerNoticeDetail readNoticeDetail(Long noticeId);
 
     void updateNotice(Long noticeId, NoticeRequestDTO.updateNoticeDTO dto);
 

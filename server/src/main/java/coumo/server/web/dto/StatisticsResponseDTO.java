@@ -61,8 +61,29 @@ public class StatisticsResponseDTO {
     @NoArgsConstructor
     public static class AgeGroupDTO {
         private String ageGroup;
-        private double maleRatio;
-        private double femaleRatio;
+        private double male;
+        private double female;
         private int total;
+    }
+
+
+    @Builder
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MonthStatisticsResponseDTO {
+        private int customerCount;
+        private int newCustomerCount;
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MonthDayResponseDTO {
+        private String day;
+        private Long totalCustomer;
     }
 }

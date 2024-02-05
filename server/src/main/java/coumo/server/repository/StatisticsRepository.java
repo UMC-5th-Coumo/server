@@ -1,6 +1,7 @@
 package coumo.server.repository;
 
 import coumo.server.domain.Customer;
+import coumo.server.web.dto.StatisticsResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,10 @@ public interface StatisticsRepository extends JpaRepository<Customer, Long> {
             "GROUP BY date")
     List<Object[]> getWeekStatistics(Long storeId, LocalDate startDate, LocalDate endDate);
 
+
+    @Query("SELECT cs.customer FROM CustomerStore cs WHERE cs.store.id = :storeId AND cs.stampTotal > 0 AND cs.updatedAt BETWEEN :startOfMonth AND :endOfMonth")
+    List<Customer> getAllCustomerCount(@Param("storeId") Long storeId, @Param("startOfMonth") LocalDateTime startOfMonth, @Param("endOfMonth") LocalDateTime endOfMonth);
+
+    @Query("SELECT cs.customer FROM CustomerStore cs WHERE cs.store.id = :storeId AND cs.createdAt BETWEEN :startOfMonth AND :endOfMonth")
+    List<Customer> getNewCustomerCount(@Param("storeId") Long storeId, @Param("startOfMonth") LocalDateTime startOfMonth, @Param("endOfMonth") LocalDateTime endOfMonth);
 }
