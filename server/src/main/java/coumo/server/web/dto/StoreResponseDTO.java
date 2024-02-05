@@ -1,5 +1,6 @@
 package coumo.server.web.dto;
 
+import coumo.server.domain.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -77,6 +78,18 @@ public class StoreResponseDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class NearestStoreDTO {
+        Long storeId;
+        String name;
+        String location;
+        Integer couponCnt;
+        String storeImage;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MoreDetailStoreDTO{
         String name;
         String description;
@@ -85,7 +98,15 @@ public class StoreResponseDTO {
         String latitude;
         Coupon coupon;
         List<String> images;
-        List<MenuMoreDate> menus;
+        List<MenuInfo> menus;
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StoreStampInfo {
+        private Store store;
+        private int stampTotal;
     }
 
     @Builder
@@ -97,17 +118,5 @@ public class StoreResponseDTO {
         Integer cnt;
         String stampType;
         String color;
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class MenuMoreDate{
-        String name;
-        String description;
-        String image;
-        LocalDateTime createdAt;
-        LocalDateTime updatedAt;
     }
 }

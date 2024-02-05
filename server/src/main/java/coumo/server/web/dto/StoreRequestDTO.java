@@ -46,7 +46,9 @@ public class StoreRequestDTO {
 
     @Getter
     public static class PointDTO{
-        public String longitude;
-        public String latitude;
+        @NotBlank
+        public Double longitude;
+        @NotBlank
+        public Double latitude;
     }
 }
