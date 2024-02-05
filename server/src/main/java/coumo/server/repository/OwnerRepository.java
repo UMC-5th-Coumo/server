@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface OwnerRepository extends JpaRepository<Owner, Long> {
 
+    Owner findByLoginId(String loginId);
+
     @Override
     Optional<Owner> findById(Long ownerId);
+
 }

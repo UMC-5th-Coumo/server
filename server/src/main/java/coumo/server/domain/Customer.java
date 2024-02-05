@@ -6,6 +6,8 @@ import coumo.server.domain.enums.State;
 import coumo.server.domain.mapping.CustomerStore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class Customer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long loginId;
+    private String loginId;
 
     @Column(nullable = false, length = 64)
     private String name;
@@ -39,7 +41,7 @@ public class Customer extends BaseEntity {
     @Column(nullable = false, length = 64)
     private String email;
 
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 64)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -52,4 +54,8 @@ public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<CustomerStore> customerStoreList = new ArrayList<>();
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
