@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -251,26 +252,114 @@ public class StatisticsService {
         for (String birthday : maleBirthdays) {
             String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
             StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
-            ageGroupDTO.setMaleRatio(ageGroupDTO.getMaleRatio() + 1);
+            ageGroupDTO.setMale(ageGroupDTO.getMale() + 1);
             ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
             ageGroupDTOMap.put(ageGroup, ageGroupDTO);
         }
         for (String birthday : femaleBirthdays) {
             String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
             StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
-            ageGroupDTO.setFemaleRatio(ageGroupDTO.getFemaleRatio() + 1);
+            ageGroupDTO.setFemale(ageGroupDTO.getFemale() + 1);
             ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
             ageGroupDTOMap.put(ageGroup, ageGroupDTO);
         }
 
         List<StatisticsResponseDTO.AgeGroupDTO> ageGroupDTOs = new ArrayList<>(ageGroupDTOMap.values());
-        for (StatisticsResponseDTO.AgeGroupDTO ageGroupDTO : ageGroupDTOs) {
-            int totalCount = ageGroupDTO.getTotal();
-            ageGroupDTO.setMaleRatio((ageGroupDTO.getMaleRatio() / totalCount) * 100);
-            ageGroupDTO.setFemaleRatio((ageGroupDTO.getFemaleRatio() / totalCount) * 100);
-        }
 
         return ageGroupDTOs;
 
+    }
+
+    /**
+     * 월간 레포트 분석 - 방문 고객, 신규 고객 수
+     * @param storeId 매장 ID
+     * @param year 통계 년도
+     * @param month 통계 월
+     */
+    public StatisticsResponseDTO.MonthStatisticsResponseDTO getMonthStatistics(Long storeId, int year, int month) {
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        // 해당 달 총 방문 고객 수
+        List<Customer> allCustomers = statisticsRepository.getAllCustomerCount(storeId, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+        int allCustomerCount = allCustomers.size();
+
+        // 해당 달 총 신규 고객 수
+        List<Customer> newCustomers = statisticsRepository.getNewCustomerCount(storeId, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+        int newCustomerCount = newCustomers.size();
+
+
+        return new StatisticsResponseDTO.MonthStatisticsResponseDTO(allCustomerCount, newCustomerCount);
+    }
+
+    /**
+     * 월간 레포트 분석 - 연령대, 성별 막대그래프
+     * @param storeId 매장 ID
+     * @param year 통계 년도
+     * @param month 통계 월
+     */
+    public List<StatisticsResponseDTO.AgeGroupDTO> getMonthAgeGroup(Long storeId, int year, int month) {
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+
+        List<String> maleBirthdays = customerStoreRepository.findCustomerBirthday(storeId, Gender.MALE, startDateTime, endDateTime);
+        List<String> femaleBirthdays = customerStoreRepository.findCustomerBirthday(storeId, Gender.FEMALE, startDateTime, endDateTime);
+
+        Map<String, StatisticsResponseDTO.AgeGroupDTO> ageGroupDTOMap = new HashMap<>();
+        for (String birthday : maleBirthdays) {
+            String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
+            StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
+            ageGroupDTO.setMale(ageGroupDTO.getMale() + 1);
+            ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
+            ageGroupDTOMap.put(ageGroup, ageGroupDTO);
+        }
+        for (String birthday : femaleBirthdays) {
+            String ageGroup = StatisticsConverter.calcAgeGroup(birthday);
+            StatisticsResponseDTO.AgeGroupDTO ageGroupDTO = ageGroupDTOMap.getOrDefault(ageGroup, new StatisticsResponseDTO.AgeGroupDTO(ageGroup, 0, 0, 0));
+            ageGroupDTO.setFemale(ageGroupDTO.getFemale() + 1);
+            ageGroupDTO.setTotal(ageGroupDTO.getTotal() + 1);
+            ageGroupDTOMap.put(ageGroup, ageGroupDTO);
+        }
+
+        List<StatisticsResponseDTO.AgeGroupDTO> ageGroupDTOs = new ArrayList<>(ageGroupDTOMap.values());
+
+        return ageGroupDTOs;
+
+    }
+
+    /**
+     * 월간 레포트 분석 - 방문 요일 고객수
+     * @param storeId 매장 ID
+     * @param year 통계 년도
+     * @param month 통계 월
+     */
+    public List<StatisticsResponseDTO.MonthDayResponseDTO> getMonthDayGroup(Long storeId, int year, int month) {
+        Map<String, Long> dayCustomerCount = new LinkedHashMap<>();
+        dayCustomerCount.put("MON", 0L);
+        dayCustomerCount.put("TUE", 0L);
+        dayCustomerCount.put("WED", 0L);
+        dayCustomerCount.put("THU", 0L);
+        dayCustomerCount.put("FRI", 0L);
+        dayCustomerCount.put("SAT", 0L);
+        dayCustomerCount.put("SUN", 0L);
+
+        List<Object[]> dayGroup = customerStoreRepository.findCustomerCountPerDay(storeId, year, month);
+
+        for (Object[] objects : dayGroup) {
+            String day = ((String) objects[0]).toUpperCase().substring(0, 3); // Convert day name to abbreviation
+            Long totalCustomer = ((Number) objects[1]).longValue();
+            dayCustomerCount.put(day, totalCustomer);
+        }
+
+        List<StatisticsResponseDTO.MonthDayResponseDTO> result = dayCustomerCount.entrySet().stream()
+                .map(entry -> new StatisticsResponseDTO.MonthDayResponseDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return result;
     }
 }
