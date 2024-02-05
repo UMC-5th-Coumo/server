@@ -14,7 +14,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       default_batch_fetch_size: 100
       hibernate:
@@ -44,5 +44,5 @@ logging:
     '[kr.co.moneybridge]': INFO
 coumo:
   openapi:
-    dev-url: "https://dev.coumo.shop"
+    dev-url: "http://localhost:8080"
     prod-url: "https://api.myapp.com"
