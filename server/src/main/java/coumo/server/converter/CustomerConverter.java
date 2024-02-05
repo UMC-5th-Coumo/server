@@ -22,6 +22,7 @@ public class CustomerConverter {
         return CustomerResponseDTO.CustomerLoginResultDTO.builder()
                 .id(customer.getId())
                 .loginId(customer.getLoginId())
+                .password(customer.getPassword())
                 .token(token)
                 .createdAt(LocalDateTime.now())
                 .build();
