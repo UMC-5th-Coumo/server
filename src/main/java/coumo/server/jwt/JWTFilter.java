@@ -1,8 +1,6 @@
 package coumo.server.jwt;
 
-import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
-import coumo.server.service.owner.OwnerService;
 import coumo.server.web.dto.CustomOwnerDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
