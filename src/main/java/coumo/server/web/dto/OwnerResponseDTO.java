@@ -27,4 +27,10 @@ public class OwnerResponseDTO {
         Long storeId;
         private final String token;
     }
+
+    @Builder
+    @Getter
+    public static class CheckLoginIdResponseDTO{
+        private String loginId;
+    }
 }

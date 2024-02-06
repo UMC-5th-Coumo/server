@@ -69,4 +69,10 @@ public class OwnerServiceImpl implements OwnerService{
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    // 로그인ID 중복확인
+    @Override
+    public boolean isLoginIdAvailable(String loginId){
+        // 해당 로그인 ID가 데이터베이스에 존재하는지 확인
+        return !ownerRepository.existsByLoginId(loginId);
+    }
 }

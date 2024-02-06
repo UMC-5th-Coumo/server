@@ -15,4 +15,7 @@ public interface OwnerService {
 
     //로그인
     Owner loginOwner(OwnerRequestDTO.LoginDTO request);
+
+    //로그인 중복확인
+    boolean isLoginIdAvailable(String loginId);
 }
