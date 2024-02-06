@@ -42,12 +42,21 @@ public class CustomerResponseDTO {
         LocalDateTime createdAt;
     }
 
+
+    //로그인
     @Builder
     @Getter
     @AllArgsConstructor
     public static class CustomerLoginResultDTO{
         Long customerId;
         private final String token;
+    }
+
+    //로그인 중복확인
+    @Builder
+    @Getter
+    public static class CheckCustomerLoginIdResponseDTO{
+        private String loginId;
     }
 }
 

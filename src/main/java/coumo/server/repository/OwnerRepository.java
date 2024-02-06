@@ -14,4 +14,6 @@ public interface OwnerRepository extends JpaRepository<Owner, Long> {
     @Override
     Optional<Owner> findById(Long ownerId);
 
+    //로그인 중복확인
+    boolean existsByLoginId(String loginId);
 }

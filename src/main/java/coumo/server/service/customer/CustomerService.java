@@ -12,4 +12,7 @@ public interface CustomerService {
 
     //로그인
     Customer loginCustomer(CustomerRequestDTO.CustomerLoginDTO request);
+
+    //로그인 중복확인
+    boolean isLoginIdAvailable(String loginId);
 }

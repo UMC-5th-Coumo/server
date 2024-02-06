@@ -49,4 +49,20 @@ public class OwnerRestController {
 
     }
 
+    @PostMapping("/join/check-login-id")
+    @Operation(summary = "WEB 로그인 ID 중복 확인 API",
+            description = "WEB 로그인 ID 중복 확인 API 구현")
+    public ApiResponse<OwnerResponseDTO.CheckLoginIdResponseDTO> checkLoginId(@RequestBody @Valid OwnerRequestDTO.CheckLoginIdDTO request){
+        boolean isLoginIdAvailable = ownerService.isLoginIdAvailable(request.getLoginId());
+
+        if(isLoginIdAvailable){
+            // 로그인 ID가 사용 가능할 경우
+            return ApiResponse.onSuccess(OwnerResponseDTO.CheckLoginIdResponseDTO.builder()
+                    .loginId(request.getLoginId())
+                    .build());
+        } else {
+            // 로그인 ID가 이미 사용 중인 경우
+            return ApiResponse.onFailure("400", "이미 사용 중인 로그인 ID입니다.", null);
+        }
+    }
 }
