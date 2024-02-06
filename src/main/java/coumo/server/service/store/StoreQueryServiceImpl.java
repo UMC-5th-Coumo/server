@@ -1,6 +1,9 @@
 package coumo.server.service.store;
 
+import coumo.server.domain.Menu;
 import coumo.server.domain.Store;
+import coumo.server.domain.StoreImage;
+import coumo.server.domain.Timetable;
 import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.CustomerStoreRepository;
@@ -29,6 +32,27 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     @Override
     public Optional<Store> findStore(Long storeId) {
         return storeRepository.findById(storeId);
+    }
+
+    @Override
+    public Optional<List<Menu>> findMenus(Long storeId) {
+        Optional<Store> optionalStore= storeRepository.findByIdWithMenus(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getMenuList());
+    }
+
+    @Override
+    public Optional<List<StoreImage>> findStoreImages(Long storeId) {
+        Optional<Store> optionalStore = storeRepository.findByIdWithImages(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getStoreImageList());
+    }
+
+    @Override
+    public Optional<List<Timetable>> findTimeTables(Long storeId) {
+        Optional<Store> optionalStore = storeRepository.findByIdWithTimetables(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getTimetableList());
     }
 
     @Override

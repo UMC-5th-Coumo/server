@@ -6,7 +6,10 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
+import coumo.server.domain.Menu;
 import coumo.server.domain.Store;
+import coumo.server.domain.StoreImage;
+import coumo.server.domain.Timetable;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreRequestDTO;
@@ -21,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,9 +51,10 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
+        List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(null);
         Store store = storeQueryService.findStore(storeId).orElseThrow();
 
-        return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store));
+        return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store, timetableList));
     }
 
     @GetMapping("/{storeId}/detail")
@@ -64,8 +71,10 @@ public class StoreWebRestController {
             @PathVariable("storeId") Long storeId){
 
         Store store = storeQueryService.findStore(storeId).orElseThrow();
+        List<StoreImage> storeImages = storeQueryService.findStoreImages(storeId).orElse(null);
+        List<Menu> menus = storeQueryService.findMenus(storeId).orElse(null);
 
-        return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store ));
+        return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store, storeImages, menus));
     }
 
     @PatchMapping("/{storeId}/basic")
