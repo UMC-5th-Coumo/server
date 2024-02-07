@@ -58,9 +58,9 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double longitude, double latitude, double distance, Pageable pageable) {
+    public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double latitude, double longitude, double distance, Pageable pageable) {
         //근처 매장 찾기
-        Page<Store> pageStore = findNearestStore(longitude, latitude, distance, Optional.empty(), pageable);
+        Page<Store> pageStore = findNearestStore(latitude, longitude, distance, Optional.empty(), pageable);
         if (pageStore.isEmpty()) return Collections.emptyList();
 
         //쿠폰 도장이 기준
@@ -86,21 +86,25 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public Page<Store> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable) {
-        Location northEast = GeometryUtil.calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
-        Location southWest = GeometryUtil.calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
+    public Page<Store> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable) {
+        Location northEast = GeometryUtil
+                .calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
+        Location southWest = GeometryUtil
+                .calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
 
         double x1 = northEast.getLatitude();
         double y1 = northEast.getLongitude();
         double x2 = southWest.getLatitude();
         double y2 = southWest.getLongitude();
 
+        log.info("x1={}, y1={}, x2={}, y2={}", x1, y1, x2, y2);
+
         if (category.isPresent()) return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
         else return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
     }
 
     @Override
-    public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable, Long customerId) {
+    public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable, Long customerId) {
         //근처 매장 찾기
         Page<Store> storePage = findNearestStore(longitude, latitude, distance, Optional.empty(), pageable);
         if (storePage.isEmpty()) return Collections.emptyList();

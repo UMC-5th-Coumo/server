@@ -27,9 +27,9 @@ public class StoreAppRestController {
     private final StoreQueryService storeQueryService;
 
     @GetMapping("/store")
-    public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude) {
+    public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) {
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
-        List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(longitude, latitude, 0.5, PageRequest.of(0, 5));
+        List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(latitude, longitude, 0.5, PageRequest.of(0, 5));
         return ApiResponse.onSuccess(StoreConverter.toFamousStoreDTO(famousStore));
     }
 
