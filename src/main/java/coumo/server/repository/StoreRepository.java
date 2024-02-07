@@ -22,6 +22,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT DISTINCT s FROM Store s JOIN FETCH s.timetableList WHERE s.id = :storeId")
     Optional<Store> findByIdWithTimetables(@Param("storeId") Long storeId);
 
+    @Query("SELECT s FROM Store s JOIN FETCH s.owner WHERE s.id = :storeId")
+    Optional<Store> findByIdWithOwner(@Param("storeId") Long storeId);
 
     @Query(value = "SELECT s.* FROM store AS s " +
             "WHERE MBRContains(ST_SRID(ST_LINESTRINGFROMTEXT(CONCAT('LINESTRING(', ?1, ' ', ?2, ', ', ?3, ' ', ?4, ')')), 4326), ST_SRID(s.point, 4326)) AND s.store_type <> 'NONE'",

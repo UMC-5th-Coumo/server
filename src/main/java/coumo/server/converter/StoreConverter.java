@@ -58,53 +58,53 @@ public class StoreConverter {
                 .name(item.getStore().getName())
                 .description(item.getStore().getStoreDescription())
                 .location(item.getStore().getStoreLocation())
-                .storeImage(item.getStore().getStoreImageList().get(0).getStoreImage())
+                .storeImage(item.getImage())
                 .build()));
 
         return resultList;
     }
 
-    public static List<StoreResponseDTO.NearestStoreDTO> toNearestStoreDTO(Page<Store> storePage, Long customerId){
-        if(storePage.isEmpty()) return Collections.emptyList();
-
-        List<StoreResponseDTO.NearestStoreDTO> resultList = new ArrayList<>();
-        List<Store> storeList = storePage.getContent();
-        storeList.forEach(item -> resultList.add(StoreResponseDTO.NearestStoreDTO.builder()
-                .storeId(item.getId())
-                .storeImage(item.getStoreImageList().get(0).getStoreImage())
-                .location(item.getStoreLocation())
-                .couponCnt(item.getCustomerCouponLength(customerId))
-                .name(item.getName())
-                .build()));
-
-        return resultList;
-    }
-
-    public static StoreResponseDTO.MoreDetailStoreDTO toMoreDetailStoreDTO(Store store, Long customerId){
-        StoreResponseDTO.MoreDetailStoreDTO result = StoreResponseDTO.MoreDetailStoreDTO.builder()
-                .name(store.getName())
-                .location(store.getStoreLocation())
-                .description(store.getStoreDescription())
-                .longitude(String.valueOf(store.getPoint().getX()))
-                .latitude(String.valueOf(store.getPoint().getY()))
-                .coupon(StoreResponseDTO.Coupon.builder()
-                        .title(store.getOwner().getOwnerCouponList().get(0).getStore_name())
-                        .cnt(store.getCustomerCouponLength(customerId))
-                        .color(store.getOwner().getOwnerCouponList().get(0).getColor())
-                        .build())
-                .images(new ArrayList<>())
-                .menus(new ArrayList<>())
-                .build();
-
-        store.getStoreImageList().forEach(item -> result.getImages().add(item.getStoreImage()));
-
-        store.getMenuList().forEach(item -> result.getMenus().add(StoreResponseDTO.MenuInfo.builder()
-                .name(item.getName())
-                .description(item.getMenuDescription())
-                .image(item.getMenuImage())
-                .isNew(item.getIsNew())
-                .build()));
-
-        return result;
-    }
+//    public static List<StoreResponseDTO.NearestStoreDTO> toNearestStoreDTO(Page<Store> storePage, Long customerId){
+//        if(storePage.isEmpty()) return Collections.emptyList();
+//
+//        List<StoreResponseDTO.NearestStoreDTO> resultList = new ArrayList<>();
+//        List<Store> storeList = storePage.getContent();
+//        storeList.forEach(item -> resultList.add(StoreResponseDTO.NearestStoreDTO.builder()
+//                .storeId(item.getId())
+//                .storeImage(item.getStoreImageList().get(0).getStoreImage())
+//                .location(item.getStoreLocation())
+//                .couponCnt(item.getCustomerCouponLength(customerId))
+//                .name(item.getName())
+//                .build()));
+//
+//        return resultList;
+//    }
+//
+//    public static StoreResponseDTO.MoreDetailStoreDTO toMoreDetailStoreDTO(Store store, Long customerId){
+//        StoreResponseDTO.MoreDetailStoreDTO result = StoreResponseDTO.MoreDetailStoreDTO.builder()
+//                .name(store.getName())
+//                .location(store.getStoreLocation())
+//                .description(store.getStoreDescription())
+//                .longitude(String.valueOf(store.getPoint().getX()))
+//                .latitude(String.valueOf(store.getPoint().getY()))
+//                .coupon(StoreResponseDTO.Coupon.builder()
+//                        .title(store.getOwner().getOwnerCouponList().get(0).getStore_name())
+//                        .cnt(store.getCustomerCouponLength(customerId))
+//                        .color(store.getOwner().getOwnerCouponList().get(0).getColor())
+//                        .build())
+//                .images(new ArrayList<>())
+//                .menus(new ArrayList<>())
+//                .build();
+//
+//        store.getStoreImageList().forEach(item -> result.getImages().add(item.getStoreImage()));
+//
+//        store.getMenuList().forEach(item -> result.getMenus().add(StoreResponseDTO.MenuInfo.builder()
+//                .name(item.getName())
+//                .description(item.getMenuDescription())
+//                .image(item.getMenuImage())
+//                .isNew(item.getIsNew())
+//                .build()));
+//
+//        return result;
+//    }
 }

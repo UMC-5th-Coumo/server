@@ -106,6 +106,7 @@ public class StoreResponseDTO {
     @NoArgsConstructor
     public static class StoreStampInfo {
         private Store store;
+        private String image;
         private int stampTotal;
     }
 

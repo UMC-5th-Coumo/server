@@ -19,4 +19,6 @@ public interface StoreQueryService {
     public Optional<List<StoreImage>> findStoreImages(Long storeId);
     public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double longitude, double latitude, double distance, Pageable pageable);
     public Page<Store> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable);
+    public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable, Long customerId);
+    public StoreResponseDTO.MoreDetailStoreDTO findStoreInfoDetail(Long storeId, Long customerId);
 }
