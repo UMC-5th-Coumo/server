@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(null);
+        List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();
 
         return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store, timetableList));
@@ -71,8 +72,8 @@ public class StoreWebRestController {
             @PathVariable("storeId") Long storeId){
 
         Store store = storeQueryService.findStore(storeId).orElseThrow();
-        List<StoreImage> storeImages = storeQueryService.findStoreImages(storeId).orElse(null);
-        List<Menu> menus = storeQueryService.findMenus(storeId).orElse(null);
+        List<StoreImage> storeImages = storeQueryService.findStoreImages(storeId).orElse(Collections.emptyList());
+        List<Menu> menus = storeQueryService.findMenus(storeId).orElse(Collections.emptyList());
 
         return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store, storeImages, menus));
     }

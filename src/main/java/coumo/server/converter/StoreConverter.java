@@ -25,10 +25,8 @@ public class StoreConverter {
                 .category(store.getStoreType().toString())
                 .build();
 
-        if (timetableList != null) {
-            timetableList.forEach(item -> storeBasicDTO.getTime()
-                    .add(new StoreResponseDTO.TimeInfo(item.getDay(), item.getStartTime(), item.getEndTime())));
-        }
+        timetableList.forEach(item -> storeBasicDTO.getTime()
+                .add(new StoreResponseDTO.TimeInfo(item.getDay(), item.getStartTime(), item.getEndTime())));
 
         return storeBasicDTO;
     }
@@ -40,9 +38,9 @@ public class StoreConverter {
                 .description(store.getStoreDescription())
                 .build();
 
-        if (storeImageList != null) storeImageList.forEach(item -> storeDetailDTO.getStoreImages().add(item.getStoreImage()));
+        storeImageList.forEach(item -> storeDetailDTO.getStoreImages().add(item.getStoreImage()));
 
-        if (menuList != null) menuList.forEach(item -> storeDetailDTO.getMenus()
+        menuList.forEach(item -> storeDetailDTO.getMenus()
                 .add(new StoreResponseDTO.MenuInfo(item.getName(), item.getMenuImage(), item.getMenuDescription(), item.getIsNew())));
 
         return storeDetailDTO;
