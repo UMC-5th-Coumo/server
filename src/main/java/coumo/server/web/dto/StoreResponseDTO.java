@@ -24,8 +24,8 @@ public class StoreResponseDTO {
         String telePhone;
         String category;
         String location;
-        String longitude;   //경도
-        String latitude;    //위도
+        String latitude;
+        String longitude;
     }
 
     //가게 (매장 설명)
@@ -106,6 +106,7 @@ public class StoreResponseDTO {
     @NoArgsConstructor
     public static class StoreStampInfo {
         private Store store;
+        private String image;
         private int stampTotal;
     }
 
