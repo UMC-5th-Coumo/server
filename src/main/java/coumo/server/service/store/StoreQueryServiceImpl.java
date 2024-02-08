@@ -68,10 +68,13 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         List<StoreResponseDTO.StoreStampInfo> storeStampInfos = new ArrayList<>();
         for (Store store : stores) {
             int total = 0;
-            for (CustomerStore item : store.getCustomerStoreList()) {
+            List<CustomerStore> customerStores = customerStoreRepository.findAllByStore(store).orElse(Collections.emptyList());
+            List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
+
+            for (CustomerStore item : customerStores) {
                 total += item.getStampTotal();
             }
-            List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
+
             storeStampInfos.add(StoreResponseDTO.StoreStampInfo.builder()
                                 .store(store)
                                 .image(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
@@ -96,8 +99,6 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         double y1 = northEast.getLongitude();
         double x2 = southWest.getLatitude();
         double y2 = southWest.getLongitude();
-
-        log.info("x1={}, y1={}, x2={}, y2={}", x1, y1, x2, y2);
 
         if (category.isPresent()) return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
         else return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
