@@ -10,9 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, Long> {
-    List<CustomerStore> findByCustomerIdAndStoreId(Long customerId, Long storeId);
+    Optional<CustomerStore> findByCustomerIdAndStoreId(Long customerId, Long storeId);
 
     @Query("SELECT COUNT(DISTINCT cs.customer.id) FROM CustomerStore cs WHERE cs.store = :store AND HOUR(cs.updatedAt) = :hour AND DATE(cs.updatedAt) = :date")
     int countCustomersByHour(@Param("store") Store store, @Param("hour") int hour, @Param("date") LocalDate date);

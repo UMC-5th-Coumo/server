@@ -83,9 +83,10 @@ public class StatisticsService {
     private List<CustomerResponseDTO> createCustomerDtoList(List<Customer> customers, Long storeId) {
         List<CustomerResponseDTO> customerResponseDtoList = new ArrayList<>();
         for (Customer customer : customers) {
-            List<CustomerStore> customerStores = customerStoreRepository.findByCustomerIdAndStoreId(customer.getId(), storeId);
-            for (CustomerStore customerStore : customerStores) {
-                int totalStamp = (customerStore != null) ? customerStore.getStampTotal() : 0;
+            Optional<CustomerStore> optionalCustomerStore = customerStoreRepository.findByCustomerIdAndStoreId(customer.getId(), storeId);
+            if (optionalCustomerStore.isPresent()) {
+                CustomerStore customerStore = optionalCustomerStore.get();
+                int totalStamp = customerStore.getStampTotal();
 
                 CustomerResponseDTO customerResponseDto = StatisticsConverter.toDTO(customer, customerStore);
                 customerResponseDto.setTotalStamp(totalStamp);
