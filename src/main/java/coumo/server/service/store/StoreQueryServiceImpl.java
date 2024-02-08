@@ -114,13 +114,13 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         List<Store> storeList = storePage.getContent();
         storeList.forEach(item -> {
             List<StoreImage> storeImages = storeImageRepository.findAllByStore(item).orElse(Collections.emptyList());
-            List<CustomerStore> customerStoreList = customerStoreRepository.findByCustomerIdAndStoreId(customerId, item.getId());
+            CustomerStore customerStore = customerStoreRepository.findByCustomerIdAndStoreId(customerId, item.getId()).orElse(null);
 
             resultList.add(StoreResponseDTO.NearestStoreDTO.builder()
                     .storeId(item.getId())
                     .storeImage(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
                     .location(item.getStoreLocation())
-                    .couponCnt(customerStoreList.isEmpty() ?  0 : customerStoreList.get(0).getStampTotal())
+                    .couponCnt(customerStore == null ?  0 : customerStore.getStampTotal())
                     .name(item.getName())
                     .build());
         });
@@ -135,7 +135,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(null);
         List<Menu> menus = menuRepository.findByStore(store).orElse(null);
         List<OwnerCoupon> ownerCoupons = ownerCouponRepository.findByOwnerCouponId(store.getOwner().getId()).orElse(Collections.emptyList());
-        List<CustomerStore> customerStoreList = customerStoreRepository.findByCustomerIdAndStoreId(customerId, storeId);
+        CustomerStore customerStore = customerStoreRepository.findByCustomerIdAndStoreId(customerId, storeId).orElse(null);
 
         //쿠폰에 대한 준비가 부족하면
         if (ownerCoupons.isEmpty() || ownerCoupons.get(0).isAvailable() == false)
@@ -149,7 +149,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                 .latitude(String.valueOf(store.getPoint().getY()))
                 .coupon(StoreResponseDTO.Coupon.builder()
                         .title(ownerCoupons.get(0).getStore_name())
-                        .cnt(customerStoreList.get(0).getStampCurrent())
+                        .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
                         .color(ownerCoupons.get(0).getColor())
                         .build())
                 .images(new ArrayList<>())
