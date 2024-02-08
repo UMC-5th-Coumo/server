@@ -6,7 +6,10 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
+import coumo.server.domain.Menu;
 import coumo.server.domain.Store;
+import coumo.server.domain.StoreImage;
+import coumo.server.domain.Timetable;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreRequestDTO;
@@ -21,6 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,9 +52,10 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
+        List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();
 
-        return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store));
+        return ApiResponse.onSuccess(StoreConverter.toResultBasicDTO(store, timetableList));
     }
 
     @GetMapping("/{storeId}/detail")
@@ -64,8 +72,10 @@ public class StoreWebRestController {
             @PathVariable("storeId") Long storeId){
 
         Store store = storeQueryService.findStore(storeId).orElseThrow();
+        List<StoreImage> storeImages = storeQueryService.findStoreImages(storeId).orElse(Collections.emptyList());
+        List<Menu> menus = storeQueryService.findMenus(storeId).orElse(Collections.emptyList());
 
-        return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store ));
+        return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store, storeImages, menus));
     }
 
     @PatchMapping("/{storeId}/basic")
@@ -108,7 +118,7 @@ public class StoreWebRestController {
         if (storeImages.length == 0) throw new StoreHandler(ErrorStatus.STORE_IMAGE_NOT_EXIST);
         else if (menuImages.length == 0 || menuDetailJson.isEmpty()) throw new StoreHandler(ErrorStatus.STORE_MENU_NOT_EXIST);
 
-        //[   {"name": "메뉴1", "description": "설명1"},   {"name": "메뉴2", "description": "설명2"} ]
+        //[   {"name": "메뉴1", "isNew": false, "description": "설명1"},   {"name": "메뉴2", "isNew": false, "description": "설명2"} ]
         StoreRequestDTO.MenuDetail[] menuDetails;
         try{
             menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
@@ -116,11 +126,7 @@ public class StoreWebRestController {
             throw new StoreHandler(ErrorStatus.STORE_MENU_BAD_REQUEST);
         }
 
-        //<수정 필요> 이미지 없으면 빈 문자열 넣자
-        String[] storeImageUrl = {"", ""};
-        String[] menuImageUrl = {"", ""};
-
-        storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetails);
+        storeCommandService.updateStore(storeId, description, storeImages, menuImages, menuDetails);
         return ApiResponse.onSuccess(storeId);
     }
 

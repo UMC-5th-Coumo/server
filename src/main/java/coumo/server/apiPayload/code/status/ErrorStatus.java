@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     _PAGE_OVER_RANGE(HttpStatus.BAD_REQUEST, "COMMON400", "페이징 범위를 넘었습니다. 페이징 0 부터 시작합니다."),
+    _SAVE_IMAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "이미지 처리 오류"),
 
     STORE_NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE,"STORE406","가게에 대한 자세한 정보가 없습니다. (사장님이 아직 쿠폰이나 가게 설정 부족)"),
     STORE_CATEGORY_BAD_REQUEST(HttpStatus.BAD_REQUEST,"STORE400","카테고리 입력이 잘 못 되었습니다"),

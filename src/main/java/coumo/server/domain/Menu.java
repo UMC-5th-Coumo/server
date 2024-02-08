@@ -21,7 +21,7 @@ public class Menu extends BaseEntity {
     @Column(nullable = false, length = 256)
     private String name; //메뉴 이름
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 256)
     private String menuImage; //메뉴 이미지
 
     @Column(nullable = false, length = 2048)
