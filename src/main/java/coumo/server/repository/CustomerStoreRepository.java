@@ -31,7 +31,12 @@ public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, L
             "GROUP BY day")
     List<Object[]> findCustomerCountPerDay(Long storeId, int year, int month);
 
-    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
+    @Query("SELECT DISTINCT c FROM CustomerStore c JOIN FETCH c.store WHERE c.store.id = :storeId")
+    Optional<List<CustomerStore>> findByStoreId(@Param("storeId") Long storeId);
+
+    Optional<List<CustomerStore>> findAllByStore(Store store);
+  
+      @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
             "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
             "FROM CustomerStore cs " +
             "JOIN cs.store s " +
@@ -50,4 +55,5 @@ public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, L
             "AND oc.storeName = s.name " +
             "ORDER BY cs.updatedAt DESC")
     List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsLatest(@Param("customerId") Long customerId);
+
 }
