@@ -46,7 +46,6 @@ public class NoticeResponseDTO {
         public Long noticeId;
         public NoticeType noticeType;
         public String title;
-        public String contentThumb;
     }
 
     // --------APP-----------------------

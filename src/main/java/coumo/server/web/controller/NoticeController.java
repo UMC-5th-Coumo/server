@@ -1,8 +1,6 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
-import coumo.server.apiPayload.code.status.ErrorStatus;
-import coumo.server.apiPayload.exception.GeneralException;
 import coumo.server.converter.NoticeConverter;
 import coumo.server.domain.Notice;
 import coumo.server.domain.Store;
