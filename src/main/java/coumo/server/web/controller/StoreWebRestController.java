@@ -108,7 +108,7 @@ public class StoreWebRestController {
         if (storeImages.length == 0) throw new StoreHandler(ErrorStatus.STORE_IMAGE_NOT_EXIST);
         else if (menuImages.length == 0 || menuDetailJson.isEmpty()) throw new StoreHandler(ErrorStatus.STORE_MENU_NOT_EXIST);
 
-        //[   {"name": "메뉴1", "description": "설명1"},   {"name": "메뉴2", "description": "설명2"} ]
+        //[   {"name": "메뉴1", "isNew": false, "description": "설명1"},   {"name": "메뉴2", "isNew": false, "description": "설명2"} ]
         StoreRequestDTO.MenuDetail[] menuDetails;
         try{
             menuDetails = objectMapper.readValue(menuDetailJson, StoreRequestDTO.MenuDetail[].class);
@@ -116,11 +116,7 @@ public class StoreWebRestController {
             throw new StoreHandler(ErrorStatus.STORE_MENU_BAD_REQUEST);
         }
 
-        //<수정 필요> 이미지 없으면 빈 문자열 넣자
-        String[] storeImageUrl = {"", ""};
-        String[] menuImageUrl = {"", ""};
-
-        storeCommandService.updateStore(storeId, description, storeImageUrl, menuImageUrl, menuDetails);
+        storeCommandService.updateStore(storeId, description, storeImages, menuImages, menuDetails);
         return ApiResponse.onSuccess(storeId);
     }
 
