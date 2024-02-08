@@ -107,7 +107,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     @Override
     public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable, Long customerId) {
         //근처 매장 찾기
-        Page<Store> storePage = findNearestStore(longitude, latitude, distance, Optional.empty(), pageable);
+        Page<Store> storePage = findNearestStore(longitude, latitude, distance, category, pageable);
         if (storePage.isEmpty()) return Collections.emptyList();
 
         List<StoreResponseDTO.NearestStoreDTO> resultList = new ArrayList<>();
