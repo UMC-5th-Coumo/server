@@ -171,4 +171,9 @@ public class StoreQueryServiceImpl implements StoreQueryService{
 
         return result;
     }
+
+    @Override
+    public Boolean isWriteStore(Owner owner) {
+        return storeRepository.findByOwner(owner).orElseThrow().isWrite();
+    }
 }
