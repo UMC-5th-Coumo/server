@@ -117,7 +117,9 @@ public class StoreResponseDTO {
     public static class Coupon{
         String title;
         Integer cnt;
-        String stampType;
-        String color;
+        String stampMax;
+        String fontColor;
+        String couponColor;
+        String stampImage;
     }
 }

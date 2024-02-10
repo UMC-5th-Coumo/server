@@ -132,8 +132,8 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     public StoreResponseDTO.MoreDetailStoreDTO findStoreInfoDetail(Long storeId, Long customerId) {
 
         Store store = storeRepository.findByIdWithOwner(storeId).orElseThrow();
-        List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(null);
-        List<Menu> menus = menuRepository.findByStore(store).orElse(null);
+        List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
+        List<Menu> menus = menuRepository.findByStore(store).orElse(Collections.emptyList());
         List<OwnerCoupon> ownerCoupons = ownerCouponRepository.findByOwnerCouponId(store.getOwner().getId()).orElse(Collections.emptyList());
         CustomerStore customerStore = customerStoreRepository.findByCustomerIdAndStoreId(customerId, storeId).orElse(null);
 
@@ -148,9 +148,12 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                 .longitude(String.valueOf(store.getPoint().getX()))
                 .latitude(String.valueOf(store.getPoint().getY()))
                 .coupon(StoreResponseDTO.Coupon.builder()
-                        .title(ownerCoupons.get(0).getStore_name())
+                        .title(ownerCoupons.get(0).getStoreName())
                         .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
-                        .color(ownerCoupons.get(0).getColor())
+                        .stampImage(ownerCoupons.get(0).getStampImage())
+                        .fontColor(ownerCoupons.get(0).getFontColor())
+                        .couponColor(ownerCoupons.get(0).getCouponColor())
+                        .stampMax(String.valueOf(ownerCoupons.get(0).getStampMax()))
                         .build())
                 .images(new ArrayList<>())
                 .menus(new ArrayList<>())
