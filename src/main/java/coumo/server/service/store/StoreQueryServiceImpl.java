@@ -132,6 +132,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     public StoreResponseDTO.MoreDetailStoreDTO findStoreInfoDetail(Long storeId, Long customerId) {
 
         Store store = storeRepository.findByIdWithOwner(storeId).orElseThrow();
+        Store storeTime = storeRepository.findByIdWithTimetables(storeId).orElse(null);
         List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
         List<Menu> menus = menuRepository.findByStore(store).orElse(Collections.emptyList());
         List<OwnerCoupon> ownerCoupons = ownerCouponRepository.findByOwnerCouponId(store.getOwner().getId()).orElse(Collections.emptyList());
@@ -144,6 +145,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         StoreResponseDTO.MoreDetailStoreDTO result = StoreResponseDTO.MoreDetailStoreDTO.builder()
                 .name(store.getName())
                 .location(store.getStoreLocation())
+                .telephone(store.getTelephone())
                 .description(store.getStoreDescription())
                 .longitude(String.valueOf(store.getPoint().getX()))
                 .latitude(String.valueOf(store.getPoint().getY()))
@@ -157,7 +159,17 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                         .build())
                 .images(new ArrayList<>())
                 .menus(new ArrayList<>())
+                .time(new ArrayList<>())
                 .build();
+
+
+        if(storeTime != null){
+            storeTime.getTimetableList().forEach(item -> result.getTime().add(StoreResponseDTO.TimeInfo.builder()
+                            .day(item.getDay())
+                            .startTime(item.getStartTime())
+                            .endTime(item.getEndTime())
+                            .build()));
+        }
 
         if(!storeImages.isEmpty()){
             storeImages.forEach(item -> result.getImages().add(item.getStoreImage()));
