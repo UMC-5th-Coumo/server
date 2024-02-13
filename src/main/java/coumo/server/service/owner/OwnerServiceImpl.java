@@ -1,9 +1,11 @@
 package coumo.server.service.owner;
 
 import coumo.server.converter.OwnerConverter;
+import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.repository.OwnerRepository;
 import coumo.server.service.store.StoreCommandService;
+import coumo.server.web.dto.LoginIdDTO;
 import coumo.server.web.dto.OwnerRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -74,5 +76,17 @@ public class OwnerServiceImpl implements OwnerService{
     public boolean isLoginIdAvailable(String loginId){
         // 해당 로그인 ID가 데이터베이스에 존재하는지 확인
         return !ownerRepository.existsByLoginId(loginId);
+    }
+
+    //인증번호
+    @Override
+    public Optional<Owner> findOwnerByNameAndPhone(String name, String phone) {
+        return ownerRepository.findByNameAndPhone(name, phone);
+    }
+
+    //인증번호 검증
+    @Override
+    public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
+        return ownerRepository.findLoginIdByPhone(phone);
     }
 }

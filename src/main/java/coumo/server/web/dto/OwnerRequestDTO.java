@@ -29,5 +29,17 @@ public class OwnerRequestDTO {
         String loginId;
     }
 
+    /* 아이디 찾기(WEB) */
+    @Getter
+    public static class OwnerVerificationRequest {
+        String name;
+        String phone;
+    }
+
+    @Getter
+    public static class OwnerVerificationCodeDTO{
+        String phone;
+        String verificationCode;
+    }
 
 }

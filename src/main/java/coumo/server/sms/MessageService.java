@@ -34,7 +34,7 @@ public class MessageService {
         Message message = new Message();
         message.setFrom(fromNumber); // 발신번호 설정
         message.setTo(toNumber); // 수신번호 설정
-        message.setText("[Coumo] 아래의 인증번호를 입력하세요'\n" + verificationCode); // 메시지 내용 설정
+        message.setText("[Coumo] 아래의 인증번호를 입력하세요\n" + verificationCode); // 메시지 내용 설정
 
         try {
             SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
