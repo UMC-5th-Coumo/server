@@ -18,18 +18,24 @@ import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/owner")
+@Slf4j
 public class OwnerRestController {
 
     private final OwnerService ownerService;
     private final JWTUtil jwtUtil;
     private final MessageService messageService;
     private final VerificationCodeStorage verificationCodeStorage;
+    private final StoreQueryService storeQueryService;
 
     @PostMapping("/join")
     @Operation(summary = "WEB 회원가입 API",
@@ -42,13 +48,20 @@ public class OwnerRestController {
     @PostMapping("/login")
     @Operation(summary = "WEB 로그인 API",
             description = "WEB 로그인 API 구현")
-    public ApiResponse<OwnerResponseDTO.LoginResultDTO> login(@RequestBody @Valid OwnerRequestDTO.LoginDTO request){
+    public ApiResponse<Object> login(@RequestBody @Valid OwnerRequestDTO.LoginDTO request){
         Owner owner = ownerService.loginOwner(request);
 
         if (owner != null) {
             // 로그인 성공 시 토큰 생성
             String token = jwtUtil.createJwt(request.getLoginId(), 3600000L); //토큰 만료 시간 1시간
-            
+
+            //강제 정보 작성 여부
+            Boolean isWrite = storeQueryService.isWriteStore(owner);
+
+            log.info("isWrite={}", isWrite);
+
+            if (isWrite.equals(false)) return ApiResponse.onSuccess(isWrite);
+
             // LoginResultDTO를 생성하여 반환
             return ApiResponse.onSuccess(OwnerConverter.toLoginResultDTO(owner, token));
         } else {

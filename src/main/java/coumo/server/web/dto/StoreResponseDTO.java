@@ -24,8 +24,8 @@ public class StoreResponseDTO {
         String telePhone;
         String category;
         String location;
-        String longitude;   //경도
-        String latitude;    //위도
+        String latitude;
+        String longitude;
     }
 
     //가게 (매장 설명)
@@ -93,6 +93,8 @@ public class StoreResponseDTO {
     public static class MoreDetailStoreDTO{
         String name;
         String description;
+        String telephone;
+        List<TimeInfo> time;
         String location;
         String longitude;
         String latitude;
@@ -106,6 +108,7 @@ public class StoreResponseDTO {
     @NoArgsConstructor
     public static class StoreStampInfo {
         private Store store;
+        private String image;
         private int stampTotal;
     }
 
@@ -116,7 +119,9 @@ public class StoreResponseDTO {
     public static class Coupon{
         String title;
         Integer cnt;
-        String stampType;
-        String color;
+        String stampMax;
+        String fontColor;
+        String couponColor;
+        String stampImage;
     }
 }

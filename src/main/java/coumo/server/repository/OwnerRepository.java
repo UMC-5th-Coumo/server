@@ -26,4 +26,5 @@ public interface OwnerRepository extends JpaRepository<Owner, Long> {
     // JPQL 쿼리를 사용하여 loginId 필드만 조회
     @Query("SELECT new coumo.server.web.dto.LoginIdDTO(c.loginId) FROM Owner c WHERE c.phone = :phone")
     Optional<LoginIdDTO> findLoginIdByPhone(@Param("phone") String phone);
+    Optional<Owner> findByStoreId(Long storeId);
 }

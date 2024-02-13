@@ -1,10 +1,11 @@
 package coumo.server.service.store;
 
-import coumo.server.domain.Store;
+import coumo.server.apiPayload.code.status.ErrorStatus;
+import coumo.server.apiPayload.exception.handler.StoreHandler;
+import coumo.server.domain.*;
 import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
-import coumo.server.repository.CustomerStoreRepository;
-import coumo.server.repository.StoreRepository;
+import coumo.server.repository.*;
 import coumo.server.util.geometry.Direction;
 import coumo.server.util.geometry.GeometryUtil;
 import coumo.server.util.geometry.Location;
@@ -25,6 +26,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StoreQueryServiceImpl implements StoreQueryService{
     private final StoreRepository storeRepository;
+    private final StoreImageRepository storeImageRepository;
+    private final CustomerStoreRepository customerStoreRepository;
+    private final MenuRepository menuRepository;
+    private final OwnerCouponRepository ownerCouponRepository;
 
     @Override
     public Optional<Store> findStore(Long storeId) {
@@ -32,9 +37,30 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double longitude, double latitude, double distance, Pageable pageable) {
+    public Optional<List<Menu>> findMenus(Long storeId) {
+        Optional<Store> optionalStore= storeRepository.findByIdWithMenus(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getMenuList());
+    }
+
+    @Override
+    public Optional<List<StoreImage>> findStoreImages(Long storeId) {
+        Optional<Store> optionalStore = storeRepository.findByIdWithImages(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getStoreImageList());
+    }
+
+    @Override
+    public Optional<List<Timetable>> findTimeTables(Long storeId) {
+        Optional<Store> optionalStore = storeRepository.findByIdWithTimetables(storeId);
+        if (optionalStore.isEmpty()) return Optional.empty();
+        return Optional.of(optionalStore.get().getTimetableList());
+    }
+
+    @Override
+    public List<StoreResponseDTO.StoreStampInfo> findFamousStore(double latitude, double longitude, double distance, Pageable pageable) {
         //근처 매장 찾기
-        Page<Store> pageStore = findNearestStore(longitude, latitude, distance, Optional.empty(), pageable);
+        Page<Store> pageStore = findNearestStore(latitude, longitude, distance, Optional.empty(), pageable);
         if (pageStore.isEmpty()) return Collections.emptyList();
 
         //쿠폰 도장이 기준
@@ -42,11 +68,18 @@ public class StoreQueryServiceImpl implements StoreQueryService{
         List<StoreResponseDTO.StoreStampInfo> storeStampInfos = new ArrayList<>();
         for (Store store : stores) {
             int total = 0;
-            for (CustomerStore item : store.getCustomerStoreList()) {
+            List<CustomerStore> customerStores = customerStoreRepository.findAllByStore(store).orElse(Collections.emptyList());
+            List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
+
+            for (CustomerStore item : customerStores) {
                 total += item.getStampTotal();
             }
+
             storeStampInfos.add(StoreResponseDTO.StoreStampInfo.builder()
-                                .store(store).stampTotal(total).build());
+                                .store(store)
+                                .image(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
+                                .stampTotal(total)
+                                .build());
         }
 
         // StampTotal이 높은 순으로 정렬
@@ -56,9 +89,11 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
-    public Page<Store> findNearestStore(double longitude, double latitude, double distance, Optional<String> category, Pageable pageable) {
-        Location northEast = GeometryUtil.calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
-        Location southWest = GeometryUtil.calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
+    public Page<Store> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable) {
+        Location northEast = GeometryUtil
+                .calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
+        Location southWest = GeometryUtil
+                .calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
 
         double x1 = northEast.getLatitude();
         double y1 = northEast.getLongitude();
@@ -67,5 +102,93 @@ public class StoreQueryServiceImpl implements StoreQueryService{
 
         if (category.isPresent()) return storeRepository.findNearByStores(x1, y1, x2, y2, category.get(), pageable);
         else return storeRepository.findNearByStores(x1, y1, x2, y2, pageable);
+    }
+
+    @Override
+    public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable, Long customerId) {
+        //근처 매장 찾기
+        Page<Store> storePage = findNearestStore(longitude, latitude, distance, category, pageable);
+        if (storePage.isEmpty()) return Collections.emptyList();
+
+        List<StoreResponseDTO.NearestStoreDTO> resultList = new ArrayList<>();
+        List<Store> storeList = storePage.getContent();
+        storeList.forEach(item -> {
+            List<StoreImage> storeImages = storeImageRepository.findAllByStore(item).orElse(Collections.emptyList());
+            CustomerStore customerStore = customerStoreRepository.findByCustomerIdAndStoreId(customerId, item.getId()).orElse(null);
+
+            resultList.add(StoreResponseDTO.NearestStoreDTO.builder()
+                    .storeId(item.getId())
+                    .storeImage(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
+                    .location(item.getStoreLocation())
+                    .couponCnt(customerStore == null ?  0 : customerStore.getStampTotal())
+                    .name(item.getName())
+                    .build());
+        });
+
+        return resultList;
+    }
+
+    @Override
+    public StoreResponseDTO.MoreDetailStoreDTO findStoreInfoDetail(Long storeId, Long customerId) {
+
+        Store store = storeRepository.findByIdWithOwner(storeId).orElseThrow();
+        Store storeTime = storeRepository.findByIdWithTimetables(storeId).orElse(null);
+        List<StoreImage> storeImages = storeImageRepository.findAllByStore(store).orElse(Collections.emptyList());
+        List<Menu> menus = menuRepository.findByStore(store).orElse(Collections.emptyList());
+        List<OwnerCoupon> ownerCoupons = ownerCouponRepository.findByOwnerCouponId(store.getOwner().getId()).orElse(Collections.emptyList());
+        CustomerStore customerStore = customerStoreRepository.findByCustomerIdAndStoreId(customerId, storeId).orElse(null);
+
+        //쿠폰에 대한 준비가 부족하면
+        if (ownerCoupons.isEmpty() || ownerCoupons.get(0).isAvailable() == false)
+            throw new StoreHandler(ErrorStatus.STORE_NOT_ACCEPTABLE);
+
+        StoreResponseDTO.MoreDetailStoreDTO result = StoreResponseDTO.MoreDetailStoreDTO.builder()
+                .name(store.getName())
+                .location(store.getStoreLocation())
+                .telephone(store.getTelephone())
+                .description(store.getStoreDescription())
+                .longitude(String.valueOf(store.getPoint().getX()))
+                .latitude(String.valueOf(store.getPoint().getY()))
+                .coupon(StoreResponseDTO.Coupon.builder()
+                        .title(ownerCoupons.get(0).getStoreName())
+                        .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
+                        .stampImage(ownerCoupons.get(0).getStampImage())
+                        .fontColor(ownerCoupons.get(0).getFontColor())
+                        .couponColor(ownerCoupons.get(0).getCouponColor())
+                        .stampMax(String.valueOf(ownerCoupons.get(0).getStampMax()))
+                        .build())
+                .images(new ArrayList<>())
+                .menus(new ArrayList<>())
+                .time(new ArrayList<>())
+                .build();
+
+
+        if(storeTime != null){
+            storeTime.getTimetableList().forEach(item -> result.getTime().add(StoreResponseDTO.TimeInfo.builder()
+                            .day(item.getDay())
+                            .startTime(item.getStartTime())
+                            .endTime(item.getEndTime())
+                            .build()));
+        }
+
+        if(!storeImages.isEmpty()){
+            storeImages.forEach(item -> result.getImages().add(item.getStoreImage()));
+        }
+
+        if(!menus.isEmpty()){
+            menus.forEach(item -> result.getMenus().add(StoreResponseDTO.MenuInfo.builder()
+                    .name(item.getName())
+                    .description(item.getMenuDescription())
+                    .image(item.getMenuImage())
+                    .isNew(item.getIsNew())
+                    .build()));
+        }
+
+        return result;
+    }
+
+    @Override
+    public Boolean isWriteStore(Owner owner) {
+        return storeRepository.findByOwner(owner).orElseThrow().isWrite();
     }
 }

@@ -112,16 +112,15 @@ public class Store extends BaseEntity {
         customerStore.setStore(this);
     }
 
-
     //======== 비즈니스 로직 메서드 ========
-    public int getCustomerCouponLength(Long customerId){
-        for (CustomerStore item : customerStoreList){
-            if(item.getStore().equals(this) && item.getCustomer().getId().equals(customerId)){
-                return item.getStampCurrent();
-            }
-        }
-        return -1;
+    public boolean isWrite(){
+        return !(getStoreType().equals(StoreType.NONE) ||
+                getName().isBlank() || getName().isEmpty() ||
+                getTelephone().isBlank() || getTelephone().isEmpty() ||
+                getStoreLocation().isBlank() || getStoreLocation().isEmpty() ||
+                getStoreDescription().isBlank() || getStoreDescription().isEmpty());
     }
+
 
     //======== 생성 메서드 ========
     public static Store createStore(Owner owner){
@@ -143,5 +142,9 @@ public class Store extends BaseEntity {
                         .build();
         store.setOwner(owner);
         return store;
+    }
+
+    public void setStoreDescription(String storeDescription) {
+        this.storeDescription = storeDescription;
     }
 }

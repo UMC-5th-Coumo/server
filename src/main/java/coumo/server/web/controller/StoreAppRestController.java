@@ -27,14 +27,14 @@ public class StoreAppRestController {
     private final StoreQueryService storeQueryService;
 
     @GetMapping("/store")
-    public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude) {
+    public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) {
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
-        List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(longitude, latitude, 0.5, PageRequest.of(0, 5));
+        List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(latitude, longitude, 0.5, PageRequest.of(0, 5));
         return ApiResponse.onSuccess(StoreConverter.toFamousStoreDTO(famousStore));
     }
 
 
-    @GetMapping("/{customerId}/store/{storeId}")
+    @GetMapping("/{customerId}/store/")
     public ApiResponse<List<StoreResponseDTO.NearestStoreDTO>> getNearestStore
             (@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude,
              @RequestParam("category") String category, @RequestParam("page") Integer page,
@@ -42,8 +42,8 @@ public class StoreAppRestController {
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
         if (page < 0) throw new StoreHandler(ErrorStatus._PAGE_OVER_RANGE);
 
-        Page<Store> nearestStore = storeQueryService.findNearestStore(longitude, latitude, 0.5, Optional.of(category), PageRequest.of(page, 10));
-        return ApiResponse.onSuccess(StoreConverter.toNearestStoreDTO(nearestStore, customerId));
+        List<StoreResponseDTO.NearestStoreDTO> nearestStore = storeQueryService.findNearestStore(longitude, latitude, 0.5, Optional.of(category), PageRequest.of(page, 10), customerId);
+        return ApiResponse.onSuccess(nearestStore);
     }
 
     @GetMapping("/{customerId}/store/{storeId}/detail")
@@ -53,12 +53,7 @@ public class StoreAppRestController {
         Store store = storeQueryService.findStore(storeId).orElseThrow();
         // <수정 필요> 유저도 없으면 예외 날려야 하니 위에 처럼 작성해야 됌.
 
-        //가게 사장이 쿠폰에 대한 정보가 부족하다면 자세한 정보를 조회 할 수 없으니!
-        List<OwnerCoupon> ownerCouponList = store.getOwner().getOwnerCouponList();
-        if (ownerCouponList.isEmpty() || ownerCouponList.get(0).isAvailable() == false)
-            throw new StoreHandler(ErrorStatus.STORE_NOT_ACCEPTABLE);
-
-        return ApiResponse.onSuccess(StoreConverter.toMoreDetailStoreDTO(store, customerId));
+        return ApiResponse.onSuccess(storeQueryService.findStoreInfoDetail(storeId, customerId));
     }
 
     @GetMapping("/test")

@@ -1,6 +1,7 @@
 package coumo.server.web.dto;
 
 import coumo.server.domain.Notice;
+import coumo.server.domain.NoticeImage;
 import coumo.server.domain.Store;
 import coumo.server.domain.enums.NoticeType;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class NoticeRequestDTO {
@@ -26,7 +28,7 @@ public class NoticeRequestDTO {
         @NotBlank
         public String noticeContent;
         @Nullable
-        public String image;
+        public List<NoticeImage> noticeImage;
 
         public Notice toEntity(Store store){
             return Notice.builder()
@@ -34,7 +36,7 @@ public class NoticeRequestDTO {
                     .noticeType(noticeType)
                     .title(title)
                     .noticeContent(noticeContent)
-                    .image(image)
+                    .noticeImageList(noticeImage)
                     .build();
         }
     }
