@@ -1,9 +1,6 @@
 package coumo.server.service.store;
 
-import coumo.server.domain.Menu;
-import coumo.server.domain.Store;
-import coumo.server.domain.StoreImage;
-import coumo.server.domain.Timetable;
+import coumo.server.domain.*;
 import coumo.server.domain.enums.StoreType;
 import coumo.server.web.dto.StoreResponseDTO;
 import org.springframework.data.domain.Page;
@@ -21,4 +18,5 @@ public interface StoreQueryService {
     public Page<Store> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable);
     public List<StoreResponseDTO.NearestStoreDTO> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable, Long customerId);
     public StoreResponseDTO.MoreDetailStoreDTO findStoreInfoDetail(Long storeId, Long customerId);
+    public Boolean isWriteStore(Owner owner);
 }

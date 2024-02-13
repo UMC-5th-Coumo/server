@@ -1,6 +1,5 @@
 package coumo.server.repository;
 
-import coumo.server.domain.Owner;
 import coumo.server.domain.OwnerCoupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
