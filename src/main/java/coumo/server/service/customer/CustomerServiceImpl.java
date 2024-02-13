@@ -5,11 +5,14 @@ import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.repository.CustomerRepository;
 import coumo.server.web.dto.CustomerRequestDTO;
+import coumo.server.web.dto.LoginIdDTO;
 import coumo.server.web.dto.OwnerRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,11 @@ public class CustomerServiceImpl implements CustomerService{
 
     private final CustomerRepository customerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public Optional<Customer> findCustomerById(Long customerId) {
+        return customerRepository.findById(customerId);
+    }
 
     @Override
     public Customer findByLoginId(String loginId) {
@@ -56,5 +64,22 @@ public class CustomerServiceImpl implements CustomerService{
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    // 로그인ID 중복확인
+    @Override
+    public boolean isLoginIdAvailable(String loginId){
+        // 해당 로그인 ID가 데이터베이스에 존재하는지 확인
+        return !customerRepository.existsByLoginId(loginId);
+    }
 
+    //인증번호
+    @Override
+    public Optional<Customer> findCustomerByNameAndPhone(String name, String phone) {
+        return customerRepository.findByNameAndPhone(name, phone);
+    }
+
+    //인증번호 검증
+    @Override
+    public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
+        return customerRepository.findLoginIdByPhone(phone);
+    }
 }

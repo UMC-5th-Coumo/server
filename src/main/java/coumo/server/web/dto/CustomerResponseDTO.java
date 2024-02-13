@@ -42,6 +42,8 @@ public class CustomerResponseDTO {
         LocalDateTime createdAt;
     }
 
+
+    //로그인
     @Builder
     @Getter
     @AllArgsConstructor
@@ -49,5 +51,24 @@ public class CustomerResponseDTO {
         Long customerId;
         private final String token;
     }
+
+    //로그인 중복확인
+    @Builder
+    @Getter
+    public static class CheckCustomerLoginIdResponseDTO{
+        private String loginId;
+    }
+
+    //내 프로필 조회
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class CustomerMyPageDTO{
+        String name;
+        String birthday;
+        String gender;
+        String phone;
+    }
+
 }
 
