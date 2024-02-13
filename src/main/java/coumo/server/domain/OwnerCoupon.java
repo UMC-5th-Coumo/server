@@ -40,10 +40,10 @@ public class OwnerCoupon extends BaseEntity {
     private StampMax stampMax; //최대 스탬프 개수
 
     //======== 비즈니스 로직 메서드 ========
-//    public boolean isAvailable(){
-//        if (color.isEmpty() || color.equals("") || store_name.isEmpty()
-//                || store_name.equals("") || stampImage.isEmpty() || stampImage.equals(""))
-//            return false;
-//        return true;
-//    }
+    public boolean isAvailable(){
+        if (storeName.isEmpty() || fontColor.equals("") || couponColor.isEmpty()
+                || stampImage.equals(""))
+            return false;
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
 package coumo.server.repository;
 
+import coumo.server.domain.Owner;
 import coumo.server.domain.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Query("SELECT s FROM Store s JOIN FETCH s.owner WHERE s.id = :storeId")
     Optional<Store> findByIdWithOwner(@Param("storeId") Long storeId);
-
+    Optional<Store> findByOwner(Owner owner);
 
     @Query(value = "SELECT s.* FROM store AS s " +
             "WHERE MBRContains(ST_GeomFromText(CONCAT('LINESTRING(', ?1, ' ', ?2, ', ', ?3, ' ', ?4, ')'), 4326), s.point) AND s.store_type <> 'NONE'",

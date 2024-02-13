@@ -13,5 +13,4 @@ public interface OwnerCouponRepository  extends JpaRepository<OwnerCoupon, Long>
     Optional<List<OwnerCoupon>> findByOwnerCouponId(@Param("ownerId") Long ownerId);
 
     Optional<OwnerCoupon> findByOwnerId(Long id);
-
 }

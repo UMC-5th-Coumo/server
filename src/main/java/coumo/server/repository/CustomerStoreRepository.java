@@ -36,24 +36,24 @@ public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, L
 
     Optional<List<CustomerStore>> findAllByStore(Store store);
 
-    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
-            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
-            "FROM CustomerStore cs " +
-            "JOIN cs.store s " +
-            "JOIN s.owner.ownerCouponList oc " +
-            "WHERE cs.customer.id = :customerId " +
-            "AND oc.storeName = s.name " +
-            "ORDER BY cs.stampCurrent DESC")
-    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsMost(@Param("customerId") Long customerId);
-
-    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
-            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
-            "FROM CustomerStore cs " +
-            "JOIN cs.store s " +
-            "JOIN s.owner.ownerCouponList oc " +
-            "WHERE cs.customer.id = :customerId " +
-            "AND oc.storeName = s.name " +
-            "ORDER BY cs.updatedAt DESC")
-    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsLatest(@Param("customerId") Long customerId);
+//    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
+//            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
+//            "FROM CustomerStore cs " +
+//            "JOIN cs.store s " +
+//            "JOIN s.owner.ownerCouponList oc " +
+//            "WHERE cs.customer.id = :customerId " +
+//            "AND oc.storeName = s.name " +
+//            "ORDER BY cs.stampCurrent DESC")
+//    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsMost(@Param("customerId") Long customerId);
+//
+//    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
+//            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
+//            "FROM CustomerStore cs " +
+//            "JOIN cs.store s " +
+//            "JOIN s.owner.ownerCouponList oc " +
+//            "WHERE cs.customer.id = :customerId " +
+//            "AND oc.storeName = s.name " +
+//            "ORDER BY cs.updatedAt DESC")
+//    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsLatest(@Param("customerId") Long customerId);
 
 }
