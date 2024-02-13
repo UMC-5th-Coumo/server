@@ -3,6 +3,7 @@ package coumo.server.repository;
 import coumo.server.domain.Store;
 import coumo.server.domain.enums.Gender;
 import coumo.server.domain.mapping.CustomerStore;
+import coumo.server.web.dto.CouponResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +35,25 @@ public interface CustomerStoreRepository  extends JpaRepository<CustomerStore, L
     Optional<List<CustomerStore>> findByStoreId(@Param("storeId") Long storeId);
 
     Optional<List<CustomerStore>> findAllByStore(Store store);
+  
+      @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
+            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
+            "FROM CustomerStore cs " +
+            "JOIN cs.store s " +
+            "JOIN s.owner.ownerCouponList oc " +
+            "WHERE cs.customer.id = :customerId " +
+            "AND oc.storeName = s.name " +
+            "ORDER BY cs.stampCurrent DESC")
+    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsMost(@Param("customerId") Long customerId);
+
+    @Query("SELECT new coumo.server.web.dto.CouponResponseDTO.CustomerStoreCouponDTO(" +
+            "oc.storeName, oc.couponColor, oc.fontColor, oc.stampImage, cs.stampCurrent, oc.stampMax) " +
+            "FROM CustomerStore cs " +
+            "JOIN cs.store s " +
+            "JOIN s.owner.ownerCouponList oc " +
+            "WHERE cs.customer.id = :customerId " +
+            "AND oc.storeName = s.name " +
+            "ORDER BY cs.updatedAt DESC")
+    List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerStoreCouponsLatest(@Param("customerId") Long customerId);
+
 }
