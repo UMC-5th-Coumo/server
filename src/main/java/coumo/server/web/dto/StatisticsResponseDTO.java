@@ -75,6 +75,8 @@ public class StatisticsResponseDTO {
     public static class MonthStatisticsResponseDTO {
         private int customerCount;
         private int newCustomerCount;
+        private int prevAllCustomerCount;
+        private int prevNewCustomerCount;
     }
 
     @Builder
