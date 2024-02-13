@@ -44,6 +44,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	// QR code
+	implementation group: 'com.google.zxing', name: 'javase', version: '3.5.0'
+	implementation group: 'com.google.zxing', name: 'core', version: '3.5.0'
+	implementation 'org.json:json:20210307'
+
 	// CoolSMS
 	implementation 'net.nurigo:sdk:4.3.0'
 }
