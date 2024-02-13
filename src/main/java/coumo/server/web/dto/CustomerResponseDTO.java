@@ -58,5 +58,17 @@ public class CustomerResponseDTO {
     public static class CheckCustomerLoginIdResponseDTO{
         private String loginId;
     }
+
+    //내 프로필 조회
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class CustomerMyPageDTO{
+        String name;
+        String birthday;
+        String gender;
+        String phone;
+    }
+
 }
 

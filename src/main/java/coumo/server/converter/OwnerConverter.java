@@ -34,4 +34,13 @@ public class OwnerConverter {
                 .phone(request.getPhone())
                 .build();
     }
+
+    public static OwnerResponseDTO.MyPageDTO toMyPageDTO(Owner owner){
+        return OwnerResponseDTO.MyPageDTO.builder()
+                .name(owner.getName())
+                .loginId(owner.getLoginId())
+                .email(owner.getEmail())
+                .phone(owner.getPhone())
+                .build();
+    }
 }

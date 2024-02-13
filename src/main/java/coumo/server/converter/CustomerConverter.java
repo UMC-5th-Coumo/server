@@ -33,9 +33,18 @@ public class CustomerConverter {
                 .password(request.getPassword())
                 .name(request.getName())
                 .birthday(request.getBirthday())
-                .gender(gender)
+                .gender(request.getGender())
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .build();
+    }
+
+    public static CustomerResponseDTO.CustomerMyPageDTO toCustomerMyPageDTO(Customer customer) {
+        return new CustomerResponseDTO.CustomerMyPageDTO(
+                customer.getName(),
+                customer.getBirthday(),
+                customer.getGender().toString(),
+                customer.getPhone()
+        );
     }
 }

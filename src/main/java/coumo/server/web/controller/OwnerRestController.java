@@ -8,12 +8,11 @@ import coumo.server.service.owner.OwnerService;
 import coumo.server.web.dto.OwnerRequestDTO;
 import coumo.server.web.dto.OwnerResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,5 +63,16 @@ public class OwnerRestController {
             // 로그인 ID가 이미 사용 중인 경우
             return ApiResponse.onFailure("400", "이미 사용 중인 로그인 ID입니다.", null);
         }
+    }
+
+    @GetMapping("/mypage/{ownerId}/profile")
+    @Operation(summary = "마이페이지 내 프로필 조회 API", description = "로그인한 사장님의 마이페이지 프로필을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+    })
+    public ApiResponse<OwnerResponseDTO.MyPageDTO> myPage(@PathVariable Long ownerId){
+        return ownerService.findOwner(ownerId)
+                .map(owner -> ApiResponse.onSuccess(OwnerConverter.toMyPageDTO(owner)))
+                .orElse(ApiResponse.onFailure("400", "사용자 정보를 찾을 수 없습니다.", null));
     }
 }

@@ -20,7 +20,7 @@ public class CustomerRequestDTO {
 
     /* 로그인(App) */
     @Getter
-    public static class CustomerLoginDTO{
+    public static class CustomerLoginDTO {
         String loginId;
         String password;
     }
@@ -32,4 +32,18 @@ public class CustomerRequestDTO {
         @NotBlank(message = "로그인 ID는 필수 입력 항목입니다.")
         String loginId;
     }
+
+    /* 아이디 찾기(App) */
+    @Getter
+    public static class VerificationRequest {
+        String name;
+        String phone;
+    }
+
+    @Getter
+    public static class VerificationCodeDTO{
+        String phone;
+        String verificationCode;
+    }
+
 }
