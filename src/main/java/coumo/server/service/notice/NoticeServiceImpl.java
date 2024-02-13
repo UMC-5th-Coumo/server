@@ -41,7 +41,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public Page<Notice> findOwnerNotice(Store store, Pageable pageable) {
 
-        return noticeRepository.findAllByStore(store);
+        return noticeRepository.findAllByStore(store, pageable);
     }
 
     @Override
