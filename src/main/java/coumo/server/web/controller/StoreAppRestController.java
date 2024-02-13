@@ -34,7 +34,7 @@ public class StoreAppRestController {
     }
 
 
-    @GetMapping("/{customerId}/store/")
+    @GetMapping("/{customerId}/store")
     public ApiResponse<List<StoreResponseDTO.NearestStoreDTO>> getNearestStore
             (@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude,
              @RequestParam("category") String category, @RequestParam("page") Integer page,
