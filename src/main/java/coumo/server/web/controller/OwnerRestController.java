@@ -125,4 +125,22 @@ public class OwnerRestController {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
     }
+
+    @PostMapping("/join/send-verification-code")
+    @Operation(summary = "[회원가입] WEB 인증번호 전송 API", description = "인증번호가 전송되었는지 확인합니다.")
+    public ApiResponse<String> joinSendVerificationCode(@RequestBody OwnerRequestDTO.OwnerVerificationRequest request){
+        messageService.sendMessage(request.getPhone());
+        return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
+    }
+
+    @PostMapping("/join/verify-code")
+    @Operation(summary = "[회원가입] WEB 인증번호 검증 API", description = "인증번호가 일치하는지 확인합니다.")
+    public ApiResponse<String> joinVerifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+        boolean isWebVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
+        if (isWebVerified) {
+            return ApiResponse.onSuccess("인증번호 검증에 성공하였습니다.");
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
+    }
 }
