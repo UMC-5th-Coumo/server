@@ -9,10 +9,7 @@ import coumo.server.service.owner.OwnerService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.sms.MessageService;
 import coumo.server.sms.VerificationCodeStorage;
-import coumo.server.web.dto.CustomerRequestDTO;
-import coumo.server.web.dto.LoginIdDTO;
-import coumo.server.web.dto.OwnerRequestDTO;
-import coumo.server.web.dto.OwnerResponseDTO;
+import coumo.server.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -61,10 +58,8 @@ public class OwnerRestController {
 
             log.info("isWrite={}", isWrite);
 
-            if (isWrite.equals(false)) return ApiResponse.onSuccess(isWrite);
-
             // LoginResultDTO를 생성하여 반환
-            return ApiResponse.onSuccess(OwnerConverter.toLoginResultDTO(owner, token));
+            return ApiResponse.onSuccess(OwnerConverter.toLoginResultDTO(owner, token, isWrite));
         } else {
             return ApiResponse.onFailure("400", "로그인에 실패했습니다.", null);
         }
@@ -113,16 +108,21 @@ public class OwnerRestController {
 
     @PostMapping("/verify-code")
     @Operation(summary = "[아이디찾기] WEB 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
-    public ApiResponse<String> verifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+    public ApiResponse<VerificationResponseDTO> verifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
 
         if (isVerified) {
-            String loginId = ownerService.findLoginIdByPhone(dto.getPhone())
-                    .map(LoginIdDTO::getLoginId) // LoginIdDTO 객체에서 loginId필드값 추출
-                    .orElse("로그인 ID를 찾을 수 없습니다.");
-            return ApiResponse.onSuccess(loginId);
+            // 인증번호 검증 성공 시, loginId를 찾아서 함께 반환
+            Optional<LoginIdDTO> loginIdDto = ownerService.findLoginIdByPhone(dto.getPhone());
+            if (loginIdDto.isPresent()) {
+                String loginId = loginIdDto.get().getLoginId();
+                return ApiResponse.onSuccess(VerificationResponseDTO.success(loginId, dto.getVerificationCode()));
+            } else {
+                return ApiResponse.onFailure("404", "로그인 ID를 찾을 수 없습니다.", null);
+            }
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+
         }
     }
 
@@ -135,10 +135,10 @@ public class OwnerRestController {
 
     @PostMapping("/join/verify-code")
     @Operation(summary = "[회원가입] WEB 인증번호 검증 API", description = "인증번호가 일치하는지 확인합니다.")
-    public ApiResponse<String> joinVerifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+    public ApiResponse<VerificationSuccessResponse> joinVerifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
         boolean isWebVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
         if (isWebVerified) {
-            return ApiResponse.onSuccess("인증번호 검증에 성공하였습니다.");
+            return ApiResponse.onSuccess(VerificationSuccessResponse.successWithCode(dto.getVerificationCode()));
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }

@@ -17,11 +17,13 @@ public class OwnerConverter {
                 .build();
     }
 
-    public static OwnerResponseDTO.LoginResultDTO toLoginResultDTO(Owner owner, String token){
+    public static OwnerResponseDTO.LoginResultDTO toLoginResultDTO(Owner owner, String token, boolean iswrite){
         return OwnerResponseDTO.LoginResultDTO.builder()
                 .ownerId(owner.getId())
                 .storeId(owner.getStore().getId())
                 .token(token)
+                .isWrite(iswrite)
+                .createdAt(owner.getCreatedAt())
                 .build();
     }
 
