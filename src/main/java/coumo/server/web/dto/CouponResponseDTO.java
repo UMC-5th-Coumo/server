@@ -28,6 +28,23 @@ public class CouponResponseDTO {
 
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CustomerStoreCouponDTO2 {
+
+        public String storeName;
+        public String couponColor;
+        public String fontColor;
+        public String stampImage;
+        public Integer stampCurrent;
+        public StampMax stampMax;
+
+    }
+
+
+
     // 쿠폰
     @Builder
     @Getter
