@@ -46,3 +46,10 @@ coumo:
   openapi:
     dev-url: "http://localhost:8080"
     prod-url: "https://api.myapp.com"
+
+coolsms:
+  api:
+    key: ${SMS_ACCESS_KEY}
+    secret: ${SMS_SECRET_KEY}
+  from:
+    number: ${SMS_NUMBER}
