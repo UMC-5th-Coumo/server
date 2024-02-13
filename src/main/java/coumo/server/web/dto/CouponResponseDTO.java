@@ -43,8 +43,6 @@ public class CouponResponseDTO {
 
     }
 
-
-
     // 쿠폰
     @Builder
     @Getter
