@@ -24,11 +24,13 @@ public class CustomerStoreServiceImpl implements CustomerStoreService{
 
     @Override
     public List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerCouponLatest(Long customerId) {
-        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
+//        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
+        return null;
     }
 
     @Override
     public List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerCouponMost(Long customerId) {
-        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
+//        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
+        return null;
     }
 }

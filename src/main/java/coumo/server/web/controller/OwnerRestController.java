@@ -6,6 +6,7 @@ import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.owner.OwnerService;
+import coumo.server.service.store.StoreQueryService;
 import coumo.server.sms.MessageService;
 import coumo.server.sms.VerificationCodeStorage;
 import coumo.server.web.dto.CustomerRequestDTO;
