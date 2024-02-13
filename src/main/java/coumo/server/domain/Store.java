@@ -51,7 +51,7 @@ public class Store extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(16)")
     private StoreType storeType; //매장 종류
 
-    @Column(columnDefinition = "POINT SRID 4326")
+    @Column(columnDefinition = "POINT")
     private Point point;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
