@@ -78,7 +78,6 @@ public class StoreCommandServiceImpl implements StoreCommandService{
         store.getMenuList().clear();
 
         //엔티티 업데이트
-        store.setStoreDescription(description);
         for(MultipartFile image : storeImages){
             String imageUrl = amazonS3Manager.uploadFile(amazonS3Manager.makeKeyName(Filepath.STORE), image);
             StoreImage storeImage = StoreImage.builder().storeImage(imageUrl).store(store).build();

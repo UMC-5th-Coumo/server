@@ -93,8 +93,6 @@ public class StoreResponseDTO {
     public static class MoreDetailStoreDTO{
         String name;
         String description;
-        String telephone;
-        List<TimeInfo> time;
         String location;
         String longitude;
         String latitude;
@@ -119,9 +117,7 @@ public class StoreResponseDTO {
     public static class Coupon{
         String title;
         Integer cnt;
-        String stampMax;
-        String fontColor;
-        String couponColor;
-        String stampImage;
+        String stampType;
+        String color;
     }
 }

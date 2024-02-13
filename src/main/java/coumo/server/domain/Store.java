@@ -112,16 +112,6 @@ public class Store extends BaseEntity {
         customerStore.setStore(this);
     }
 
-    //======== 비즈니스 로직 메서드 ========
-    public boolean isWrite(){
-        return !(getStoreType().equals(StoreType.NONE) ||
-                getName().isBlank() || getName().isEmpty() ||
-                getTelephone().isBlank() || getTelephone().isEmpty() ||
-                getStoreLocation().isBlank() || getStoreLocation().isEmpty() ||
-                getStoreDescription().isBlank() || getStoreDescription().isEmpty());
-    }
-
-
     //======== 생성 메서드 ========
     public static Store createStore(Owner owner){
         Point point = createPoint(0.0, 0.0);
@@ -142,9 +132,5 @@ public class Store extends BaseEntity {
                         .build();
         store.setOwner(owner);
         return store;
-    }
-
-    public void setStoreDescription(String storeDescription) {
-        this.storeDescription = storeDescription;
     }
 }

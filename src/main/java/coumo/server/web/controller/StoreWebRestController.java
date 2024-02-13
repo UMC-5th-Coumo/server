@@ -6,7 +6,10 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.StoreConverter;
-import coumo.server.domain.*;
+import coumo.server.domain.Menu;
+import coumo.server.domain.Store;
+import coumo.server.domain.StoreImage;
+import coumo.server.domain.Timetable;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreRequestDTO;
@@ -127,11 +130,4 @@ public class StoreWebRestController {
         return ApiResponse.onSuccess(storeId);
     }
 
-
-//    @GetMapping("/test/isWrite/{ownerId}")
-//    public ApiResponse<Boolean> updateDetail(@PathVariable("ownerId") Long ownerId){
-//
-//        Owner owner = ownerRepository.findById(ownerId).orElseThrow();
-//        return ApiResponse.onSuccess(  storeQueryService.isWriteStore(owner));
-//    }
 }

@@ -27,19 +27,4 @@ public class OwnerResponseDTO {
         Long storeId;
         private final String token;
     }
-
-    @Builder
-    @Getter
-    public static class CheckLoginIdResponseDTO{
-        private String loginId;
-    }
-
-    @Builder
-    @Getter
-    public static class MyPageDTO{
-        String name;
-        String loginId;
-        String email;
-        String phone;
-    }
 }
