@@ -2,6 +2,7 @@ package coumo.server.converter;
 
 import coumo.server.domain.Customer;
 import coumo.server.domain.enums.Gender;
+import coumo.server.domain.enums.State;
 import coumo.server.web.dto.CustomerRequestDTO;
 import coumo.server.web.dto.CustomerResponseDTO;
 
@@ -36,6 +37,7 @@ public class CustomerConverter {
                 .gender(request.getGender())
                 .email(request.getEmail())
                 .phone(request.getPhone())
+                .state(State.ACTIVE)
                 .build();
     }
 

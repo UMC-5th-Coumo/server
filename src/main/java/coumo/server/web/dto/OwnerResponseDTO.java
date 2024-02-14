@@ -28,6 +28,10 @@ public class OwnerResponseDTO {
         private final String token;
         boolean isWrite;
         LocalDateTime createdAt;
+        String name;
+        String loginId;
+        String email;
+        String phone;
     }
 
     @Builder
