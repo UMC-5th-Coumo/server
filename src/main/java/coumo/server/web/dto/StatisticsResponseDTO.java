@@ -38,6 +38,14 @@ public class StatisticsResponseDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class HolidayResponseDTO {
+        private String message;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class WeekResponseDTO {
         private String day;
         private LocalDate date;
