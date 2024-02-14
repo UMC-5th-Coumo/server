@@ -26,6 +26,8 @@ public class OwnerResponseDTO {
         Long ownerId;
         Long storeId;
         private final String token;
+        boolean isWrite;
+        LocalDateTime createdAt;
     }
 
     @Builder

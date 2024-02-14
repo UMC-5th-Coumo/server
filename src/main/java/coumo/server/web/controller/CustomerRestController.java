@@ -7,9 +7,7 @@ import coumo.server.jwt.JWTUtil;
 import coumo.server.service.customer.CustomerService;
 import coumo.server.sms.MessageService;
 import coumo.server.sms.VerificationCodeStorage;
-import coumo.server.web.dto.CustomerRequestDTO;
-import coumo.server.web.dto.CustomerResponseDTO;
-import coumo.server.web.dto.LoginIdDTO;
+import coumo.server.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -109,6 +107,24 @@ public class CustomerRestController {
                      .map(LoginIdDTO::getLoginId) // LoginIdDTO 객체에서 loginId필드값 추출
                      .orElse("로그인 ID를 찾을 수 없습니다.");
             return ApiResponse.onSuccess(loginId);
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
+    }
+
+    @PostMapping("/join/send-verification-code")
+    @Operation(summary = "[회원가입] APP 인증번호 전송 API", description = "인증번호가 전송되었는지 확인합니다.")
+    public ApiResponse<String> joinSendVerificationCode(@RequestBody CustomerRequestDTO.VerificationRequest request){
+        messageService.sendMessage(request.getPhone());
+        return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
+    }
+
+    @PostMapping("/join/verify-code")
+    @Operation(summary = "[회원가입] APP 인증번호 검증 API", description = "인증번호가 일치하는지 확인합니다.")
+    public ApiResponse<CustomerVerificationSuccessResponse> joinVerifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+        boolean isAPPVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
+        if (isAPPVerified) {
+            return ApiResponse.onSuccess(CustomerVerificationSuccessResponse.customerSuccessWithCode(dto.getVerificationCode()));
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
