@@ -143,4 +143,24 @@ public class OwnerRestController {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
     }
+
+    @PostMapping("/logout/{ownerId}")
+    @Operation(summary = "WEB 로그아웃 API", description = "Owner의 State = SLEEP으로 설정.")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> ownerLogout(@PathVariable Long ownerId) {
+        ownerService.logoutOwner(ownerId);
+        return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+    }
+
+    @PostMapping("/delete/{ownerId}")
+    @Operation(summary = "WEB 회원탈퇴 API", description = "Owner의 State = LEAVE으로 설정")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> ownerDelete(@PathVariable Long ownerId) {
+        ownerService.deleteOwner(ownerId);
+        return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+    }
 }

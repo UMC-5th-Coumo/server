@@ -129,4 +129,24 @@ public class CustomerRestController {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
     }
+
+    @PostMapping("/logout/{customerId}")
+    @Operation(summary = "APP 로그아웃 API", description = "Customer의 State = SLEEP으로 설정.")
+    @Parameters({
+            @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> customerLogout(@PathVariable Long customerId) {
+        customerService.logoutCustomer(customerId);
+        return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+    }
+
+    @PostMapping("/delete/{customerId}")
+    @Operation(summary = "APP 회원탈퇴 API", description = "Customer의 State = LEAVE으로 설정")
+    @Parameters({
+            @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> customerDelete(@PathVariable Long customerId) {
+        customerService.deleteCustomer(customerId);
+        return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+    }
 }

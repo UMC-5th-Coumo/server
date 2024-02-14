@@ -26,4 +26,10 @@ public interface OwnerService {
 
     //인증번호 검증
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
+
+    //로그아웃
+    void logoutOwner(Long ownerId);
+
+    //회원탈퇴
+    void deleteOwner(Long ownerId);
 }
