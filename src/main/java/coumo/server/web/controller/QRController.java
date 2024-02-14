@@ -22,7 +22,7 @@ public class QRController {
     private final QRService qrService;
 
     @Operation(summary = "고객 : 도장 적립용 QR 생성")
-    @PostMapping("/customer/stamp/{customerId}/{storeId}")
+    @GetMapping("/customer/stamp/{customerId}/{storeId}")
     @Parameters({
             @Parameter(name = "ownerId", description = "고객 아이디, path variable"),
             @Parameter(name = "storeId", description = "도장을 적립하고자 하는 가게, path variable")})
@@ -32,7 +32,7 @@ public class QRController {
     }
 
     @Operation(summary = "고객 : 도장 사용용 QR 생성")
-    @PostMapping("/customer/payment/{customerId}/{storeId}")
+    @GetMapping("/customer/payment/{customerId}/{storeId}")
     @Parameters({
             @Parameter(name = "ownerId", description = "고객 아이디, path variable"),
             @Parameter(name = "storeId", description = "도장을 적립하고자 하는 가게, path variable")})
