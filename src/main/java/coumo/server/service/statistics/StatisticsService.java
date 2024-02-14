@@ -290,8 +290,17 @@ public class StatisticsService {
         List<Customer> newCustomers = statisticsRepository.getNewCustomerCount(storeId, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
         int newCustomerCount = newCustomers.size();
 
+        // 이전 달 데이터
+        LocalDate prevStartDate = startDate.minusMonths(1);
+        LocalDate prevEndDate = startDate.minusDays(1);
 
-        return new StatisticsResponseDTO.MonthStatisticsResponseDTO(allCustomerCount, newCustomerCount);
+        List<Customer> prevAllCustomers = statisticsRepository.getAllCustomerCount(storeId, prevStartDate.atStartOfDay(), prevEndDate.atTime(23, 59, 59));
+        int prevAllCustomerCount = prevAllCustomers.size();
+
+        List<Customer> prevNewCustomers = statisticsRepository.getNewCustomerCount(storeId, prevStartDate.atStartOfDay(), prevEndDate.atTime(23, 59, 59));
+        int prevNewCustomerCount = prevNewCustomers.size();
+
+        return new StatisticsResponseDTO.MonthStatisticsResponseDTO(allCustomerCount, newCustomerCount, prevAllCustomerCount, prevNewCustomerCount);
     }
 
     /**
