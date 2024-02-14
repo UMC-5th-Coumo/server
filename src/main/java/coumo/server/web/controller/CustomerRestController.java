@@ -114,14 +114,14 @@ public class CustomerRestController {
 
     @PostMapping("/join/send-verification-code")
     @Operation(summary = "[회원가입] APP 인증번호 전송 API", description = "인증번호가 전송되었는지 확인합니다.")
-    public ApiResponse<String> joinSendVerificationCode(@RequestBody CustomerRequestDTO.VerificationRequest request){
+    public ApiResponse<String> joinSendVerificationCode(@RequestBody CustomerRequestDTO.CustomerVerificationRequest request){
         messageService.sendMessage(request.getPhone());
         return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
     }
 
     @PostMapping("/join/verify-code")
     @Operation(summary = "[회원가입] APP 인증번호 검증 API", description = "인증번호가 일치하는지 확인합니다.")
-    public ApiResponse<CustomerVerificationSuccessResponse> joinVerifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+    public ApiResponse<CustomerVerificationSuccessResponse> joinVerifyCode(@RequestBody CustomerRequestDTO.CustomerVerificationCodeDTO dto) {
         boolean isAPPVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
         if (isAPPVerified) {
             return ApiResponse.onSuccess(CustomerVerificationSuccessResponse.customerSuccessWithCode(dto.getVerificationCode()));
