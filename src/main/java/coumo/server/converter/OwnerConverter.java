@@ -1,6 +1,7 @@
 package coumo.server.converter;
 
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.web.dto.OwnerRequestDTO;
 import coumo.server.web.dto.OwnerResponseDTO;
 
@@ -24,6 +25,10 @@ public class OwnerConverter {
                 .token(token)
                 .isWrite(iswrite)
                 .createdAt(owner.getCreatedAt())
+                .name(owner.getName())
+                .loginId(owner.getLoginId())
+                .email(owner.getEmail())
+                .phone(owner.getPhone())
                 .build();
     }
 
@@ -34,6 +39,7 @@ public class OwnerConverter {
                 .name(request.getName())
                 .email(request.getEmail())
                 .phone(request.getPhone())
+                .state(State.ACTIVE)
                 .build();
     }
 

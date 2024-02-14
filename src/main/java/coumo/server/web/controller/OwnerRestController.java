@@ -83,20 +83,20 @@ public class OwnerRestController {
         }
     }
 
-    @GetMapping("/mypage/{ownerId}/profile")
-    @Operation(summary = "WEB 마이페이지 내 프로필 조회 API", description = "로그인한 사장님의 마이페이지 프로필을 조회합니다.")
-    @Parameters({
-            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
-    })
-    public ApiResponse<OwnerResponseDTO.MyPageDTO> myPage(@PathVariable Long ownerId){
-        return ownerService.findOwner(ownerId)
-                .map(owner -> ApiResponse.onSuccess(OwnerConverter.toMyPageDTO(owner)))
-                .orElse(ApiResponse.onFailure("400", "사용자 정보를 찾을 수 없습니다.", null));
-    }
+//    @GetMapping("/mypage/{ownerId}/profile")
+//    @Operation(summary = "WEB 마이페이지 내 프로필 조회 API", description = "로그인한 사장님의 마이페이지 프로필을 조회합니다.")
+//    @Parameters({
+//            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+//    })
+//    public ApiResponse<OwnerResponseDTO.MyPageDTO> myPage(@PathVariable Long ownerId){
+//        return ownerService.findOwner(ownerId)
+//                .map(owner -> ApiResponse.onSuccess(OwnerConverter.toMyPageDTO(owner)))
+//                .orElse(ApiResponse.onFailure("400", "사용자 정보를 찾을 수 없습니다.", null));
+//    }
 
     @PostMapping("/find-id")
     @Operation(summary = "[아이디찾기] WEB 인증번호 전송 API", description = "인증번호가 전송되었는지 확인합니다.")
-    public ApiResponse<String> sendVerificationCode(@RequestBody OwnerRequestDTO.OwnerVerificationRequest request) {
+    public ApiResponse<String> sendVerificationCode(@RequestBody OwnerRequestDTO.OwnerLoginVerificationRequest request) {
         Optional<Owner> ownerOpt = ownerService.findOwnerByNameAndPhone(request.getName(), request.getPhone());
         if (ownerOpt.isPresent()) {
             messageService.sendMessage(request.getPhone());
@@ -108,7 +108,7 @@ public class OwnerRestController {
 
     @PostMapping("/verify-code")
     @Operation(summary = "[아이디찾기] WEB 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
-    public ApiResponse<VerificationResponseDTO> verifyCode(@RequestBody OwnerRequestDTO.OwnerVerificationCodeDTO dto) {
+    public ApiResponse<VerificationResponseDTO> verifyCode(@RequestBody OwnerRequestDTO.OwnerLoginVerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
 
         if (isVerified) {
