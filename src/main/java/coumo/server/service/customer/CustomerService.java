@@ -27,9 +27,6 @@ public interface CustomerService {
     //인증번호 검증
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
 
-    //로그아웃
-    void logoutCustomer(Long customerId);
+    Customer saveCustomer(Customer customer);
 
-    //회원탈퇴
-    void deleteCustomer(Long customerId);
 }

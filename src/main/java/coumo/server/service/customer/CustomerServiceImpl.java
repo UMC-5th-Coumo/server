@@ -84,21 +84,8 @@ public class CustomerServiceImpl implements CustomerService{
         return customerRepository.findLoginIdByPhone(phone);
     }
 
-    //로그아웃
     @Override
-    public void logoutCustomer(Long customerId) {
-        customerRepository.findById(customerId).ifPresent(customer -> {
-            customer.setState(State.SLEEP);
-            customerRepository.save(customer);
-        });
-    }
-
-    //회원탈퇴
-    @Override
-    public void deleteCustomer(Long customerId) {
-        customerRepository.findById(customerId).ifPresent(customer -> {
-            customer.setState(State.LEAVE);
-            customerRepository.save(customer);
-        });
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
     }
 }

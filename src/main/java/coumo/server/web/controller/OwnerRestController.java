@@ -4,6 +4,7 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.owner.OwnerService;
 import coumo.server.service.store.StoreQueryService;
@@ -149,9 +150,14 @@ public class OwnerRestController {
     @Parameters({
             @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
     })
-    public ApiResponse<String> ownerLogout(@PathVariable Long ownerId) {
-        ownerService.logoutOwner(ownerId);
-        return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+    public ApiResponse<String> logoutOwner(@PathVariable Long ownerId) {
+        return ownerService.findOwner(ownerId)
+                .map(owner -> {
+                    owner.setState(State.SLEEP);
+                    ownerService.saveOwner(owner);
+                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 
     @PostMapping("/delete/{ownerId}")
@@ -159,8 +165,13 @@ public class OwnerRestController {
     @Parameters({
             @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
     })
-    public ApiResponse<String> ownerDelete(@PathVariable Long ownerId) {
-        ownerService.deleteOwner(ownerId);
-        return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+    public ApiResponse<String> deleteOwner(@PathVariable Long ownerId) {
+        return ownerService.findOwner(ownerId)
+                .map(owner -> {
+                    owner.setState(State.LEAVE);
+                    ownerService.saveOwner(owner);
+                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 }

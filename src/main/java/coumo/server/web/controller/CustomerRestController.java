@@ -3,6 +3,7 @@ package coumo.server.web.controller;
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.CustomerConverter;
 import coumo.server.domain.Customer;
+import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.customer.CustomerService;
 import coumo.server.sms.MessageService;
@@ -135,18 +136,27 @@ public class CustomerRestController {
     @Parameters({
             @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
     })
-    public ApiResponse<String> customerLogout(@PathVariable Long customerId) {
-        customerService.logoutCustomer(customerId);
-        return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+    public ApiResponse<String> logoutCustomer(@PathVariable Long customerId) {
+        return customerService.findCustomerById(customerId)
+                .map(customer -> {
+                    customer.setState(State.SLEEP);
+                    customerService.saveCustomer(customer);
+                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
-
     @PostMapping("/delete/{customerId}")
     @Operation(summary = "APP 회원탈퇴 API", description = "Customer의 State = LEAVE으로 설정")
     @Parameters({
             @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
     })
-    public ApiResponse<String> customerDelete(@PathVariable Long customerId) {
-        customerService.deleteCustomer(customerId);
-        return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+    public ApiResponse<String> deleteCustomer(@PathVariable Long customerId) {
+        return customerService.findCustomerById(customerId)
+                .map(customer -> {
+                    customer.setState(State.LEAVE);
+                    customerService.saveCustomer(customer);
+                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 }

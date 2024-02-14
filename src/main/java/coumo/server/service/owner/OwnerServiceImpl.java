@@ -91,21 +91,8 @@ public class OwnerServiceImpl implements OwnerService{
         return ownerRepository.findLoginIdByPhone(phone);
     }
 
-    //로그아웃
     @Override
-    public void logoutOwner(Long ownerId) {
-        ownerRepository.findById(ownerId).ifPresent(owner -> {
-            owner.setState(State.SLEEP);
-            ownerRepository.save(owner);
-        });
-    }
-
-    //회원탈퇴
-    @Override
-    public void deleteOwner(Long ownerId) {
-        ownerRepository.findById(ownerId).ifPresent(owner -> {
-            owner.setState(State.LEAVE);
-            ownerRepository.save(owner);
-        });
+    public Owner saveOwner(Owner owner){
+        return ownerRepository.save(owner);
     }
 }
