@@ -3,6 +3,7 @@ package coumo.server.service.owner;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.repository.OwnerRepository;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.web.dto.LoginIdDTO;
@@ -88,5 +89,10 @@ public class OwnerServiceImpl implements OwnerService{
     @Override
     public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
         return ownerRepository.findLoginIdByPhone(phone);
+    }
+
+    @Override
+    public Owner saveOwner(Owner owner){
+        return ownerRepository.save(owner);
     }
 }

@@ -69,4 +69,6 @@ public class Owner extends BaseEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setState(State state) { this.state = state;}
 }

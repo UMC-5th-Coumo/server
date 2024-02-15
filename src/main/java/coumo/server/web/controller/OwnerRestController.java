@@ -4,6 +4,7 @@ import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.owner.OwnerService;
 import coumo.server.service.store.StoreQueryService;
@@ -142,5 +143,35 @@ public class OwnerRestController {
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
+    }
+
+    @PostMapping("/logout/{ownerId}")
+    @Operation(summary = "WEB 로그아웃 API", description = "Owner의 State = SLEEP으로 설정.")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> logoutOwner(@PathVariable Long ownerId) {
+        return ownerService.findOwner(ownerId)
+                .map(owner -> {
+                    owner.setState(State.SLEEP);
+                    ownerService.saveOwner(owner);
+                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+    }
+
+    @PostMapping("/delete/{ownerId}")
+    @Operation(summary = "WEB 회원탈퇴 API", description = "Owner의 State = LEAVE으로 설정")
+    @Parameters({
+            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> deleteOwner(@PathVariable Long ownerId) {
+        return ownerService.findOwner(ownerId)
+                .map(owner -> {
+                    owner.setState(State.LEAVE);
+                    ownerService.saveOwner(owner);
+                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 }

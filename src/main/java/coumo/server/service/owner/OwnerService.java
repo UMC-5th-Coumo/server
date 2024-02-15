@@ -26,4 +26,6 @@ public interface OwnerService {
 
     //인증번호 검증
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
+
+    Owner saveOwner(Owner owner);
 }

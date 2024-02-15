@@ -3,6 +3,7 @@ package coumo.server.service.customer;
 import coumo.server.converter.CustomerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.repository.CustomerRepository;
 import coumo.server.web.dto.CustomerRequestDTO;
 import coumo.server.web.dto.LoginIdDTO;
@@ -81,5 +82,10 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
         return customerRepository.findLoginIdByPhone(phone);
+    }
+
+    @Override
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
     }
 }
