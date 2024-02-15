@@ -1,6 +1,7 @@
 package coumo.server.service.customer;
 
 import coumo.server.domain.Customer;
+import coumo.server.domain.Owner;
 import coumo.server.web.dto.CustomerRequestDTO;
 import coumo.server.web.dto.LoginIdDTO;
 
@@ -24,6 +25,9 @@ public interface CustomerService {
     //인증번호
     Optional<Customer> findCustomerByNameAndPhone(String name, String phone);
 
+    Optional<Customer> findCustomerByLoginIdAndPhone(String loginId, String phone);
+
+    void resetPassword(String loginId, String newPassword);
     //인증번호 검증
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
 

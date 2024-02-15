@@ -174,4 +174,29 @@ public class OwnerRestController {
                 })
                 .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
+
+    @PostMapping("/reset-password/send-code")
+    @Operation(summary = "[비밀번호찾기] WEB 인증번호 전송 API",description = "비밀번호 재설정을 위한 인증 코드 전송")
+    public ApiResponse<String> sendResetPasswordCode(@RequestBody OwnerRequestDTO.OwnerPasswordResetSendCodeDTO dto) {
+        Optional<Owner> ownerOptional = ownerService.findOwnerByLoginIdAndPhone(dto.getLoginId(), dto.getPhone());
+        if (ownerOptional.isPresent()) {
+            messageService.sendMessage(dto.getPhone());
+            return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다.", null);
+        }
+    }
+
+    @PostMapping("/reset-password/verify-code")
+    @Operation(summary = "[비밀번호찾기] WEB 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
+    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody OwnerRequestDTO.OwnerPasswordResetVerifyCodeDTO dto) {
+        boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
+        if (isVerified) {
+            ownerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
+            return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
+    }
+
 }

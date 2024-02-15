@@ -3,6 +3,7 @@ package coumo.server.web.controller;
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.CustomerConverter;
 import coumo.server.domain.Customer;
+import coumo.server.domain.Owner;
 import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.customer.CustomerService;
@@ -158,5 +159,29 @@ public class CustomerRestController {
                     return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
                 })
                 .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+    }
+
+    @PostMapping("/reset-password/send-code")
+    @Operation(summary = "[비밀번호찾기] APP 인증번호 전송 API",description = "비밀번호 재설정을 위한 인증 코드 전송")
+    public ApiResponse<String> sendResetPasswordCode(@RequestBody CustomerRequestDTO.CustomerPasswordResetSendCodeDTO dto) {
+        Optional<Customer> customerOptional = customerService.findCustomerByLoginIdAndPhone(dto.getLoginId(), dto.getPhone());
+        if (customerOptional.isPresent()) {
+            messageService.sendMessage(dto.getPhone());
+            return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다.", null);
+        }
+    }
+
+    @PostMapping("/reset-password/verify-code")
+    @Operation(summary = "[비밀번호찾기] APP 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
+    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody CustomerRequestDTO.CustomerPasswordResetVerifyCodeDTO dto) {
+        boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
+        if (isVerified) {
+            customerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
+            return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
     }
 }
