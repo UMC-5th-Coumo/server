@@ -107,7 +107,7 @@ public class OwnerRestController {
         }
     }
 
-    @PostMapping("/verify-code")
+    @GetMapping("/verify-code")
     @Operation(summary = "[아이디찾기] WEB 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
     public ApiResponse<VerificationResponseDTO> verifyCode(@RequestBody OwnerRequestDTO.OwnerLoginVerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
@@ -145,7 +145,7 @@ public class OwnerRestController {
         }
     }
 
-    @PostMapping("/logout/{ownerId}")
+    @PatchMapping("/logout/{ownerId}")
     @Operation(summary = "WEB 로그아웃 API", description = "Owner의 State = SLEEP으로 설정.")
     @Parameters({
             @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
@@ -160,7 +160,7 @@ public class OwnerRestController {
                 .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 
-    @PostMapping("/delete/{ownerId}")
+    @PatchMapping("/delete/{ownerId}")
     @Operation(summary = "WEB 회원탈퇴 API", description = "Owner의 State = LEAVE으로 설정")
     @Parameters({
             @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
@@ -187,7 +187,7 @@ public class OwnerRestController {
         }
     }
 
-    @PostMapping("/reset-password/verify-code")
+    @PatchMapping("/reset-password/verify-code")
     @Operation(summary = "[비밀번호찾기] WEB 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
     public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody OwnerRequestDTO.OwnerPasswordResetVerifyCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
