@@ -46,4 +46,16 @@ public class CustomerRequestDTO {
         String verificationCode;
     }
 
+    /* 회원 가입 시 휴대폰 인증 */
+    @Getter
+    public static class CustomerVerificationRequest {
+        String name;
+        String phone;
+    }
+
+    @Getter
+    public static class CustomerVerificationCodeDTO{
+        String phone;
+        String verificationCode;
+    }
 }
