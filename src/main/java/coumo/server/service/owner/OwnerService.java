@@ -24,8 +24,14 @@ public interface OwnerService {
     //인증번호
     Optional<Owner> findOwnerByNameAndPhone(String name, String phone);
 
+    Optional<Owner> findOwnerByLoginIdAndPhone(String loginId, String phone);
+
+    void resetPassword(String loginId, String newPassword);
+
     //인증번호 검증
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
 
     Owner saveOwner(Owner owner);
+
+    void deleteOwner(Long ownerId);
 }
