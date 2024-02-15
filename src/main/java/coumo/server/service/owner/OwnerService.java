@@ -32,4 +32,6 @@ public interface OwnerService {
     Optional<LoginIdDTO> findLoginIdByPhone(String phone);
 
     Owner saveOwner(Owner owner);
+
+    void deleteOwner(Long ownerId);
 }

@@ -2,7 +2,6 @@ package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.OwnerConverter;
-import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
@@ -145,34 +144,41 @@ public class OwnerRestController {
         }
     }
 
-    @PatchMapping("/logout/{ownerId}")
-    @Operation(summary = "WEB 로그아웃 API", description = "Owner의 State = SLEEP으로 설정.")
-    @Parameters({
-            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
-    })
-    public ApiResponse<String> logoutOwner(@PathVariable Long ownerId) {
-        return ownerService.findOwner(ownerId)
-                .map(owner -> {
-                    owner.setState(State.SLEEP);
-                    ownerService.saveOwner(owner);
-                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
-                })
-                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
-    }
+//    @PatchMapping("/logout/{ownerId}")
+//    @Operation(summary = "WEB 로그아웃 API", description = "Owner의 State = SLEEP으로 설정.")
+//    @Parameters({
+//            @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
+//    })
+//    public ApiResponse<String> logoutOwner(@PathVariable Long ownerId) {
+//        return ownerService.findOwner(ownerId)
+//                .map(owner -> {
+//                    owner.setState(State.SLEEP);
+//                    ownerService.saveOwner(owner);
+//                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+//                })
+//                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+//    }
 
-    @PatchMapping("/delete/{ownerId}")
-    @Operation(summary = "WEB 회원탈퇴 API", description = "Owner의 State = LEAVE으로 설정")
+    @DeleteMapping("/delete/{ownerId}")
+    @Operation(summary = "WEB 회원탈퇴 API", description = "회원정보 삭제")
     @Parameters({
             @Parameter(name = "ownerId", description = "ownerId, path variable 입니다!"),
     })
     public ApiResponse<String> deleteOwner(@PathVariable Long ownerId) {
-        return ownerService.findOwner(ownerId)
-                .map(owner -> {
-                    owner.setState(State.LEAVE);
-                    ownerService.saveOwner(owner);
-                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
-                })
-                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+        Optional<Owner> ownerOptional = ownerService.findOwner(ownerId);
+        if(ownerOptional.isPresent()){
+            ownerService.deleteOwner(ownerId);
+            return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null);
+        }
+//        return ownerService.findOwner(ownerId)
+//                .map(owner -> {
+//                    owner.setState(State.LEAVE);
+//                    ownerService.saveOwner(owner);
+//                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+//                })
+//                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 
     @PostMapping("/reset-password/send-code")
@@ -187,16 +193,26 @@ public class OwnerRestController {
         }
     }
 
-    @PatchMapping("/reset-password/verify-code")
-    @Operation(summary = "[비밀번호찾기] WEB 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
-    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody OwnerRequestDTO.OwnerPasswordResetVerifyCodeDTO dto) {
+    @PostMapping("/reset-password/verify-code")
+    @Operation(summary = "[비밀번호찾기] WEB 인증번호 검증 API", description = "코드 검증")
+    public ApiResponse<VerificationPwSuccessResponse> verifyCodePassword(@RequestBody OwnerRequestDTO.OwnerPasswordVerifyCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
         if (isVerified) {
-            ownerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
-            return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
+            return ApiResponse.onSuccess(VerificationPwSuccessResponse.successWithCode("인증번호 검증에 성공했습니다.", dto.getVerificationCode()));
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }
     }
 
+    @PatchMapping("/reset-password/set-pw")
+    @Operation(summary = "[비밀번호찾기] WEB 비밀번호 재설정 API", description = "비밀번호 재설정")
+    public ApiResponse<String> resetPassword(@RequestBody OwnerRequestDTO.OwnerPasswordResetDTO dto){
+        Owner owner = ownerService.findByLoginId(dto.getLoginId());
+        if (owner != null) {
+            ownerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
+            return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "해당 사용자를 찾을 수 없습니다.", null);
+        }
+    }
 }

@@ -110,4 +110,9 @@ public class OwnerServiceImpl implements OwnerService{
     public Owner saveOwner(Owner owner){
         return ownerRepository.save(owner);
     }
+
+    @Override
+    public void deleteOwner(Long ownerId) {
+        ownerRepository.deleteById(ownerId);
+    }
 }

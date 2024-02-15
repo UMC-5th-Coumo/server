@@ -61,10 +61,15 @@ public class OwnerRequestDTO {
     }
 
     @Getter
-    public static class OwnerPasswordResetVerifyCodeDTO{
+    public static class OwnerPasswordVerifyCodeDTO {
         String loginId;
         String phone;
         String verificationCode;
+    }
+
+    @Getter
+    public static class OwnerPasswordResetDTO{
+        String loginId;
         String newPassword;
     }
 }

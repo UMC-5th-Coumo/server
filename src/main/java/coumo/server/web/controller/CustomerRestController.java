@@ -146,19 +146,26 @@ public class CustomerRestController {
                 })
                 .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
-    @PatchMapping("/delete/{customerId}")
-    @Operation(summary = "APP 회원탈퇴 API", description = "Customer의 State = LEAVE으로 설정")
+    @DeleteMapping("/delete/{customerId}")
+    @Operation(summary = "APP 회원탈퇴 API", description = "회원정보 삭제")
     @Parameters({
             @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
     })
     public ApiResponse<String> deleteCustomer(@PathVariable Long customerId) {
-        return customerService.findCustomerById(customerId)
-                .map(customer -> {
-                    customer.setState(State.LEAVE);
-                    customerService.saveCustomer(customer);
-                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
-                })
-                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+        Optional<Customer> customerOptional = customerService.findCustomerById(customerId);
+        if(customerOptional.isPresent()){
+            customerService.deleteCustomer(customerId);
+            return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null);
+        }
+//        return customerService.findCustomerById(customerId)
+//                .map(customer -> {
+//                    customer.setState(State.LEAVE);
+//                    customerService.saveCustomer(customer);
+//                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+//                })
+//                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
     }
 
     @PostMapping("/reset-password/send-code")
