@@ -42,4 +42,15 @@ public class OwnerRequestDTO {
         String verificationCode;
     }
 
+    @Getter
+    public static class OwnerLoginVerificationRequest {
+        String name;
+        String phone;
+    }
+
+    @Getter
+    public static class OwnerLoginVerificationCodeDTO{
+        String phone;
+        String verificationCode;
+    }
 }
