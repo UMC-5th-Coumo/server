@@ -136,7 +136,7 @@ public class StatisticsService {
      * 시간대 별 방문 통계 조회
      * @param storeId 매장 ID
      */
-    public List<StatisticsResponseDTO.TimeResponseDTO> getTimeStatistics(Long storeId) {
+    public Object getTimeStatistics(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("매장이 올바르지 않습니다."));
 
@@ -144,6 +144,10 @@ public class StatisticsService {
 
         Timetable timetable = timetableRepository.findByStoreAndDay(store, day)
                 .orElseThrow(() -> new IllegalArgumentException("시간 설정이 올바르지 않습니다."));
+
+        if (timetable.getStartTime() == null || timetable.getEndTime() == null) {
+            return new StatisticsResponseDTO.HolidayResponseDTO("휴무일입니다.");  // 휴무일인 경우 HolidayResponseDTO 반환
+        }
 
         LocalTime currentTime = LocalTime.now();
         LocalTime startTime = LocalTime.parse(timetable.getStartTime());
