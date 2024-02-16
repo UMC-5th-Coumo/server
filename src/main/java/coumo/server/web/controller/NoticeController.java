@@ -113,7 +113,7 @@ public class NoticeController {
             @RequestParam("longtitude") Double longitude,
             @RequestParam("latitde") Double latitude,
             @RequestParam("type")NoticeType noticeType,
-            @CheckPage @RequestParam(name="pageId")Integer pageId){
+            @CheckPage @RequestParam(name="pageId") Integer pageId){
 
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
         Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
