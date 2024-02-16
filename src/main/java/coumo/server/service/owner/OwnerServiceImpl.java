@@ -3,6 +3,7 @@ package coumo.server.service.owner;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.repository.OwnerRepository;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.web.dto.LoginIdDTO;
@@ -60,6 +61,9 @@ public class OwnerServiceImpl implements OwnerService{
 
         // 소유자가 존재하고 비밀번호가 일치하는지 확인합니다.
         if (owner != null && isPasswordMatch(password, owner.getPassword())) {
+            // 로그인 성공 시, 상태를 ACTIVE로 변경
+            owner.setState(State.ACTIVE);
+            ownerRepository.save(owner);
             return owner; // 로그인 성공 시 소유자 엔터티를 반환합니다.
         } else {
             return null; // 로그인 실패 시 null을 반환하거나 해당하는 방식으로 처리합니다.
@@ -83,10 +87,32 @@ public class OwnerServiceImpl implements OwnerService{
     public Optional<Owner> findOwnerByNameAndPhone(String name, String phone) {
         return ownerRepository.findByNameAndPhone(name, phone);
     }
+    @Override
+    public Optional<Owner> findOwnerByLoginIdAndPhone(String loginId, String phone) {
+        return ownerRepository.findByLoginIdAndPhone(loginId, phone);
+    }
+    @Override
+    public void resetPassword(String loginId, String newPassword) {
+        Owner owner = ownerRepository.findByLoginId(loginId);
+        if (owner != null) {
+            owner.setPassword(passwordEncoder.encode(newPassword));
+            ownerRepository.save(owner);
+        }
+    }
 
     //인증번호 검증
     @Override
     public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
         return ownerRepository.findLoginIdByPhone(phone);
+    }
+
+    @Override
+    public Owner saveOwner(Owner owner){
+        return ownerRepository.save(owner);
+    }
+
+    @Override
+    public void deleteOwner(Long ownerId) {
+        ownerRepository.deleteById(ownerId);
     }
 }

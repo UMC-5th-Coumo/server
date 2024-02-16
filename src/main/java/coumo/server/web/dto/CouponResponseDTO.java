@@ -19,28 +19,6 @@ public class CouponResponseDTO {
         public CustomerStoreStampDTO customerStoreStampDTO;
         public StoreCouponDTO storeCouponDTO;
 
-
-        public CustomerStoreCouponDTO(String storeName, String couponColor, String fontColor,
-                                      String stampImage, Integer stampCurrent, StampMax stampMax) {
-            this.storeCouponDTO = new StoreCouponDTO(storeName, couponColor, fontColor, stampImage);
-            this.customerStoreStampDTO = new CustomerStoreStampDTO(stampCurrent, stampMax);
-        }
-
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class CustomerStoreCouponDTO2 {
-
-        public String storeName;
-        public String couponColor;
-        public String fontColor;
-        public String stampImage;
-        public Integer stampCurrent;
-        public StampMax stampMax;
-
     }
 
     // 쿠폰

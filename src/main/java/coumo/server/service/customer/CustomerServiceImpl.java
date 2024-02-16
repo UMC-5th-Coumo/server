@@ -3,6 +3,7 @@ package coumo.server.service.customer;
 import coumo.server.converter.CustomerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.repository.CustomerRepository;
 import coumo.server.web.dto.CustomerRequestDTO;
 import coumo.server.web.dto.LoginIdDTO;
@@ -53,6 +54,9 @@ public class CustomerServiceImpl implements CustomerService{
 
         // 소유자가 존재하고 비밀번호가 일치하는지 확인합니다.
         if (customer != null && isPasswordMatch(password, customer.getPassword())) {
+            // 로그인 성공 시, 상태를 ACTIVE로 변경
+            customer.setState(State.ACTIVE);
+            customerRepository.save(customer);
             return customer; // 로그인 성공 시 소유자 엔터티를 반환합니다.
         } else {
             return null; // 로그인 실패 시 null을 반환하거나 해당하는 방식으로 처리합니다.
@@ -76,10 +80,33 @@ public class CustomerServiceImpl implements CustomerService{
     public Optional<Customer> findCustomerByNameAndPhone(String name, String phone) {
         return customerRepository.findByNameAndPhone(name, phone);
     }
+    @Override
+    public Optional<Customer> findCustomerByLoginIdAndPhone(String loginId, String phone) {
+        return customerRepository.findByLoginIdAndPhone(loginId, phone);
+    }
+
+    @Override
+    public void resetPassword(String loginId, String newPassword) {
+        Customer customer = customerRepository.findByLoginId(loginId);
+        if (customer != null) {
+            customer.setPassword(passwordEncoder.encode(newPassword));
+            customerRepository.save(customer);
+        }
+    }
 
     //인증번호 검증
     @Override
     public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
         return customerRepository.findLoginIdByPhone(phone);
+    }
+
+    @Override
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public void deleteCustomer(Long customerId) {
+        customerRepository.deleteById(customerId);
     }
 }

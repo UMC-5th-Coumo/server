@@ -3,6 +3,8 @@ package coumo.server.web.controller;
 import coumo.server.apiPayload.ApiResponse;
 import coumo.server.converter.CustomerConverter;
 import coumo.server.domain.Customer;
+import coumo.server.domain.Owner;
+import coumo.server.domain.enums.State;
 import coumo.server.jwt.JWTUtil;
 import coumo.server.service.customer.CustomerService;
 import coumo.server.sms.MessageService;
@@ -97,7 +99,7 @@ public class CustomerRestController {
         }
     }
 
-    @PostMapping("/verify-code")
+    @GetMapping("/verify-code")
     @Operation(summary = "[아이디찾기] APP 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
     public ApiResponse<String> verifyCode(@RequestBody CustomerRequestDTO.VerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
@@ -125,6 +127,66 @@ public class CustomerRestController {
         boolean isAPPVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
         if (isAPPVerified) {
             return ApiResponse.onSuccess(CustomerVerificationSuccessResponse.customerSuccessWithCode(dto.getVerificationCode()));
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
+    }
+
+    @PatchMapping("/logout/{customerId}")
+    @Operation(summary = "APP 로그아웃 API", description = "Customer의 State = SLEEP으로 설정.")
+    @Parameters({
+            @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> logoutCustomer(@PathVariable Long customerId) {
+        return customerService.findCustomerById(customerId)
+                .map(customer -> {
+                    customer.setState(State.SLEEP);
+                    customerService.saveCustomer(customer);
+                    return ApiResponse.onSuccess("로그아웃에 성공했습니다.");
+                })
+                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+    }
+    @DeleteMapping("/delete/{customerId}")
+    @Operation(summary = "APP 회원탈퇴 API", description = "회원정보 삭제")
+    @Parameters({
+            @Parameter(name = "customerId", description = "customerId, path variable 입니다!"),
+    })
+    public ApiResponse<String> deleteCustomer(@PathVariable Long customerId) {
+        Optional<Customer> customerOptional = customerService.findCustomerById(customerId);
+        if(customerOptional.isPresent()){
+            customerService.deleteCustomer(customerId);
+            return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null);
+        }
+//        return customerService.findCustomerById(customerId)
+//                .map(customer -> {
+//                    customer.setState(State.LEAVE);
+//                    customerService.saveCustomer(customer);
+//                    return ApiResponse.onSuccess("회원탈퇴가 완료되었습니다.");
+//                })
+//                .orElse(ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다", null));
+    }
+
+    @PostMapping("/reset-password/send-code")
+    @Operation(summary = "[비밀번호찾기] APP 인증번호 전송 API",description = "비밀번호 재설정을 위한 인증 코드 전송")
+    public ApiResponse<String> sendResetPasswordCode(@RequestBody CustomerRequestDTO.CustomerPasswordResetSendCodeDTO dto) {
+        Optional<Customer> customerOptional = customerService.findCustomerByLoginIdAndPhone(dto.getLoginId(), dto.getPhone());
+        if (customerOptional.isPresent()) {
+            messageService.sendMessage(dto.getPhone());
+            return ApiResponse.onSuccess("인증번호가 전송되었습니다.");
+        } else {
+            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다.", null);
+        }
+    }
+
+    @PatchMapping("/reset-password/verify-code")
+    @Operation(summary = "[비밀번호찾기] APP 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
+    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody CustomerRequestDTO.CustomerPasswordResetVerifyCodeDTO dto) {
+        boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
+        if (isVerified) {
+            customerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
+            return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
         } else {
             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
         }

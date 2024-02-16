@@ -21,10 +21,10 @@ public class Timetable {
     @Column(nullable = false, length = 50)
     private String day; //요일
 
-    @Column(nullable = false, length = 32)
+    @Column(length = 32)
     private String startTime; //시작 시간
 
-    @Column(nullable = false, length = 32)
+    @Column(length = 32)
     private String endTime; //종료 시간
 
     public void setStore(Store store) {

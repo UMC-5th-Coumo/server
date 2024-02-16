@@ -53,4 +53,23 @@ public class OwnerRequestDTO {
         String phone;
         String verificationCode;
     }
+
+    @Getter
+    public static class OwnerPasswordResetSendCodeDTO{
+        String loginId;
+        String phone;
+    }
+
+    @Getter
+    public static class OwnerPasswordVerifyCodeDTO {
+        String loginId;
+        String phone;
+        String verificationCode;
+    }
+
+    @Getter
+    public static class OwnerPasswordResetDTO{
+        String loginId;
+        String newPassword;
+    }
 }
