@@ -56,6 +56,9 @@ public class Owner extends BaseEntity {
     private List<OwnerCoupon> ownerCouponList = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<DesignReceipt> designReceiptList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<SubscriptionReceipt> subscriptionReceiptList = new ArrayList<>();
 
     public void setStore(Store store) {

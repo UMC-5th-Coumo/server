@@ -20,11 +20,11 @@ public class DesignReceipt extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
-    private Store store; //매장 아이디
+    @JoinColumn(name = "owner_id")
+    private Owner owner; //사장님 고유 ID
 
     @Column(nullable = false, length = 50)
-    private String couponTitle; //쿠폰 제목
+    private String storeName; //쿠폰 제목
 
     @Column(nullable = false, length = 16)
     private String phone; //휴대폰
@@ -38,4 +38,8 @@ public class DesignReceipt extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(16)")
     private StoreType storeType; //매장 종류
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store; //매장 아이디
 }
