@@ -1,12 +1,14 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.domain.OwnerCoupon;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.service.coupon.CouponService;
 import coumo.server.service.coupon.CustomerStoreService;
 import coumo.server.service.coupon.OwnerCouponService;
+import coumo.server.service.customer.CustomerService;
 import coumo.server.service.owner.OwnerService;
 import coumo.server.validation.annotation.ExistOwner;
 import coumo.server.web.dto.CouponRequestDTO;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.Optional;
 public class CouponController {
 
     private final OwnerService ownerService;
+    private final CustomerService customerService;
     private final CouponService couponService;
     private final OwnerCouponService ownerCouponService;
     private final CustomerStoreService customerStoreService;
@@ -33,7 +37,7 @@ public class CouponController {
     @Operation(summary = "사장님 : 쿠폰 등록하기")
     @PostMapping("register/{ownerId}")
     @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> registerCoupon(@ExistOwner @PathVariable Long ownerId, @RequestBody CouponRequestDTO.registerCouponDTO dto){
+    public ApiResponse<?> registerCoupon(@ExistOwner @PathVariable("ownerId") Long ownerId, @RequestBody CouponRequestDTO.registerCouponDTO dto){
 
         Optional<Owner> owner = ownerService.findOwner(ownerId);
         OwnerCoupon newCoupon = couponService.register(owner.get(), dto);
@@ -47,7 +51,7 @@ public class CouponController {
             @Parameter(name = "storeId", description = "매장 아이디, path variable"),
             @Parameter(name = "customerId", description = "고객 아이디, path variable"),
     })
-    public ApiResponse<?> storeCoupon(@PathVariable Long storeId, @PathVariable Long customerId){
+    public ApiResponse<?> storeCoupon(@PathVariable("storeId") Long storeId, @PathVariable("customerId") Long customerId){
 
         CustomerStore customerStore = customerStoreService.findCustomerStoreCoupon(storeId, customerId);
         OwnerCoupon ownerCoupon = ownerCouponService.findStoreCoupon(storeId);
@@ -78,18 +82,27 @@ public class CouponController {
     @Operation(summary = "고객 : 내 쿠폰 보기 (필터 두 가지)")
     @GetMapping("{customerId}/list")
     @Parameter(name = "customerId", description = "고객 아이디, path variable")
-    public ApiResponse<?> storeCoupon(@PathVariable Long customerId, @RequestParam("filter") String filter){
+    public ApiResponse<?> storeCoupon(@RequestParam(value = "filter") String filter , @PathVariable("customerId") Long customerId){
 
-        if(filter == "latest")          // latest : 최근 적립한 순서
-        {
-            List<CouponResponseDTO.CustomerStoreCouponDTO> customerStoreCouponDTOS = customerStoreService.findCustomerCouponLatest(customerId);
-            return ApiResponse.onSuccess(customerStoreCouponDTOS);
+        Optional<Customer> customer = customerService.findCustomerById(customerId);
+        if(customer.isEmpty()) return ApiResponse.onFailure("400", "존재하지 않는 유저입니다.", customerId);
+
+        List<CouponResponseDTO.CustomerStoreCouponDTO> customerStoreCouponDTOS;
+        switch (filter) {
+            case "latest":
+                customerStoreCouponDTOS = customerStoreService.findCustomerCouponLatest(customerId);
+                break;
+            case "most":
+                customerStoreCouponDTOS = customerStoreService.findCustomerCouponMost(customerId);
+                break;
+            default:
+                return ApiResponse.onFailure("400", "필터 값을 올바르게 입력하세요.", filter);
         }
-        else if (filter == "most")      // most : 많이 적립한 순서
-        {
-            List<CouponResponseDTO.CustomerStoreCouponDTO> customerStoreCouponDTOS = customerStoreService.findCustomerCouponMost(customerId);
-            return ApiResponse.onSuccess(customerStoreCouponDTOS);
+
+        if (customerStoreCouponDTOS.isEmpty()) {
+            return ApiResponse.onFailure("400", "해당 유저에게 쿠폰이 존재하지 않습니다.", filter);
         }
-        return ApiResponse.onFailure("400", "필터 값을 올바르게 입력하세요", filter);
+
+        return ApiResponse.onSuccess(customerStoreCouponDTOS);
     }
 }

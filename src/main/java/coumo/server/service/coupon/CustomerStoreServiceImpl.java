@@ -1,6 +1,7 @@
 package coumo.server.service.coupon;
 
 import coumo.server.domain.mapping.CustomerStore;
+import coumo.server.repository.CustomerStoreQueryRepository;
 import coumo.server.repository.CustomerStoreRepository;
 import coumo.server.web.dto.CouponResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CustomerStoreServiceImpl implements CustomerStoreService{
 
     private final CustomerStoreRepository customerStoreRepository;
+    private final CustomerStoreQueryRepository customerStoreQueryRepository;
 
     @Override
     public CustomerStore findCustomerStoreCoupon(Long storeId, Long customerId) {
@@ -24,13 +26,11 @@ public class CustomerStoreServiceImpl implements CustomerStoreService{
 
     @Override
     public List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerCouponLatest(Long customerId) {
-//        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
-        return null;
+        return customerStoreQueryRepository.findCustomerStoreCouponsLatest(customerId);
     }
 
     @Override
     public List<CouponResponseDTO.CustomerStoreCouponDTO> findCustomerCouponMost(Long customerId) {
-//        return customerStoreRepository.findCustomerStoreCouponsMost(customerId);
-        return null;
+        return customerStoreQueryRepository.findCustomerStoreCouponsMost(customerId);
     }
 }

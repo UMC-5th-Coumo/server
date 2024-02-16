@@ -26,7 +26,7 @@ public class QRController {
     @Parameters({
             @Parameter(name = "ownerId", description = "고객 아이디, path variable"),
             @Parameter(name = "storeId", description = "도장을 적립하고자 하는 가게, path variable")})
-    public ResponseEntity<byte[]> QRCustomerStamp(@PathVariable Integer customerId, @PathVariable Integer storeId) throws WriterException {
+    public ResponseEntity<byte[]> QRCustomerStamp(@PathVariable("customerId") Integer customerId, @PathVariable("storeId") Integer storeId) throws WriterException {
 
         return qrService.createQR(customerId, storeId);
     }
@@ -36,7 +36,7 @@ public class QRController {
     @Parameters({
             @Parameter(name = "ownerId", description = "고객 아이디, path variable"),
             @Parameter(name = "storeId", description = "도장을 적립하고자 하는 가게, path variable")})
-    public ResponseEntity<byte[]> QRCustomerPayment(@PathVariable Integer customerId, @PathVariable Integer storeId) throws WriterException {
+    public ResponseEntity<byte[]> QRCustomerPayment(@PathVariable("customerId") Integer customerId, @PathVariable("storeId") Integer storeId) throws WriterException {
 
         return qrService.createQR(customerId, storeId);
     }
