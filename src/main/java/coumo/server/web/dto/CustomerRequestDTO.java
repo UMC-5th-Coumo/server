@@ -58,4 +58,18 @@ public class CustomerRequestDTO {
         String phone;
         String verificationCode;
     }
+
+    @Getter
+    public static class CustomerPasswordResetSendCodeDTO{
+        String loginId;
+        String phone;
+    }
+
+    @Getter
+    public static class CustomerPasswordResetVerifyCodeDTO{
+        String loginId;
+        String phone;
+        String verificationCode;
+        String newPassword;
+    }
 }

@@ -17,6 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByNameAndPhone(String name, String phone);
 
+    Optional<Customer> findByLoginIdAndPhone(String loginID, String phone);
+
     // JPQL 쿼리를 사용하여 loginId 필드만 조회
     @Query("SELECT new coumo.server.web.dto.LoginIdDTO(c.loginId) FROM Customer c WHERE c.phone = :phone")
     Optional<LoginIdDTO> findLoginIdByPhone(@Param("phone") String phone);
