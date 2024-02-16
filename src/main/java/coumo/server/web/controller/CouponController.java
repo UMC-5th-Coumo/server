@@ -1,19 +1,16 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
-import coumo.server.domain.DesignReceipt;
 import coumo.server.domain.Owner;
 import coumo.server.domain.OwnerCoupon;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.service.coupon.CouponService;
 import coumo.server.service.coupon.CustomerStoreService;
 import coumo.server.service.coupon.OwnerCouponService;
-import coumo.server.service.design.DesignReceiptService;
 import coumo.server.service.owner.OwnerService;
 import coumo.server.validation.annotation.ExistOwner;
 import coumo.server.web.dto.CouponRequestDTO;
 import coumo.server.web.dto.CouponResponseDTO;
-import coumo.server.web.dto.DesignReceiptRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
