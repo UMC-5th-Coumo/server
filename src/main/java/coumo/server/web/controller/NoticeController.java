@@ -17,11 +17,16 @@ import coumo.server.web.dto.NoticeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,26 +36,40 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notice")
+@Slf4j
 public class NoticeController {
 
     private final NoticeService noticeService;
     private final StoreQueryService storeQueryService;
 
     @Operation(summary = "사장님 : 동네소식 글 쓰기")
-    @PostMapping("/{ownerId}/post")
-    @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> postNotice(@ExistOwner(message = "존재안해요") @PathVariable("ownerId") Long ownerId, @RequestBody NoticeRequestDTO.updateNoticeDTO dto){
+    @PostMapping(value = "/{ownerId}/post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Parameters({
+            @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
+            @Parameter(name = "noticeType", description = "게시글 종류, NEW_PRODUCT/EVENT/NO_SHOW"),
+            @Parameter(name = "title", description = "게시글 제목"),
+            @Parameter(name = "noticeContent", description = "게시글 내용"),
+            @Parameter(name = "noticeImages", description = "게시글 사진 (최대 5개)")
+    })
+    public ApiResponse<?> postNotice(
+            @PathVariable("ownerId") Long ownerId,
+            @RequestPart("noticeType") String noticeType,
+            @RequestPart("title") String title,
+            @RequestPart("noticeContent") String noticeContent,
+            @RequestPart("noticeImages") MultipartFile[] noticeImages
+    ){
+        if(! (noticeType.equals("NEW_PRODUCT") ||  noticeType.equals("EVENT") || noticeType.equals("NO_SHOW")))
+            return ApiResponse.onFailure("400", "올바른 게시글 종류가 아닙니다.", noticeType);
+        NoticeType noticeType1 = NoticeType.valueOf(noticeType);
+        Notice notice = noticeService.postNotice(ownerId, noticeType1, title, noticeContent, noticeImages);  // 글 저장
 
-        Optional<Store> store = storeQueryService.findStore(ownerId);  // store 존재 여부
-        Notice newNotice = noticeService.postNotice(store.get(), dto);  // 글 저장
-
-        return ApiResponse.onSuccess(newNotice.getId());
+        return ApiResponse.onSuccess(notice.getId());
     }
 
     @Operation(summary = "사장님 : 내가 쓴 글 리스트 보기 (페이징=10)")
     @GetMapping("/{ownerId}/list")
     @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> readNotice(@ExistOwner @PathVariable("ownerId") Long ownerId, @CheckPage @RequestParam(name="pageId")Integer pageId) {
+    public ApiResponse<?> readNotice(@PathVariable("ownerId") Long ownerId, @RequestParam(name="pageId")Integer pageId) {
 
         Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
 
@@ -78,19 +97,27 @@ public class NoticeController {
     })
     public ApiResponse<?> readNoticeDetail(@ExistOwner @PathVariable("ownerId") Long ownerId, @ExistNotice @PathVariable("noticeId") Long noticeId){
 
+        if(noticeService.findNotice(noticeId).isEmpty()) return ApiResponse.onFailure("400", "게시물이 존재하지 않습니다.", noticeId);
         NoticeResponseDTO.OwnerNoticeDetail ownerNoticeDetail = noticeService.readNoticeDetail(noticeId);   // 내가 쓴 글 세부내용 보기
         return ApiResponse.onSuccess(ownerNoticeDetail);
     }
 
     @Operation(summary = "사장님 : 동네소식 글 수정 완료 버튼")
-    @PatchMapping("/{ownerId}/update/{noticeId}")
+    @PutMapping(value = "/{ownerId}/update/{noticeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Parameters({
             @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
             @Parameter(name = "noticeId", description = "게시물 번호, path variable"),
     })
-    public ApiResponse<?> updateNotice(@ExistOwner @PathVariable("ownerId") Long ownerId, @ExistNotice @PathVariable("noticeId") Long noticeId, @RequestBody NoticeRequestDTO.updateNoticeDTO dto){
+    public ApiResponse<?> updateNotice(
+            @PathVariable("ownerId") Long ownerId,
+            @PathVariable("noticeId") Long noticeId,
+            @RequestPart("noticeType") String noticeType,
+            @RequestPart("title") String title,
+            @RequestPart("noticeContent") String noticeContent,
+            @RequestPart("noticeImages") MultipartFile[] noticeImages
+    ){
 
-        noticeService.updateNotice(noticeId, dto);  // 수정
+        noticeService.updateNotice(noticeId, noticeType, title, noticeContent, noticeImages);  // 수정
         return ApiResponse.onSuccess(noticeId);
     }
 
@@ -100,7 +127,7 @@ public class NoticeController {
             @Parameter(name = "ownerId", description = "사장님 아이디, path variable"),
             @Parameter(name = "noticeId", description = "게시물 번호, path variable"),
     })
-    public ApiResponse<?> deleteNotice(@ExistOwner @PathVariable("ownerId") Long ownerId, @ExistNotice @PathVariable("noticeId") Long noticeId){
+    public ApiResponse<?> deleteNotice(@PathVariable("ownerId") Long ownerId, @PathVariable("noticeId") Long noticeId){
 
         noticeService.deleteNotice(noticeId);       // 글 삭제
         return ApiResponse.onSuccess(noticeId);

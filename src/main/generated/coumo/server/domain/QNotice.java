@@ -29,8 +29,6 @@ public class QNotice extends EntityPathBase<Notice> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath image = createString("image");
-
     public final StringPath noticeContent = createString("noticeContent");
 
     public final ListPath<NoticeImage, QNoticeImage> noticeImageList = this.<NoticeImage, QNoticeImage>createList("noticeImageList", NoticeImage.class, QNoticeImage.class, PathInits.DIRECT2);

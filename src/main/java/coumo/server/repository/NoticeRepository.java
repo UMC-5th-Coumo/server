@@ -11,8 +11,7 @@ import java.util.Optional;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-    @Override
-    Optional<Notice> findById(Long noticeId);
+    Optional<Notice> findById(Long id);
 
     Notice save(Notice notice);
 
