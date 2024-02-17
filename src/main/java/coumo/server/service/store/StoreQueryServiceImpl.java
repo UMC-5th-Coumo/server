@@ -119,7 +119,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                     .storeId(item.getId())
                     .storeImage(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
                     .location(item.getStoreLocation())
-                    .couponCnt(customerStore == null ?  0 : customerStore.getStampTotal())
+                    .couponCnt(customerStore == null ?  0 : customerStore.getStampCurrent())
                     .name(item.getName())
                     .build());
         });
@@ -150,7 +150,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                 .latitude(String.valueOf(store.getPoint().getY()))
                 .coupon(StoreResponseDTO.Coupon.builder()
                         .title(ownerCoupons.get(0).getStoreName())
-                        .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
+                        .cnt(customerStore == null ?  0 : customerStore.getStampCurrent())
                         .stampImage(StampURL.getURL(ownerCoupons.get(0).getStampImage()))
                         .fontColor(ownerCoupons.get(0).getFontColor())
                         .couponColor(ownerCoupons.get(0).getCouponColor())
