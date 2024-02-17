@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NoticeService {
-    public void postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, MultipartFile[] noticeImages);
+    Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, MultipartFile[] noticeImages);
 
     Page<Notice> findOwnerNotice(Store store, Pageable pageable);
 
     NoticeResponseDTO.OwnerNoticeDetail readNoticeDetail(Long noticeId);
 
-    void updateNotice(Long noticeId, NoticeRequestDTO.updateNoticeDTO dto);
+    void updateNotice(Long noticeId, String noticeType, String title, String noticeContent, MultipartFile[] noticeImages);
 
     void deleteNotice(Long noticeId);
 
-    Notice findNotice(Long noticeId);
+    Optional<Notice> findNotice(Long noticeId);
 
     Page<Store> findNearestStore(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable);
 
