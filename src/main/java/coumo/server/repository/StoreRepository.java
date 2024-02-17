@@ -27,6 +27,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByIdWithOwner(@Param("storeId") Long storeId);
     Optional<Store> findByOwner(Owner owner);
 
+    Optional<Store> findByName(String name);
+
     @Query(value = "SELECT s.* FROM store AS s " +
             "WHERE MBRContains(ST_GeomFromText(CONCAT('LINESTRING(', ?1, ' ', ?2, ', ', ?3, ' ', ?4, ')'), 4326), s.point) AND s.store_type <> 'NONE'",
             countQuery = "SELECT s.* FROM store AS s " +

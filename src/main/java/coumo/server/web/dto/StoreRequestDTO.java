@@ -23,6 +23,8 @@ public class StoreRequestDTO {
         @NotBlank
         public String location;
         @NotBlank
+        public String detailLocation;
+        @NotBlank
         public String longitude;
         @NotBlank
         public String latitude;

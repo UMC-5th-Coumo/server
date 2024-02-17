@@ -75,7 +75,7 @@ public class StoreWebRestController {
         return ApiResponse.onSuccess(StoreConverter.toResultDetailDTO(store, storeImages, menus));
     }
 
-    @PatchMapping("/{storeId}/basic")
+    @PutMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 저장 API",
             description = "사장님이 가게 정보를 저장한 정보를 저장하는 API입니다. 가게에 대한 정보를 json으로 보내주세요.")
     @ApiResponses({
@@ -90,7 +90,7 @@ public class StoreWebRestController {
         return ApiResponse.onSuccess(storeId);
     }
 
-    @PatchMapping(value = "/{storeId}/detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{storeId}/detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "사장님이 작성한 가게 정보(매장 설명) 저장 API",
             description = "사장님이 가게 정보를 저장한 정보를 저장하는 API입니다. 가게에 대한 정보를 FormData으로 보내주세요.")
     @ApiResponses({

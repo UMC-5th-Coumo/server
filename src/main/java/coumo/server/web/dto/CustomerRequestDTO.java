@@ -66,10 +66,15 @@ public class CustomerRequestDTO {
     }
 
     @Getter
-    public static class CustomerPasswordResetVerifyCodeDTO{
+    public static class CustomerPasswordVerifyCodeDTO {
         String loginId;
         String phone;
         String verificationCode;
+    }
+
+    @Getter
+    public static class CustomerPasswordResetDTO{
+        String loginId;
         String newPassword;
     }
 }

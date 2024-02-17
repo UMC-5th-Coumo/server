@@ -24,6 +24,7 @@ public class StoreResponseDTO {
         String telePhone;
         String category;
         String location;
+        String detailLocation;
         String latitude;
         String longitude;
     }
