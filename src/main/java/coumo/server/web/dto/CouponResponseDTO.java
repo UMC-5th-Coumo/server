@@ -43,4 +43,16 @@ public class CouponResponseDTO {
         public String fontColor;
         public String stampImage;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MainCouponDTO {
+        public String storeName;
+        public String couponColor;
+        public String fontColor;
+        public String stampImage;
+        public String stampMax;
+    }
 }
