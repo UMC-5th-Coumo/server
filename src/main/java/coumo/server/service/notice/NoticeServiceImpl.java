@@ -1,8 +1,12 @@
 package coumo.server.service.notice;
 
+import coumo.server.aws.s3.AmazonS3Manager;
+import coumo.server.aws.s3.Filepath;
 import coumo.server.domain.Notice;
 import coumo.server.domain.NoticeImage;
 import coumo.server.domain.Store;
+import coumo.server.domain.StoreImage;
+import coumo.server.domain.enums.NoticeType;
 import coumo.server.repository.NoticeImageRepository;
 import coumo.server.repository.NoticeRepository;
 import coumo.server.repository.StoreRepository;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,12 +35,30 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
     private final StoreRepository storeRepository;
     private final NoticeImageRepository noticeImageRepository;
+    private final AmazonS3Manager amazonS3Manager;
 
     @Override
-    public Notice postNotice(Store store, NoticeRequestDTO.updateNoticeDTO dto) {
+    public void postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, MultipartFile[] noticeImages) {
 
-        Notice newNotice = dto.toEntity(store);
-        return noticeRepository.save(newNotice);
+        // 엔티티 조회
+        Store store = storeRepository.findByOwnerId(ownerId).orElseThrow();
+        Notice notice = Notice.builder()
+                .store(store)
+                .noticeType(noticeType)
+                .title(title)
+                .noticeContent(noticeContent)
+                .build();
+
+        noticeRepository.save(notice);
+
+        if(noticeImages.length != 0)
+        {
+            for(MultipartFile image : noticeImages){
+                String imageUrl = amazonS3Manager.uploadFile(amazonS3Manager.makeKeyName(Filepath.STORE), image);
+                NoticeImage noticeImage = NoticeImage.builder().noticeImage(imageUrl).notice(notice).build();
+                notice.addNoticeImage(noticeImage);
+            }
+        }
     }
 
     @Override

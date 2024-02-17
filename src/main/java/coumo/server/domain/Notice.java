@@ -41,8 +41,18 @@ public class Notice extends BaseEntity {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
     private List<NoticeImage> noticeImageList = new ArrayList<>();
 
+
+
+
+
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public void addNoticeImage(NoticeImage noticeImage) {
+
+        noticeImageList.add(noticeImage);
+        noticeImage.setNotice(this);
     }
 }
 

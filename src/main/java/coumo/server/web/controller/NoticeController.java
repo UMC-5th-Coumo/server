@@ -17,11 +17,16 @@ import coumo.server.web.dto.NoticeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +36,33 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notice")
+@Slf4j
 public class NoticeController {
 
     private final NoticeService noticeService;
     private final StoreQueryService storeQueryService;
 
     @Operation(summary = "사장님 : 동네소식 글 쓰기")
-    @PostMapping("/{ownerId}/post")
-    @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
-    public ApiResponse<?> postNotice(@ExistOwner(message = "존재안해요") @PathVariable("ownerId") Long ownerId, @RequestBody NoticeRequestDTO.updateNoticeDTO dto){
+    @PostMapping(value = "/{ownerId}/post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Parameters({
+            @Parameter(name = "ownerId", description = "사장님 아이디, path variable")
+            //@Parameter(name = "noticeType", description = "게시글 종류, new_product/event/noshow"),
+            //@Parameter(name = "title", description = "게시글 제목"),
+            //@Parameter(name = "noticeContent", description = "게시글 내용"),
+            //@Parameter(name = "noticeImages", description = "게시글 사진 (최대 5개)")
+    })
 
-        Optional<Store> store = storeQueryService.findStore(ownerId);  // store 존재 여부
-        Notice newNotice = noticeService.postNotice(store.get(), dto);  // 글 저장
+    public ApiResponse<?> postNotice(
+            @PathVariable("ownerId") Long ownerId,
+            @RequestPart("noticeType") NoticeType noticeType,
+            @RequestPart("title") String title,
+            @RequestPart("noticeContent") String noticeContent,
+            @RequestPart("noticeImages") MultipartFile[] noticeImages
+    ){
+        System.out.println(noticeImages);
+        //noticeService.postNotice(ownerId, noticeType, title, noticeContent, noticeImages);  // 글 저장
 
-        return ApiResponse.onSuccess(newNotice.getId());
+        return ApiResponse.onSuccess(ownerId);
     }
 
     @Operation(summary = "사장님 : 내가 쓴 글 리스트 보기 (페이징=10)")
