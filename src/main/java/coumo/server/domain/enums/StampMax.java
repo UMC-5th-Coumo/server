@@ -1,5 +1,5 @@
 package coumo.server.domain.enums;
 
 public enum StampMax {
-    SEVEN, EIGHT, NINE, TEN
+    SEVEN, EIGHT, NINE, TEN, TWELVE
 }
