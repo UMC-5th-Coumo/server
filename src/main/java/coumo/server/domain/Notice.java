@@ -28,9 +28,6 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String title; //제목
 
-    @Column(length = 50)
-    private String image; //게시글 이미지
-
     @Column(nullable = false, length = 2048)
     private String noticeContent; //게시글 내용
 
@@ -41,8 +38,24 @@ public class Notice extends BaseEntity {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
     private List<NoticeImage> noticeImageList = new ArrayList<>();
 
+
+
+
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public void addNoticeImage(NoticeImage noticeImage) {
+
+        noticeImageList.add(noticeImage);
+        noticeImage.setNotice(this);
+    }
+
+    public void setUpdateNotice(String noticeType, String title, String noticeContent) {
+        NoticeType noticeType1 = NoticeType.valueOf(noticeType);
+        this.noticeType = noticeType1;
+        this.title = title;
+        this.noticeContent = noticeContent;
     }
 }
 

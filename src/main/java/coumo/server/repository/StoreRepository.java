@@ -45,4 +45,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Page<Store> findNearByStores(Double x1, Double y1, Double x2, Double y2, String category, Pageable pageable);
 
 
+    Optional<Store> findByOwnerId(Long ownerId);
 }

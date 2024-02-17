@@ -36,7 +36,7 @@ public class NoticeResponseDTO {
         public NoticeType noticeType;
         public String title;
         public String noticeContent;
-        public List<NoticeImage> noticeImage;
+        public List<String> noticeImages;
         public LocalDateTime createdAt;
     }
 

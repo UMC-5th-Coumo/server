@@ -19,4 +19,8 @@ public class NoticeImage {
 
     @Column(nullable = false, length = 256)
     private String noticeImage; //게시글 이미지
+
+    public void setNotice(Notice notice) {
+        this.notice = notice;
+    }
 }
