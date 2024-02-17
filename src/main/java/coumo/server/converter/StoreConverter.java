@@ -22,6 +22,7 @@ public class StoreConverter {
                 .latitude(String.valueOf(store.getPoint().getY()))
                 .time(new ArrayList<>())
                 .location(store.getStoreLocation())
+                .detailLocation(store.getStoreDetailLocation())
                 .category(store.getStoreType().toString())
                 .build();
 

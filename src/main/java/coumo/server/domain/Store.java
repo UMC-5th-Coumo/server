@@ -41,6 +41,9 @@ public class Store extends BaseEntity {
     @Column(nullable = false, length = 256)
     private String storeLocation; //매장 위치
 
+    @Column(nullable = false, length = 256)
+    private String storeDetailLocation; //매장 상세 주소
+
     @Column(nullable = false, length = 2048)
     private String storeDescription; //매장 설명
 
@@ -77,11 +80,12 @@ public class Store extends BaseEntity {
         return geometryFactory.createPoint(new Coordinate(longitude, latitude));
     }
 
-    public void updateStore(String name, String telephone, String storeLocation, String category,
-                            String longitude,  String latitude){
+    public void updateStore(String name, String telephone, String storeLocation, String detailLocation,
+                            String category, String longitude,  String latitude){
         this.name = name;
         this.telephone = telephone;
         this.storeLocation = storeLocation;
+        this.storeDetailLocation = detailLocation;
         this.point = createPoint(Double.valueOf(latitude), Double.valueOf(longitude));
         this.storeType = StoreType.fromString(category);
     }
@@ -129,6 +133,7 @@ public class Store extends BaseEntity {
                         .name("")
                         .telephone("")
                         .storeLocation("")
+                        .storeDetailLocation("")
                         .storeDescription("")
                         .businessNumber("")
                         .storeType(StoreType.NONE)
