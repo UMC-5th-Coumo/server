@@ -120,7 +120,7 @@ public class StoreResponseDTO {
     public static class Coupon{
         String title;
         Integer cnt;
-        String stampMax;
+        Integer stampMax;
         String fontColor;
         String couponColor;
         String stampImage;
