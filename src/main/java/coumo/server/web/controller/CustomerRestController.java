@@ -180,15 +180,26 @@ public class CustomerRestController {
         }
     }
 
-    @PatchMapping("/reset-password/verify-code")
-    @Operation(summary = "[비밀번호찾기] APP 인증번호 검증 및 비밀번호 재설정 API", description = "코드 검증 및 비밀번호 재설정")
-    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody CustomerRequestDTO.CustomerPasswordResetVerifyCodeDTO dto) {
+    @PostMapping("/reset-password/verify-code")
+    @Operation(summary = "[비밀번호찾기] APP 인증번호 검증 API", description = "코드 검증")
+    public ApiResponse<VerificationAppPwSuccessResponse> verifyCodePasswordApp(@RequestBody CustomerRequestDTO.CustomerPasswordVerifyCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
         if (isVerified) {
+            return ApiResponse.onSuccess(VerificationAppPwSuccessResponse.successWithCode("인증번호 검증에 성공했습니다.", dto.getVerificationCode()));
+        } else {
+            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+        }
+    }
+
+    @PatchMapping("/reset-password/set-pw")
+    @Operation(summary = "[비밀번호찾기] APP 비밀번호 재설정 API", description = "비밀번호 재설정")
+    public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody CustomerRequestDTO.CustomerPasswordResetDTO dto) {
+        Customer customer = customerService.findByLoginId(dto.getLoginId());
+        if (customer != null) {
             customerService.resetPassword(dto.getLoginId(), dto.getNewPassword());
             return ApiResponse.onSuccess("비밀번호가 성공적으로 재설정되었습니다.");
         } else {
-            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+            return ApiResponse.onFailure("404", "해당 사용자를 찾을 수 없습니다.", null);
         }
     }
 }
