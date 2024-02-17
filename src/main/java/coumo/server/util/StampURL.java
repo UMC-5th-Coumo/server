@@ -1,4 +1,4 @@
-package coumo.server.util.geometry;
+package coumo.server.util;
 
 public class StampURL {
     public static String getURL(String type){

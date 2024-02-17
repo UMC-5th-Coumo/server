@@ -3,13 +3,12 @@ package coumo.server.service.store;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.*;
-import coumo.server.domain.enums.StoreType;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.*;
 import coumo.server.util.geometry.Direction;
 import coumo.server.util.geometry.GeometryUtil;
 import coumo.server.util.geometry.Location;
-import coumo.server.util.geometry.StampURL;
+import coumo.server.util.StampURL;
 import coumo.server.web.dto.StoreResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
