@@ -60,7 +60,8 @@ public class StoreCommandServiceImpl implements StoreCommandService{
                                 .build());
         }
         store.updateStore(updateBasicDTO.getName(), updateBasicDTO.getTelePhone(), updateBasicDTO.getLocation(),
-                updateBasicDTO.getCategory(), updateBasicDTO.getLongitude(), updateBasicDTO.getLatitude());
+                updateBasicDTO.getDetailLocation(), updateBasicDTO.getCategory(), updateBasicDTO.getLongitude(),
+                updateBasicDTO.getLatitude());
     }
 
     @Override
