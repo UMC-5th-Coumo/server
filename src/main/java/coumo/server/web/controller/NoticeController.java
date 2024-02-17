@@ -54,7 +54,7 @@ public class NoticeController {
 
     public ApiResponse<?> postNotice(
             @PathVariable("ownerId") Long ownerId,
-            @RequestPart("noticeType") NoticeType noticeType,
+            @RequestPart("noticeType") String noticeType,
             @RequestPart("title") String title,
             @RequestPart("noticeContent") String noticeContent,
             @RequestPart("noticeImages") MultipartFile[] noticeImages
