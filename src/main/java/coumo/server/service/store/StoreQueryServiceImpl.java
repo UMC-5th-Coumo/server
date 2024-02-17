@@ -9,6 +9,7 @@ import coumo.server.repository.*;
 import coumo.server.util.geometry.Direction;
 import coumo.server.util.geometry.GeometryUtil;
 import coumo.server.util.geometry.Location;
+import coumo.server.util.geometry.StampURL;
 import coumo.server.web.dto.StoreResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -152,7 +153,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                 .coupon(StoreResponseDTO.Coupon.builder()
                         .title(ownerCoupons.get(0).getStoreName())
                         .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
-                        .stampImage(ownerCoupons.get(0).getStampImage())
+                        .stampImage(StampURL.getURL(ownerCoupons.get(0).getStampImage()))
                         .fontColor(ownerCoupons.get(0).getFontColor())
                         .couponColor(ownerCoupons.get(0).getCouponColor())
                         .stampMax(String.valueOf(ownerCoupons.get(0).getStampMax()))
