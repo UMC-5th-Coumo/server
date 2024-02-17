@@ -3,6 +3,7 @@ package coumo.server.service.store;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.*;
+import coumo.server.domain.enums.StampMax;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.*;
 import coumo.server.util.geometry.Direction;
@@ -154,7 +155,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                         .stampImage(StampURL.getURL(ownerCoupons.get(0).getStampImage()))
                         .fontColor(ownerCoupons.get(0).getFontColor())
                         .couponColor(ownerCoupons.get(0).getCouponColor())
-                        .stampMax(String.valueOf(ownerCoupons.get(0).getStampMax()))
+                        .stampMax(StampMax.fromInt(ownerCoupons.get(0).getStampMax()))
                         .build())
                 .images(new ArrayList<>())
                 .menus(new ArrayList<>())
