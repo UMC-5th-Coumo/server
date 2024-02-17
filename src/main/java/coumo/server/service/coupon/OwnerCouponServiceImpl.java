@@ -17,8 +17,8 @@ public class OwnerCouponServiceImpl implements OwnerCouponService{
     private final OwnerCouponRepository ownerCouponRepository;
     @Override
     public OwnerCoupon findStoreCoupon(Long storeId) {
-        Owner owner = ownerRepository.findByStoreId(storeId).get();
-        OwnerCoupon ownerCoupon = ownerCouponRepository.findByOwnerId(owner.getId()).get();
+        Owner owner = ownerRepository.findByStoreId(storeId).orElseThrow();
+        OwnerCoupon ownerCoupon = ownerCouponRepository.findByOwnerId(owner.getId()).orElseThrow();
 
         return ownerCoupon;
     }
