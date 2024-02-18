@@ -48,12 +48,12 @@ public class OwnerCoupon extends BaseEntity {
         return true;
     }
 
-    public void update(CouponRequestDTO.registerCouponDTO dto, String stampURL) {
+    public void update(CouponRequestDTO.registerCouponDTO dto) {
 
         this.couponColor = dto.getCouponColor();
         this.fontColor = dto.getFontColor();
         this.storeName = dto.getStoreName();
-        this.stampImage = stampURL;
+        this.stampImage = dto.getStampImage();
         this.stampMax = dto.getStampMax();
 
     }

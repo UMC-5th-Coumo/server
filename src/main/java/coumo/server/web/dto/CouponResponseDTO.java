@@ -1,10 +1,8 @@
 package coumo.server.web.dto;
 
 import coumo.server.domain.enums.StampMax;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 public class CouponResponseDTO {
@@ -36,6 +34,7 @@ public class CouponResponseDTO {
 
     @Builder
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class StoreCouponDTO {
