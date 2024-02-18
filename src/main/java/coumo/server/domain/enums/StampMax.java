@@ -5,6 +5,7 @@ import coumo.server.apiPayload.exception.handler.StoreHandler;
 
 public enum StampMax {
 
+
     SEVEN, EIGHT, NINE, TEN, TWELVE;
 
     public static int fromInt(StampMax stampMax) {
