@@ -37,6 +37,7 @@ public class StoreWebRestController {
     private final StoreQueryService storeQueryService;
     private final ObjectMapper objectMapper;
     private final OwnerService ownerService;
+    private final TokenCheck tokenCheck;
 
     @GetMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 조회 API",
@@ -51,8 +52,7 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        TokenCheck.setOwnerService(ownerService);
-        log.info("token check = {}",TokenCheck.isAvailableStoreId(storeId));
+        log.info("token check = {}",tokenCheck.isAvailableStoreId(storeId));
 
         List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();
