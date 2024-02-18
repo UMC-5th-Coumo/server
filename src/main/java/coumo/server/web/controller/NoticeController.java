@@ -133,10 +133,10 @@ public class NoticeController {
     @Operation(summary = "고객 : 내 주변 동네 소식 (페이징=10)")
     @GetMapping("/around/list/{pageId}")
     public ApiResponse<?> aroundNotice(
-            @RequestParam("longtitude") Double longitude,
-            @RequestParam("latitde") Double latitude,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("latitude") Double latitude,
             @RequestParam("type")String type,
-            @RequestParam(name="pageId") Integer pageId){
+            @RequestParam("pageId") Integer pageId){
 
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
         if (!(type.equals("NEW_PRODUCT") || type.equals("EVENT") || type.equals("NO_SHOW") || type.equals(null))) return ApiResponse.onFailure("400", "잘못된 게시글 종류입니다.", type);
