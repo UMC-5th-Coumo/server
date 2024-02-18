@@ -22,7 +22,7 @@ public class TokenCheck {
     }
 
     //현재 로그인된 사용자의 userId 반환
-    public static String getCurrentOwnerId() {
+    public static String getCurrentOwnerLoginId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
             return authentication.getName();
@@ -32,16 +32,16 @@ public class TokenCheck {
 
 
     public static Boolean isAvailable(Long storeId) {
-        String currentOwnerId = getCurrentOwnerId();
+        String currentOwnerLoginId = getCurrentOwnerLoginId();
 
         //검증
-        if(currentOwnerId == null) {
+        if(currentOwnerLoginId == null) {
             log.info("FAILED: Token - not find owner");
             return false;
         }
 
         //유효한 이이디인데
-        Store store = ownerService.findStore(currentOwnerId);
+        Store store = ownerService.findStore(currentOwnerLoginId);
 
         //토큰에서 찾은 아이디로 검색 실패
         if (store == null) {
