@@ -152,7 +152,8 @@ public class NoticeServiceImpl implements NoticeService {
     public List<NoticeResponseDTO.NearestNoticeDTO> findNearestNotice(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable) {
 
         //근처 매장 찾기
-        Page<Store> storePage = findNearestStore(longitude, latitude, distance, category, pageable);
+        Page<Store> storePage = findNearestStore(latitude, longitude, distance, category, pageable);
+        log.info("storePage.isEmpty={}", storePage.isEmpty());
         if (storePage.isEmpty()) return Collections.emptyList();
 
         List<NoticeResponseDTO.NearestNoticeDTO> resultList = new ArrayList<>();

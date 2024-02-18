@@ -144,7 +144,7 @@ public class NoticeController {
         Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
         NoticeType noticeType = NoticeType.valueOf(type);
 
-        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTO = noticeService.findNearestNotice(latitude, longitude, 0.5, Optional.of(String.valueOf(noticeType)), pageable);
+        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTO = noticeService.findNearestNotice(latitude, longitude, 0.5, Optional.empty(), pageable);
         List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTOS = new ArrayList<>();
 
         if(noticeType == NoticeType.NEW_PRODUCT || noticeType == NoticeType.EVENT || noticeType == NoticeType.NO_SHOW || noticeType == null){
