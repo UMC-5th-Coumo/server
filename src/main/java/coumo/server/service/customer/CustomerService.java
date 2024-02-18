@@ -3,6 +3,7 @@ package coumo.server.service.customer;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
 import coumo.server.web.dto.CustomerRequestDTO;
+import coumo.server.web.dto.LoginAppIdDTO;
 import coumo.server.web.dto.LoginIdDTO;
 
 import java.util.Optional;
@@ -29,7 +30,7 @@ public interface CustomerService {
 
     void resetPassword(String loginId, String newPassword);
     //인증번호 검증
-    Optional<LoginIdDTO> findLoginIdByPhone(String phone);
+    Optional<LoginAppIdDTO> findLoginIdByPhone(String phone);
 
     Customer saveCustomer(Customer customer);
 
