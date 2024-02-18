@@ -2,6 +2,7 @@ package coumo.server.service.owner;
 
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.Store;
 import coumo.server.web.dto.LoginIdDTO;
 import coumo.server.web.dto.OwnerRequestDTO;
 
@@ -11,6 +12,8 @@ public interface OwnerService {
     Optional<Owner> findOwner(Long ownerId);
 
     Owner findByLoginId(String loginId);
+
+    Store findStore(String loginId);
 
     // 회원가입
     Owner joinOwner(OwnerRequestDTO.JoinDTO request);

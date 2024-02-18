@@ -9,6 +9,7 @@ import coumo.server.converter.StoreConverter;
 import coumo.server.domain.*;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
+import coumo.server.util.TokenCheck;
 import coumo.server.web.dto.StoreRequestDTO;
 import coumo.server.web.dto.StoreResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import coumo.server.service.owner.OwnerService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class StoreWebRestController {
     private final StoreCommandService storeCommandService;
     private final StoreQueryService storeQueryService;
     private final ObjectMapper objectMapper;
+    private final OwnerService ownerService;
 
     @GetMapping("/{storeId}/basic")
     @Operation(summary = "사장님이 작성한 가게 정보(기본 정보) 조회 API",
@@ -48,6 +50,9 @@ public class StoreWebRestController {
     })
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
+
+        TokenCheck.setOwnerService(ownerService);
+        log.info("token check = {}",TokenCheck.isAvailable(storeId));
 
         List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();
