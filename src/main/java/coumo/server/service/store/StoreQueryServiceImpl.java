@@ -3,12 +3,13 @@ package coumo.server.service.store;
 import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.domain.*;
-import coumo.server.domain.enums.StoreType;
+import coumo.server.domain.enums.StampMax;
 import coumo.server.domain.mapping.CustomerStore;
 import coumo.server.repository.*;
 import coumo.server.util.geometry.Direction;
 import coumo.server.util.geometry.GeometryUtil;
 import coumo.server.util.geometry.Location;
+import coumo.server.util.StampURL;
 import coumo.server.web.dto.StoreResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -120,7 +120,7 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                     .storeId(item.getId())
                     .storeImage(storeImages.isEmpty() ?  null : storeImages.get(0).getStoreImage())
                     .location(item.getStoreLocation())
-                    .couponCnt(customerStore == null ?  0 : customerStore.getStampTotal())
+                    .couponCnt(customerStore == null ?  0 : customerStore.getStampCurrent())
                     .name(item.getName())
                     .build());
         });
@@ -151,11 +151,11 @@ public class StoreQueryServiceImpl implements StoreQueryService{
                 .latitude(String.valueOf(store.getPoint().getY()))
                 .coupon(StoreResponseDTO.Coupon.builder()
                         .title(ownerCoupons.get(0).getStoreName())
-                        .cnt(customerStore == null ?  0 : customerStore.getStampTotal())
-                        .stampImage(ownerCoupons.get(0).getStampImage())
+                        .cnt(customerStore == null ?  0 : customerStore.getStampCurrent())
+                        .stampImage(StampURL.getURL(ownerCoupons.get(0).getStampImage()))
                         .fontColor(ownerCoupons.get(0).getFontColor())
                         .couponColor(ownerCoupons.get(0).getCouponColor())
-                        .stampMax(String.valueOf(ownerCoupons.get(0).getStampMax()))
+                        .stampMax(StampMax.fromInt(ownerCoupons.get(0).getStampMax()))
                         .build())
                 .images(new ArrayList<>())
                 .menus(new ArrayList<>())
