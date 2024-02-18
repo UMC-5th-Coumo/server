@@ -15,42 +15,27 @@ import coumo.server.service.owner.OwnerService;
 @Slf4j
 public class TokenCheck {
     private final StoreQueryService storeQueryService;
-    private static OwnerService ownerService;
+    private final OwnerService ownerService;
 
-    public static void setOwnerService(OwnerService ownerService) {
-        TokenCheck.ownerService = ownerService;
-    }
-
-    //현재 로그인된 사용자의 userId 반환
-    public static String getCurrentOwnerLoginId() {
+    public String getCurrentOwnerLoginId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null) && (authentication.getPrincipal() instanceof UserDetails)) {
             return authentication.getName();
         }
-        return null; // 인증된 사용자가 없을 경우 null 반환
+        throw new IllegalStateException("User not logged in");
     }
 
-
-    public static Boolean isAvailableStoreId(Long storeId) {
+    public Boolean isAvailableStoreId(Long storeId) {
         String currentOwnerLoginId = getCurrentOwnerLoginId();
 
-        //검증
-        if(currentOwnerLoginId == null) {
-            log.info("FAILED: Token - not find owner");
-            return false;
-        }
-
-        //유효한 이이디인데
         Store store = ownerService.findStore(currentOwnerLoginId);
 
-        //토큰에서 찾은 아이디로 검색 실패
         if (store == null) {
             log.info("FAILED: Token - not find store of owner");
             return false;
         }
 
-        //비교
-        log.info("Token: store.getId() == storeId {}", store.getId() == storeId);
-        return store.getId() == storeId;
+        log.info("Token: store.getId().equals(storeId) {}", store.getId().equals(storeId));
+        return store.getId().equals(storeId);
     }
 }
