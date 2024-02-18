@@ -10,9 +10,13 @@ import coumo.server.repository.CustomerStoreRepository;
 import coumo.server.repository.StatisticsRepository;
 import coumo.server.repository.StoreRepository;
 import coumo.server.repository.TimetableRepository;
+import coumo.server.service.owner.OwnerService;
+import coumo.server.util.TokenCheck;
+import coumo.server.web.dto.CustomOwnerDetails;
 import coumo.server.web.dto.CustomerResponseDTO;
 import coumo.server.web.dto.StatisticsResponseDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class StatisticsService {
     private final StatisticsRepository statisticsRepository;
     private final CustomerStoreRepository customerStoreRepository;
@@ -39,6 +44,7 @@ public class StatisticsService {
      * @param storeId 매장 ID
      */
     public Map<String, Object> getAllCustomers(Long storeId) {
+
         List<Customer> customers = statisticsRepository.getAllCustomers(storeId);
         List<CustomerResponseDTO> customerList = this.createCustomerDtoList(customers, storeId);
 
@@ -376,4 +382,5 @@ public class StatisticsService {
 
         return result;
     }
+
 }
