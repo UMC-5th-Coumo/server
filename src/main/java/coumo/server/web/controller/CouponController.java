@@ -10,6 +10,7 @@ import coumo.server.service.coupon.CustomerStoreService;
 import coumo.server.service.coupon.OwnerCouponService;
 import coumo.server.service.customer.CustomerService;
 import coumo.server.service.owner.OwnerService;
+import coumo.server.util.StampURL;
 import coumo.server.validation.annotation.ExistOwner;
 import coumo.server.web.dto.CouponRequestDTO;
 import coumo.server.web.dto.CouponResponseDTO;
@@ -68,7 +69,7 @@ public class CouponController {
                 .couponColor(ownerCoupon.getCouponColor())
                 .storeName(ownerCoupon.getStoreName())
                 .fontColor(ownerCoupon.getFontColor())
-                .stampImage(ownerCoupon.getStampImage())
+                .stampImage(StampURL.getURL(ownerCoupon.getStampImage()))
                 .storeId(storeId)
                 .build();
 
@@ -105,6 +106,10 @@ public class CouponController {
             return ApiResponse.onFailure("400", "해당 유저에게 쿠폰이 존재하지 않습니다.", filter);
         }
 
+        customerStoreCouponDTOS.forEach(item -> {
+            String stampUrl = StampURL.getURL(item.getStoreCouponDTO().getStampImage());
+            item.getStoreCouponDTO().setStampImage(stampUrl);
+        });
         return ApiResponse.onSuccess(customerStoreCouponDTOS);
     }
 }

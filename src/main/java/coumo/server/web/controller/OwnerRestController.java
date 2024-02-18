@@ -106,7 +106,7 @@ public class OwnerRestController {
         }
     }
 
-    @GetMapping("/verify-code")
+    @PostMapping("/verify-code")
     @Operation(summary = "[아이디찾기] WEB 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
     public ApiResponse<VerificationResponseDTO> verifyCode(@RequestBody OwnerRequestDTO.OwnerLoginVerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
@@ -204,7 +204,7 @@ public class OwnerRestController {
         }
     }
 
-    @PatchMapping("/reset-password/set-pw")
+    @PostMapping("/reset-password/set-pw")
     @Operation(summary = "[비밀번호찾기] WEB 비밀번호 재설정 API", description = "비밀번호 재설정")
     public ApiResponse<String> resetPassword(@RequestBody OwnerRequestDTO.OwnerPasswordResetDTO dto){
         Owner owner = ownerService.findByLoginId(dto.getLoginId());

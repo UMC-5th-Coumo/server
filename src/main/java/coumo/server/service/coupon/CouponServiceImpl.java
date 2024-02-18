@@ -23,8 +23,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public Long register(Owner owner, CouponRequestDTO.registerCouponDTO dto) {
 
-        String stampUrl = getURL(dto.getStampImage());
-
         Optional<OwnerCoupon> ownerCoupon = ownerCouponRepository.findByOwnerId(owner.getId());
         if(ownerCoupon.isEmpty())
         {
@@ -34,7 +32,7 @@ public class CouponServiceImpl implements CouponService {
         }
         else
         {
-            ownerCoupon.get().update(dto, stampUrl);
+            ownerCoupon.get().update(dto);
             return ownerCoupon.get().getId();
         }
     }
