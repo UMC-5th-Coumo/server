@@ -39,9 +39,10 @@ public class CouponController {
     public ApiResponse<?> registerCoupon(@ExistOwner @PathVariable("ownerId") Long ownerId, @RequestBody CouponRequestDTO.registerCouponDTO dto){
 
         Optional<Owner> owner = ownerService.findOwner(ownerId);
-        OwnerCoupon newCoupon = couponService.register(owner.get(), dto);
+        if(owner.isEmpty()) return ApiResponse.onFailure("400", "존재하지 않는 사장입니다.", ownerId);
+        Long newCouponId = couponService.register(owner.get(), dto);
         // 스탬프 이미지 미리 저장해둘 건지 의논이 필요함.
-        return ApiResponse.onSuccess(newCoupon.getId());
+        return ApiResponse.onSuccess(newCouponId);
     }
 
     @Operation(summary = "고객 : 해당 가게의 내 쿠폰 보기")

@@ -2,6 +2,7 @@ package coumo.server.domain;
 
 import coumo.server.domain.common.BaseEntity;
 import coumo.server.domain.enums.StampMax;
+import coumo.server.web.dto.CouponRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,5 +46,15 @@ public class OwnerCoupon extends BaseEntity {
                 || stampImage.equals(""))
             return false;
         return true;
+    }
+
+    public void update(CouponRequestDTO.registerCouponDTO dto, String stampURL) {
+
+        this.couponColor = dto.getCouponColor();
+        this.fontColor = dto.getFontColor();
+        this.storeName = dto.getStoreName();
+        this.stampImage = stampURL;
+        this.stampMax = dto.getStampMax();
+
     }
 }

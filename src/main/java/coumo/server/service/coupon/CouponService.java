@@ -6,6 +6,6 @@ import coumo.server.web.dto.CouponRequestDTO;
 
 public interface CouponService {
 
-    OwnerCoupon register(Owner owner, CouponRequestDTO.registerCouponDTO dto);
+    Long register(Owner owner, CouponRequestDTO.registerCouponDTO dto);
 
 }
