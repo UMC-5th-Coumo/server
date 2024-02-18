@@ -1,9 +1,6 @@
 package coumo.server.repository;
 
-
-import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
-import coumo.server.domain.Store;
 import coumo.server.web.dto.LoginIdDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +11,9 @@ import java.util.Optional;
 public interface OwnerRepository extends JpaRepository<Owner, Long> {
 
     Owner findByLoginId(String loginId);
+
+    @Query("SELECT o FROM Owner o JOIN FETCH o.store WHERE o.loginId = :loginId")
+    Optional<Owner> findByLoginIdWithStore(@Param("loginId") String loginId);
 
     @Override
     Optional<Owner> findById(Long ownerId);

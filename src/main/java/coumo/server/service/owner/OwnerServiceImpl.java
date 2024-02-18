@@ -3,6 +3,7 @@ package coumo.server.service.owner;
 import coumo.server.converter.OwnerConverter;
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.domain.Store;
 import coumo.server.domain.enums.State;
 import coumo.server.repository.OwnerRepository;
 import coumo.server.service.store.StoreCommandService;
@@ -35,6 +36,13 @@ public class OwnerServiceImpl implements OwnerService{
     public Owner findByLoginId(String loginId) {
         //loginId기반으로 계정조회
         return ownerRepository.findByLoginId(loginId);
+    }
+
+    @Override
+    public Store findStore(String loginId) {
+        Owner owner = ownerRepository.findByLoginIdWithStore(loginId).orElse(null);
+
+        return (owner == null) ? null : owner.getStore();
     }
 
     // 회원가입 기능
