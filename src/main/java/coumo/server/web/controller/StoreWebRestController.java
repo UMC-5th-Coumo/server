@@ -52,7 +52,7 @@ public class StoreWebRestController {
             @PathVariable("storeId") Long storeId){
 
         TokenCheck.setOwnerService(ownerService);
-        log.info("token check = {}",TokenCheck.isAvailable(storeId));
+        log.info("token check = {}",TokenCheck.isAvailableStoreId(storeId));
 
         List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();

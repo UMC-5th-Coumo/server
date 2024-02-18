@@ -31,7 +31,7 @@ public class TokenCheck {
     }
 
 
-    public static Boolean isAvailable(Long storeId) {
+    public static Boolean isAvailableStoreId(Long storeId) {
         String currentOwnerLoginId = getCurrentOwnerLoginId();
 
         //검증
