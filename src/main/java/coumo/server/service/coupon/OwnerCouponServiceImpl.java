@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -18,8 +21,8 @@ public class OwnerCouponServiceImpl implements OwnerCouponService{
     @Override
     public OwnerCoupon findStoreCoupon(Long storeId) {
         Owner owner = ownerRepository.findByStoreId(storeId).orElseThrow();
-        OwnerCoupon ownerCoupon = ownerCouponRepository.findByOwnerId(owner.getId()).orElseThrow();
+        List<OwnerCoupon> ownerCoupons = ownerCouponRepository.findByOwnerCouponId(owner.getId()).orElse(Collections.emptyList());
 
-        return ownerCoupon;
+        return (ownerCoupons.isEmpty()) ? null : ownerCoupons.get(0);
     }
 }
