@@ -6,6 +6,7 @@ import coumo.server.domain.Owner;
 import coumo.server.domain.enums.State;
 import coumo.server.repository.CustomerRepository;
 import coumo.server.web.dto.CustomerRequestDTO;
+import coumo.server.web.dto.LoginAppIdDTO;
 import coumo.server.web.dto.LoginIdDTO;
 import coumo.server.web.dto.OwnerRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +97,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     //인증번호 검증
     @Override
-    public Optional<LoginIdDTO> findLoginIdByPhone(String phone){
+    public Optional<LoginAppIdDTO> findLoginIdByPhone(String phone){
         return customerRepository.findLoginIdByPhone(phone);
     }
 

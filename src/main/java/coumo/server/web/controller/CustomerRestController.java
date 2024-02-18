@@ -99,19 +99,21 @@ public class CustomerRestController {
         }
     }
 
-    @GetMapping("/verify-code")
+    @PostMapping("/verify-code")
     @Operation(summary = "[아이디찾기] APP 인증번호 검증 및 로그인 ID 반환 API", description = "인증번호가 일치하는지 확인하고 loginId를 반환합니다.")
-    public ApiResponse<String> verifyCode(@RequestBody CustomerRequestDTO.VerificationCodeDTO dto) {
+    public ApiResponse<VerificationAppResponseDTO> verifyCode(@RequestBody CustomerRequestDTO.VerificationCodeDTO dto) {
         boolean isVerified = verificationCodeStorage.verifyCode(dto.getPhone(), dto.getVerificationCode());
-
          if (isVerified) {
-             String loginId = customerService.findLoginIdByPhone(dto.getPhone())
-                     .map(LoginIdDTO::getLoginId) // LoginIdDTO 객체에서 loginId필드값 추출
-                     .orElse("로그인 ID를 찾을 수 없습니다.");
-            return ApiResponse.onSuccess(loginId);
-        } else {
-            return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
-        }
+             Optional<LoginAppIdDTO> loginAppIdDTO = customerService.findLoginIdByPhone(dto.getPhone());
+             if (loginAppIdDTO.isPresent()) {
+                 String loginId = loginAppIdDTO.get().getLoginId();
+                 return ApiResponse.onSuccess(VerificationAppResponseDTO.success(loginId, dto.getVerificationCode()));
+             } else {
+                 return ApiResponse.onFailure("404", "로그인 ID를 찾을 수 없습니다.", null);
+             }
+         } else {
+             return ApiResponse.onFailure("400", "인증번호가 일치하지 않습니다.", null);
+         }
     }
 
     @PostMapping("/join/send-verification-code")
@@ -191,7 +193,7 @@ public class CustomerRestController {
         }
     }
 
-    @PatchMapping("/reset-password/set-pw")
+    @PostMapping("/reset-password/set-pw")
     @Operation(summary = "[비밀번호찾기] APP 비밀번호 재설정 API", description = "비밀번호 재설정")
     public ApiResponse<String> verifyCodeAndResetPassword(@RequestBody CustomerRequestDTO.CustomerPasswordResetDTO dto) {
         Customer customer = customerService.findByLoginId(dto.getLoginId());

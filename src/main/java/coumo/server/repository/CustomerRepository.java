@@ -2,6 +2,7 @@ package coumo.server.repository;
 
 import coumo.server.domain.Customer;
 import coumo.server.domain.Owner;
+import coumo.server.web.dto.LoginAppIdDTO;
 import coumo.server.web.dto.LoginIdDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByLoginIdAndPhone(String loginID, String phone);
 
     // JPQL 쿼리를 사용하여 loginId 필드만 조회
-    @Query("SELECT new coumo.server.web.dto.LoginIdDTO(c.loginId) FROM Customer c WHERE c.phone = :phone")
-    Optional<LoginIdDTO> findLoginIdByPhone(@Param("phone") String phone);
+    @Query("SELECT new coumo.server.web.dto.LoginAppIdDTO(c.loginId) FROM Customer c WHERE c.phone = :phone")
+    Optional<LoginAppIdDTO> findLoginIdByPhone(@Param("phone") String phone);
 }
