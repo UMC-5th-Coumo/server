@@ -131,7 +131,7 @@ public class NoticeController {
 
     // 동네소식 - 필터링 4가지
     @Operation(summary = "고객 : 내 주변 동네 소식 (페이징=10)")
-    @GetMapping("/around/list/{pageId}")
+    @GetMapping("/around/list")
     public ApiResponse<?> aroundNotice(
             @RequestParam("longitude") Double longitude,
             @RequestParam("latitude") Double latitude,
