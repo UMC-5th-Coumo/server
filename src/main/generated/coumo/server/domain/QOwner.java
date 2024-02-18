@@ -27,6 +27,8 @@ public class QOwner extends EntityPathBase<Owner> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final ListPath<DesignReceipt, QDesignReceipt> designReceiptList = this.<DesignReceipt, QDesignReceipt>createList("designReceiptList", DesignReceipt.class, QDesignReceipt.class, PathInits.DIRECT2);
+
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
