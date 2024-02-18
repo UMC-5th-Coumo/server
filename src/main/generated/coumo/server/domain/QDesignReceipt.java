@@ -26,8 +26,6 @@ public class QDesignReceipt extends EntityPathBase<DesignReceipt> {
 
     public final StringPath couponDescription = createString("couponDescription");
 
-    public final StringPath couponTitle = createString("couponTitle");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -35,9 +33,13 @@ public class QDesignReceipt extends EntityPathBase<DesignReceipt> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QOwner owner;
+
     public final StringPath phone = createString("phone");
 
     public final QStore store;
+
+    public final StringPath storeName = createString("storeName");
 
     public final EnumPath<coumo.server.domain.enums.StoreType> storeType = createEnum("storeType", coumo.server.domain.enums.StoreType.class);
 
@@ -62,6 +64,7 @@ public class QDesignReceipt extends EntityPathBase<DesignReceipt> {
 
     public QDesignReceipt(Class<? extends DesignReceipt> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.owner = inits.isInitialized("owner") ? new QOwner(forProperty("owner"), inits.get("owner")) : null;
         this.store = inits.isInitialized("store") ? new QStore(forProperty("store"), inits.get("store")) : null;
     }
 

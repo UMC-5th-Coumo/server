@@ -5,7 +5,6 @@ import coumo.server.aws.s3.Filepath;
 import coumo.server.domain.Notice;
 import coumo.server.domain.NoticeImage;
 import coumo.server.domain.Store;
-import coumo.server.domain.StoreImage;
 import coumo.server.domain.enums.NoticeType;
 import coumo.server.repository.NoticeImageRepository;
 import coumo.server.repository.NoticeRepository;
@@ -162,19 +161,17 @@ public class NoticeServiceImpl implements NoticeService {
         storeList.forEach(item -> {
             List<Notice> notices = noticeRepository.findAllByStoreId(item.getId());
             notices.forEach(notice -> {
-                List<NoticeImage> noticeImages = noticeImageRepository.findAllByNoticeId(notice.getId());
+                List<String> noticeImages = noticeImageRepository.findAllByNoticeId(notice.getId());
 
                 resultList.add(NoticeResponseDTO.NearestNoticeDTO.builder()
-                        .noticeImage(noticeImages)
+                        .noticeImages(noticeImages)
                         .noticeContent(notice.getNoticeContent())
                         .noticeType(notice.getNoticeType())
                         .title(notice.getTitle())
                         .storeName(item.getName())
                         .createdAt(notice.getCreatedAt())
                         .build());
-
             });
-
         });
 
         return resultList;

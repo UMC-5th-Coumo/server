@@ -11,20 +11,16 @@ import coumo.server.service.notice.NoticeService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.validation.annotation.ExistNotice;
 import coumo.server.validation.annotation.ExistOwner;
-import coumo.server.validation.annotation.CheckPage;
-import coumo.server.web.dto.NoticeRequestDTO;
 import coumo.server.web.dto.NoticeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -139,11 +135,14 @@ public class NoticeController {
     public ApiResponse<?> aroundNotice(
             @RequestParam("longtitude") Double longitude,
             @RequestParam("latitde") Double latitude,
-            @RequestParam("type")NoticeType noticeType,
-            @CheckPage @RequestParam(name="pageId") Integer pageId){
+            @RequestParam("type")String type,
+            @RequestParam(name="pageId") Integer pageId){
 
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
+        if (!(type.equals("NEW_PRODUCT") || type.equals("EVENT") || type.equals("NO_SHOW") || type.equals(null))) return ApiResponse.onFailure("400", "잘못된 게시글 종류입니다.", type);
+
         Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
+        NoticeType noticeType = NoticeType.valueOf(type);
 
         List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTO = noticeService.findNearestNotice(latitude, longitude, 0.5, Optional.of(String.valueOf(noticeType)), pageable);
         List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTOS = new ArrayList<>();
@@ -153,9 +152,8 @@ public class NoticeController {
             nearestNoticeDTOS = nearestNoticeDTO.stream()
                             .filter(dto -> noticeType == null || dto.getNoticeType().equals(noticeType))
                             .collect(Collectors.toList());
-        }else{
-            return ApiResponse.onFailure("400", "잘못된 게시글 종류입니다.", noticeType);
         }
+
         return ApiResponse.onSuccess(nearestNoticeDTOS);
     }
 }

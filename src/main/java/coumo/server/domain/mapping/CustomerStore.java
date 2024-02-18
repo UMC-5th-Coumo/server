@@ -36,4 +36,9 @@ public class CustomerStore extends BaseEntity {
     public void setStore(Store store) {
         this.store = store;
     }
+
+    public void setStamps(Integer stampCurrent, Integer stampTotal) {
+        this.stampCurrent = stampCurrent;
+        this.stampTotal = stampTotal;
+    }
 }

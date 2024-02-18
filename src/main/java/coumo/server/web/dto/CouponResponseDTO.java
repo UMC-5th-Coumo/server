@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 public class CouponResponseDTO {
 
@@ -29,7 +30,7 @@ public class CouponResponseDTO {
     public static class CustomerStoreStampDTO {
         public Integer stampCurrent;
         public StampMax stampMax;
-
+        public LocalDateTime updatedAt;
     }
 
 
@@ -38,6 +39,7 @@ public class CouponResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class StoreCouponDTO {
+        public Long storeId;
         public String storeName;
         public String couponColor;
         public String fontColor;
