@@ -1,6 +1,5 @@
 package coumo.server.web.dto;
 
-import coumo.server.domain.NoticeImage;
 import coumo.server.domain.enums.NoticeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,7 +64,7 @@ public class NoticeResponseDTO {
         String noticeContent;       // 게시글 내용
         LocalDateTime createdAt;    // 게시글 생성일
         String storeName;           // 매장 이름
-        List<NoticeImage> noticeImage;  // 게시글 사진 리스트
+        List<String> noticeImages;  // 게시글 사진 리스트
     }
 
 }

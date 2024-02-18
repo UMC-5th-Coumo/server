@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,6 +59,7 @@ public class CouponController {
         CouponResponseDTO.CustomerStoreStampDTO customerStoreStampDTO = CouponResponseDTO.CustomerStoreStampDTO.builder()
                 .stampCurrent(customerStore.getStampCurrent())
                 .stampMax(customerStore.getStampMax())
+                .updatedAt(customerStore.getUpdatedAt())
                 .build();
 
         // 해당 매장의 쿠폰 디자인
@@ -68,6 +68,7 @@ public class CouponController {
                 .storeName(ownerCoupon.getStoreName())
                 .fontColor(ownerCoupon.getFontColor())
                 .stampImage(ownerCoupon.getStampImage())
+                .storeId(storeId)
                 .build();
 
         CouponResponseDTO.CustomerStoreCouponDTO customerStoreCouponDTO = CouponResponseDTO.CustomerStoreCouponDTO.builder()

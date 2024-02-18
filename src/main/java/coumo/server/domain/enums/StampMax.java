@@ -4,6 +4,8 @@ import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 
 public enum StampMax {
+
+
     SEVEN, EIGHT, NINE, TEN, TWELVE;
 
     public static int fromInt(StampMax stampMax) {
@@ -22,4 +24,5 @@ public enum StampMax {
                 throw new IllegalArgumentException("Invalid StampMax value");
         }
     }
+
 }

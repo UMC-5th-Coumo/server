@@ -28,8 +28,10 @@ public class CustomerStoreQueryRepositoryImpl implements CustomerStoreQueryRepos
                         CouponResponseDTO.CustomerStoreCouponDTO.class,
                         Projections.fields(CouponResponseDTO.CustomerStoreStampDTO.class,
                                 qCustomerStore.stampCurrent.as("stampCurrent"),
-                                qCustomerStore.stampMax.as("stampMax")),
+                                qCustomerStore.stampMax.as("stampMax"),
+                                qCustomerStore.updatedAt.as("updatedAt")),
                         Projections.fields(CouponResponseDTO.StoreCouponDTO.class,
+                                qStore.id.as("storeId"),
                                 qStore.name.as("storeName"),
                                 qOwnerCoupon.couponColor.as("couponColor"),
                                 qOwnerCoupon.fontColor.as("fontColor"),
@@ -38,7 +40,7 @@ public class CustomerStoreQueryRepositoryImpl implements CustomerStoreQueryRepos
                 ))
                 .from(qCustomerStore)
                 .leftJoin(qCustomerStore.store, qStore)
-                .leftJoin(qStore.owner, qOwnerCoupon.owner)
+                .leftJoin(qOwnerCoupon).on(qOwnerCoupon.owner.eq(qStore.owner))     //qOwnerCoupon.owner가 root entity가 아니므로 조인을 명확히 정의해야함.
                 .where(qCustomerStore.customer.id.eq(customerId))
                 .orderBy(qCustomerStore.stampCurrent.desc())
                 .fetch();
@@ -58,8 +60,10 @@ public class CustomerStoreQueryRepositoryImpl implements CustomerStoreQueryRepos
                         CouponResponseDTO.CustomerStoreCouponDTO.class,
                         Projections.fields(CouponResponseDTO.CustomerStoreStampDTO.class,
                                 qCustomerStore.stampCurrent.as("stampCurrent"),
-                                qCustomerStore.stampMax.as("stampMax")),
+                                qCustomerStore.stampMax.as("stampMax"),
+                                qCustomerStore.updatedAt.as("updatedAt")),
                         Projections.fields(CouponResponseDTO.StoreCouponDTO.class,
+                                qStore.id.as("storeId"),
                                 qStore.name.as("storeName"),
                                 qOwnerCoupon.couponColor.as("couponColor"),
                                 qOwnerCoupon.fontColor.as("fontColor"),
@@ -68,7 +72,7 @@ public class CustomerStoreQueryRepositoryImpl implements CustomerStoreQueryRepos
                 ))
                 .from(qCustomerStore)
                 .leftJoin(qCustomerStore.store, qStore)
-                .leftJoin(qStore.owner, qOwnerCoupon.owner)
+                .leftJoin(qOwnerCoupon).on(qOwnerCoupon.owner.eq(qStore.owner))
                 .where(qCustomerStore.customer.id.eq(customerId))
                 .orderBy(qCustomerStore.updatedAt.desc())
                 .fetch();

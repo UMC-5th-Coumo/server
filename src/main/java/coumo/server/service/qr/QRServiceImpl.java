@@ -61,60 +61,62 @@ public class QRServiceImpl implements QRService{
         }
     }
 
+    // 도장 적립
     @Override
-    public Optional<CustomerStore> stampToCoupon(QRRequestDTO dto) {
+    public Integer stampToCoupon(QRRequestDTO dto) {
 
-        Optional<CustomerStore> customerStore = customerStoreRepository.findByCustomerIdAndStoreId(dto.getCustomerId(), dto.getStoreId());
         Integer stampCurrent = 0;
         Integer stampTotal = 0;
+        Optional<CustomerStore> customerStore = customerStoreRepository.findByCustomerIdAndStoreId(dto.getCustomerId(), dto.getStoreId());
+
         if(customerStore.isPresent()){
-            stampCurrent = customerStore.get().getStampCurrent();
-            stampTotal = customerStore.get().getStampTotal();
+            stampCurrent = customerStore.get().getStampCurrent() + dto.getStampCnt();
+            stampTotal = customerStore.get().getStampTotal() + dto.getStampCnt();
+
+            customerStore.get().setStamps(stampCurrent, stampTotal);
         }
+        else
+        {
+            Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow();
+            Store store = storeRepository.findById(dto.getStoreId()).orElseThrow();
+            Owner owner = ownerRepository.findById(dto.getOwnerId()).orElseThrow();
+            StampMax stampMax = (ownerCouponRepository.findByOwnerId(owner.getId())).get().getStampMax();
 
-        Customer customer = customerRepository.findById(dto.getCustomerId()).get();
-        Store store = storeRepository.findById(dto.getStoreId()).get();
-        Owner owner = ownerRepository.findByStoreId(store.getId()).get();
-        StampMax stampMax = (ownerCouponRepository.findByOwnerId(owner.getId())).get().getStampMax();
+            CustomerStore updateCustomerStore = CustomerStore.builder()
+                    .customer(customer)
+                    .store(store)
+                    .stampMax(stampMax)
+                    .stampCurrent(stampCurrent + dto.getStampCnt())
+                    .stampTotal(stampTotal + dto.getStampCnt())
+                    .build();
 
-        CustomerStore updateCustomerStore = CustomerStore.builder()
-                .customer(customer)
-                .store(store)
-                .stampMax(stampMax)
-                .stampCurrent(stampCurrent + dto.getStampCnt())
-                .stampTotal(stampTotal + dto.getStampCnt())
-                .build();
+            customerStoreRepository.save(updateCustomerStore);
+        }
+        return stampCurrent;
 
-        CustomerStore newCustomerStore = customerStoreRepository.save(updateCustomerStore);
 
-        return Optional.of(newCustomerStore);
+
     }
 
+    // 도장 사용
     @Override
-    public Optional<CustomerStore> stampFromCoupon(QRRequestDTO dto) {
+    public Integer stampFromCoupon(QRRequestDTO dto) {
 
         Optional<CustomerStore> customerStore = customerStoreRepository.findByCustomerIdAndStoreId(dto.getCustomerId(), dto.getStoreId());
-        Integer stampCurrent = customerStore.get().getStampCurrent();
-        Integer stampTotal = customerStore.get().getStampTotal();
-        if(customerStore.isEmpty()){
+
+        if(customerStore.isPresent()){
+            if(customerStore.get().getStampCurrent() >= dto.getStampCnt()){
+                Integer stampCurrent = customerStore.get().getStampCurrent() - dto.getStampCnt();
+                Integer stampTotal = customerStore.get().getStampTotal();
+                customerStore.get().setStamps(stampCurrent, stampTotal);
+                return stampCurrent;
+            }
+            else return -1 * dto.getStampCnt() - 1;
+
+        }
+        else
+        {
             return null;
         }
-
-        Customer customer = customerRepository.findById(dto.getCustomerId()).get();
-        Store store = storeRepository.findById(dto.getStoreId()).get();
-        Owner owner = ownerRepository.findByStoreId(store.getId()).get();
-        StampMax stampMax = (ownerCouponRepository.findByOwnerId(owner.getId())).get().getStampMax();
-
-        CustomerStore updateCustomerStore = CustomerStore.builder()
-                .customer(customer)
-                .store(store)
-                .stampMax(stampMax)
-                .stampCurrent(stampCurrent - dto.getStampCnt())
-                .stampTotal(stampTotal + dto.getStampCnt())
-                .build();
-
-        CustomerStore newCustomerStore = customerStoreRepository.save(updateCustomerStore);
-
-        return Optional.of(newCustomerStore);
     }
 }
