@@ -9,6 +9,8 @@ import coumo.server.domain.Store;
 import coumo.server.service.store.StoreCommandService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.web.dto.StoreResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class StoreAppRestController {
     private final StoreQueryService storeQueryService;
 
     @GetMapping("/store")
+    @Operation(summary = "사장님: 근처 유명 가게 조회")
     public ApiResponse<List<StoreResponseDTO.FamousStoreDTO>> getFamousStore(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) {
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
         List<StoreResponseDTO.StoreStampInfo> famousStore = storeQueryService.findFamousStore(latitude, longitude, 0.5, PageRequest.of(0, 5));
@@ -35,6 +38,7 @@ public class StoreAppRestController {
 
 
     @GetMapping("/{customerId}/store")
+    @Operation(summary = "사장님: 근처 가게 조회(카테고리 별로)")
     public ApiResponse<List<StoreResponseDTO.NearestStoreDTO>> getNearestStore
             (@RequestParam("longitude") Double longitude, @RequestParam("latitude") Double latitude,
              @RequestParam("category") String category, @RequestParam("page") Integer page,
@@ -47,6 +51,7 @@ public class StoreAppRestController {
     }
 
     @GetMapping("/{customerId}/store/{storeId}/detail")
+    @Operation(summary = "사장님: 가게 상세 정보 조회")
     public ApiResponse<StoreResponseDTO.MoreDetailStoreDTO> getStoreDetail
             (@PathVariable("customerId") Long customerId,
              @PathVariable("storeId") Long storeId) {
@@ -55,11 +60,5 @@ public class StoreAppRestController {
 
         return ApiResponse.onSuccess(storeQueryService.findStoreInfoDetail(storeId, customerId));
     }
-
-    @GetMapping("/test")
-    public ApiResponse<Long> getStoreDetail
-            () {
-        Store store = storeCommandService.createStore(2L);
-        return ApiResponse.onSuccess(store.getId());
-    }
+    
 }
