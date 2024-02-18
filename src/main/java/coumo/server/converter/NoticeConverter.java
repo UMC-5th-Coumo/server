@@ -10,6 +10,7 @@ public class NoticeConverter {
                 .noticeId(notice.getId())
                 .noticeType(notice.getNoticeType())
                 .title(notice.getTitle())
+                .createdAt(notice.getCreatedAt())
                 .build();
     }
 }
