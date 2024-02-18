@@ -52,7 +52,7 @@ public class StoreWebRestController {
     public ApiResponse<StoreResponseDTO.StoreBasicDTO> getBasic(
             @PathVariable("storeId") Long storeId){
 
-        log.info("token check = {}",tokenCheck.isAvailableStoreId(storeId));
+//        log.info("token check = {}",tokenCheck.isAvailableStoreId(storeId));
 
         List<Timetable> timetableList = storeQueryService.findTimeTables(storeId).orElse(Collections.emptyList());
         Store store = storeQueryService.findStore(storeId).orElseThrow();
