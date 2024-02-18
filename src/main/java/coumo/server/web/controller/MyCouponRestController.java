@@ -1,6 +1,8 @@
 package coumo.server.web.controller;
 
 import coumo.server.apiPayload.ApiResponse;
+import coumo.server.apiPayload.code.status.ErrorStatus;
+import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.MainCouponConverter;
 import coumo.server.domain.OwnerCoupon;
 import coumo.server.service.coupon.OwnerCouponService;
@@ -24,6 +26,11 @@ public class MyCouponRestController {
     @Parameter(name = "storeId", description = "가게 아이디, path variable")
     public ApiResponse<CouponResponseDTO.MainCouponDTO> registerCoupon(@PathVariable("storeId") Long storeId){
         OwnerCoupon storeCoupon = ownerCouponService.findStoreCoupon(storeId);
+
+        if (storeCoupon == null) {
+            throw new StoreHandler(ErrorStatus.OWNER_COUPON_BAD_REQUEST);
+        }
+
         return ApiResponse.onSuccess(MainCouponConverter.toMainCouponDTO(storeCoupon));
     }
 }
