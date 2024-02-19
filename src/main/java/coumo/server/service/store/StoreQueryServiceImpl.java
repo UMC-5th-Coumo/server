@@ -37,6 +37,9 @@ public class StoreQueryServiceImpl implements StoreQueryService{
     }
 
     @Override
+    public Optional<Store> findByOwnerId(Long ownerId) {return storeRepository.findByOwnerId(ownerId);}
+
+    @Override
     public Optional<List<Menu>> findMenus(Long storeId) {
         Optional<Store> optionalStore= storeRepository.findByIdWithMenus(storeId);
         if (optionalStore.isEmpty()) return Optional.empty();

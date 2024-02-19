@@ -5,9 +5,11 @@ import coumo.server.apiPayload.code.status.ErrorStatus;
 import coumo.server.apiPayload.exception.handler.StoreHandler;
 import coumo.server.converter.NoticeConverter;
 import coumo.server.domain.Notice;
+import coumo.server.domain.Owner;
 import coumo.server.domain.Store;
 import coumo.server.domain.enums.NoticeType;
 import coumo.server.service.notice.NoticeService;
+import coumo.server.service.owner.OwnerService;
 import coumo.server.service.store.StoreQueryService;
 import coumo.server.validation.annotation.ExistNotice;
 import coumo.server.validation.annotation.ExistOwner;
@@ -37,6 +39,7 @@ public class NoticeController {
 
     private final NoticeService noticeService;
     private final StoreQueryService storeQueryService;
+    private final OwnerService ownerService;
 
     @Operation(summary = "사장님 : 동네소식 글 쓰기")
     @PostMapping(value = "/{ownerId}/post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -69,9 +72,13 @@ public class NoticeController {
 
         Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
 
-        Optional<Store> store = storeQueryService.findStore(ownerId);  // store 존재 여부
+        Optional<Owner> owner = ownerService.findOwner(ownerId);
+        if(owner.isEmpty()) return ApiResponse.onFailure("400", "존재하지 않는 사장님입니다.", ownerId);
 
-        Page<Notice> noticePage = noticeService.findOwnerNotice(store.get(), pageable);
+        Optional<Store> store = storeQueryService.findByOwnerId(ownerId);  // store 존재 여부
+        if(store.isEmpty()) return ApiResponse.onFailure("400", "사장님의 매장이 존재하지 않습니다.", ownerId);
+
+        Page<Notice> noticePage = noticeService.findOwnerNotice(store.get().getId(), pageable);
 
         List<NoticeResponseDTO.NoticeThumbInfo> noticeThumbInfos = noticePage.getContent().stream()
                 .map(NoticeConverter::toNoticeThumbInfo)

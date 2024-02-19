@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface NoticeService {
     Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, Optional<MultipartFile[]> noticeImages);
 
-    Page<Notice> findOwnerNotice(Store store, Pageable pageable);
+    Page<Notice> findOwnerNotice(Long storeId, Pageable pageable);
 
     NoticeResponseDTO.OwnerNoticeDetail readNoticeDetail(Long noticeId);
 
