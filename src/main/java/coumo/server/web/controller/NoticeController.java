@@ -52,7 +52,7 @@ public class NoticeController {
             @RequestPart("noticeType") String noticeType,
             @RequestPart("title") String title,
             @RequestPart("noticeContent") String noticeContent,
-            @RequestPart("noticeImages") MultipartFile[] noticeImages
+            @RequestPart(value = "noticeImages", required = false) Optional<MultipartFile[]> noticeImages
     ){
         if(! (noticeType.equals("NEW_PRODUCT") ||  noticeType.equals("EVENT") || noticeType.equals("NO_SHOW")))
             return ApiResponse.onFailure("400", "올바른 게시글 종류가 아닙니다.", noticeType);
