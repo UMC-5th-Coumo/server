@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface StoreQueryService {
     public Optional<Store> findStore(Long storeId);
+    public Optional<Store> findByOwnerId(Long ownerId);
     public Optional<List<Timetable>> findTimeTables(Long storeId);
     public Optional<List<Menu>> findMenus(Long storeId);
     public Optional<List<StoreImage>> findStoreImages(Long storeId);

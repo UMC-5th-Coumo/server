@@ -15,7 +15,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     Notice save(Notice notice);
 
-    Page<Notice> findAllByStore(Store store, Pageable pageable);
+    Page<Notice> findAllByStoreId(Long storeId, Pageable pageable);
 
     List<Notice> findAllByStoreId(Long id);
 }
