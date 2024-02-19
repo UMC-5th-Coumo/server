@@ -62,6 +62,8 @@
 
 
 # 💜 시스템 아키텍쳐 
+![coumo drawio (2)](https://github.com/UMC-5th-Coumo/server/assets/23547185/8c57dffd-bb34-4fde-8929-df7d3a4f2be1)
+
 <br>
 
 # 💜 API 명세서 
