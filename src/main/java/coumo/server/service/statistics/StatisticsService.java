@@ -151,7 +151,7 @@ public class StatisticsService {
         Timetable timetable = timetableRepository.findByStoreAndDay(store, day)
                 .orElseThrow(() -> new IllegalArgumentException("시간 설정이 올바르지 않습니다."));
 
-        if (timetable.getStartTime() == null || timetable.getEndTime() == null) {
+        if ("none".equals(timetable.getStartTime()) || "none".equals(timetable.getEndTime())) {
             return new StatisticsResponseDTO.HolidayResponseDTO("휴무일입니다.");  // 휴무일인 경우 HolidayResponseDTO 반환
         }
 
