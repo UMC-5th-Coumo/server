@@ -38,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final AmazonS3Manager amazonS3Manager;
 
     @Override
-    public Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, MultipartFile[] noticeImages) {
+    public Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, Optional<MultipartFile[]> noticeImages) {
 
         // 엔티티 조회
         Store store = storeRepository.findByOwnerId(ownerId).orElseThrow();
@@ -52,9 +52,9 @@ public class NoticeServiceImpl implements NoticeService {
 
         Notice newNotice = noticeRepository.save(notice);
 
-        if(noticeImages.length != 0)
+        if(noticeImages.isPresent())
         {
-            for(MultipartFile image : noticeImages){
+            for(MultipartFile image : noticeImages.get()){
                 String imageUrl = amazonS3Manager.uploadFile(amazonS3Manager.makeKeyName(Filepath.NOTICE), image);
                 NoticeImage noticeImage = NoticeImage.builder()
                         .noticeImage(imageUrl)
@@ -152,7 +152,8 @@ public class NoticeServiceImpl implements NoticeService {
     public List<NoticeResponseDTO.NearestNoticeDTO> findNearestNotice(double latitude, double longitude, double distance, Optional<String> category, Pageable pageable) {
 
         //근처 매장 찾기
-        Page<Store> storePage = findNearestStore(longitude, latitude, distance, category, pageable);
+        Page<Store> storePage = findNearestStore(latitude, longitude, distance, category, pageable);
+        log.info("storePage.isEmpty={}", storePage.isEmpty());
         if (storePage.isEmpty()) return Collections.emptyList();
 
         List<NoticeResponseDTO.NearestNoticeDTO> resultList = new ArrayList<>();
