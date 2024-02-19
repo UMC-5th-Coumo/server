@@ -3,9 +3,7 @@ package coumo.server.service.notice;
 import coumo.server.domain.Notice;
 import coumo.server.domain.Store;
 import coumo.server.domain.enums.NoticeType;
-import coumo.server.web.dto.NoticeRequestDTO;
 import coumo.server.web.dto.NoticeResponseDTO;
-import coumo.server.web.dto.StoreResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NoticeService {
-    Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, MultipartFile[] noticeImages);
+    Notice postNotice(Long ownerId, NoticeType noticeType, String title, String noticeContent, Optional<MultipartFile[]> noticeImages);
 
     Page<Notice> findOwnerNotice(Store store, Pageable pageable);
 

@@ -52,7 +52,7 @@ public class NoticeController {
             @RequestPart("noticeType") String noticeType,
             @RequestPart("title") String title,
             @RequestPart("noticeContent") String noticeContent,
-            @RequestPart("noticeImages") MultipartFile[] noticeImages
+            @RequestPart(value = "noticeImages", required = false) Optional<MultipartFile[]> noticeImages
     ){
         if(! (noticeType.equals("NEW_PRODUCT") ||  noticeType.equals("EVENT") || noticeType.equals("NO_SHOW")))
             return ApiResponse.onFailure("400", "올바른 게시글 종류가 아닙니다.", noticeType);
@@ -135,25 +135,30 @@ public class NoticeController {
     public ApiResponse<?> aroundNotice(
             @RequestParam("longitude") Double longitude,
             @RequestParam("latitude") Double latitude,
-            @RequestParam("type")String type,
+            @RequestParam(value = "type", required = false) Optional<String> type,
             @RequestParam("pageId") Integer pageId){
 
         if (longitude < -180|| longitude > 180 || latitude > 90 || latitude < -90)  throw new StoreHandler(ErrorStatus.STORE_POINT_BAD_REQUEST);
-        if (!(type.equals("NEW_PRODUCT") || type.equals("EVENT") || type.equals("NO_SHOW") || type.equals(null))) return ApiResponse.onFailure("400", "잘못된 게시글 종류입니다.", type);
-
-        Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
-        NoticeType noticeType = NoticeType.valueOf(type);
-
-        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTO = noticeService.findNearestNotice(latitude, longitude, 0.5, Optional.of(String.valueOf(noticeType)), pageable);
-        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTOS = new ArrayList<>();
-
-        if(noticeType == NoticeType.NEW_PRODUCT || noticeType == NoticeType.EVENT || noticeType == NoticeType.NO_SHOW || noticeType == null){
-            // Stream을 사용하여 조건에 맞는 항목만 필터링
-            nearestNoticeDTOS = nearestNoticeDTO.stream()
-                            .filter(dto -> noticeType == null || dto.getNoticeType().equals(noticeType))
-                            .collect(Collectors.toList());
+        // 'type' 검증 로직 수정
+        if (type.isPresent() && !(type.get().equals("NEW_PRODUCT") || type.get().equals("EVENT") || type.get().equals("NO_SHOW"))) {
+            return ApiResponse.onFailure("400", "잘못된 게시글 종류입니다.", type.orElse(null));
         }
 
-        return ApiResponse.onSuccess(nearestNoticeDTOS);
+        Pageable pageable = PageRequest.of((int) (pageId - 1), 10); // 페이지 크기 = 10
+
+        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTO = noticeService.findNearestNotice(latitude, longitude, 0.5, Optional.empty(), pageable);
+        List<NoticeResponseDTO.NearestNoticeDTO> nearestNoticeDTOS = new ArrayList<>();
+
+        if(type.isPresent()){
+            NoticeType noticeType = NoticeType.valueOf(type.get());
+            if(noticeType == NoticeType.NEW_PRODUCT || noticeType == NoticeType.EVENT || noticeType == NoticeType.NO_SHOW){
+                // Stream을 사용하여 조건에 맞는 항목만 필터링
+                nearestNoticeDTOS = nearestNoticeDTO.stream()
+                        .filter(dto -> noticeType == null || dto.getNoticeType().equals(noticeType))
+                        .collect(Collectors.toList());
+                return ApiResponse.onSuccess(nearestNoticeDTOS);
+            }
+        }
+        return ApiResponse.onSuccess(nearestNoticeDTO);
     }
 }
