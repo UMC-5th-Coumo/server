@@ -118,8 +118,7 @@ public class Store extends BaseEntity {
 
     //======== 비즈니스 로직 메서드 ========
     public boolean isWrite(){
-        return !(getStoreType().equals(StoreType.NONE) ||
-                getName().isBlank() || getName().isEmpty() ||
+        return !(getStoreType().equals(StoreType.NONE) || 
                 getTelephone().isBlank() || getTelephone().isEmpty() ||
                 getStoreLocation().isBlank() || getStoreLocation().isEmpty() ||
                 getStoreDescription().isBlank() || getStoreDescription().isEmpty());
