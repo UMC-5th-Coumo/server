@@ -14,6 +14,7 @@ public class DesignReceiptConverter {
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .storeType(dto.getStoreType())
+                .couponTitle("")
                 .couponDescription(dto.getCouponDescription())
                 .build();
     }

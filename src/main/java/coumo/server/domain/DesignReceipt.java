@@ -25,7 +25,7 @@ public class DesignReceipt extends BaseEntity {
     private Owner owner; //사장님 고유 ID
 
     @Column(nullable = true, length = 50)
-    private String couponName; //쿠폰 이름
+    private String couponTitle; //쿠폰 이름
 
     @Column(nullable = false, length = 50)
     private String storeName; //매장명
