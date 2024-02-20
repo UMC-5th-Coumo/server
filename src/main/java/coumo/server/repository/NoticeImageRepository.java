@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NoticeImageRepository extends JpaRepository<NoticeImage, Long> {
 
-    List<String> findAllByNoticeId(Long NoticeId);
+    List<NoticeImage> findAllByNoticeId(Long NoticeId);
 
     void deleteAllByNotice(Notice notice);
 }

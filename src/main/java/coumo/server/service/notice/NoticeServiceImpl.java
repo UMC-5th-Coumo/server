@@ -162,10 +162,15 @@ public class NoticeServiceImpl implements NoticeService {
         storeList.forEach(item -> {
             List<Notice> notices = noticeRepository.findAllByStoreId(item.getId());
             notices.forEach(notice -> {
-                List<String> noticeImages = noticeImageRepository.findAllByNoticeId(notice.getId());
+                List<NoticeImage> noticeImages = noticeImageRepository.findAllByNoticeId(notice.getId());
+                List<String> images = new ArrayList<>();
+
+                noticeImages.forEach(image->{
+                    images.add(image.getNoticeImage());
+                });
 
                 resultList.add(NoticeResponseDTO.NearestNoticeDTO.builder()
-                        .noticeImages(noticeImages)
+                        .noticeImages(images)
                         .noticeContent(notice.getNoticeContent())
                         .noticeType(notice.getNoticeType())
                         .title(notice.getTitle())
