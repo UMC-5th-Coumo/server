@@ -38,7 +38,7 @@
 
 <br>
 
-# 💜 AI
+# 💜 IA
 ![0012](https://github.com/UMC-5th-Coumo/server/assets/23547185/77c83b60-1ceb-4d55-9ab5-87b31597e798)
 ![0013](https://github.com/UMC-5th-Coumo/server/assets/23547185/2736b87a-a177-41c0-9f0f-a6acc98490b5)
 
@@ -59,8 +59,17 @@
 
 <br>
 
-# 💜 API 명세서 
+# 💜 ERD 
 
 <br>
 
-# 💜 ERD 
+
+# 💜 API 명세서 
+<img width="970" alt="스크린샷 2024-02-20 오후 11 37 39" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/94ade641-e416-40cb-860d-e07d26f91700">
+<img width="972" alt="스크린샷 2024-02-20 오후 11 37 33" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/ff807d56-7e94-4584-a168-071d08ac9d37">
+<img width="969" alt="스크린샷 2024-02-20 오후 11 37 17" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/f6155791-1b29-45ae-9505-acb0601a63fa">
+<img width="975" alt="스크린샷 2024-02-20 오후 11 37 09" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/819cad8b-581b-489b-82c5-1cd5d696ac03">
+<img width="976" alt="스크린샷 2024-02-20 오후 11 37 00" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/3ed22011-d368-4a3e-8cfe-4793969fe3cd">
+
+
+
