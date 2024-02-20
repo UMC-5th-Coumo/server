@@ -4,6 +4,7 @@ import coumo.server.domain.DesignReceipt;
 import coumo.server.domain.Owner;
 import coumo.server.web.dto.DesignReceiptRequestDTO;
 import coumo.server.web.dto.DesignReceiptResponseDTO;
+import coumo.server.web.dto.DesignReceiptServiceResponseDTO;
 
 public class DesignReceiptConverter {
     public static DesignReceipt fromDTO(DesignReceiptRequestDTO dto, Owner owner) {
@@ -13,6 +14,7 @@ public class DesignReceiptConverter {
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .storeType(dto.getStoreType())
+                .couponTitle("")
                 .couponDescription(dto.getCouponDescription())
                 .build();
     }
@@ -28,5 +30,16 @@ public class DesignReceiptConverter {
                 designReceipt.getCreatedAt(),
                 designReceipt.getUpdatedAt()
         );
+    }
+
+    public static DesignReceiptServiceResponseDTO toServiceResponseDTO(DesignReceipt receipt) {
+        return DesignReceiptServiceResponseDTO.builder()
+                .receiptId(receipt.getId())
+                .storeName(receipt.getStoreName())
+                .storeType(receipt.getStoreType())
+                .couponDescription(receipt.getCouponDescription())
+                .receiptState(receipt.getReceiptState())
+                .createdAt(receipt.getCreatedAt())
+                .build();
     }
 }

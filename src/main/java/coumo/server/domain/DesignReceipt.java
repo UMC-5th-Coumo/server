@@ -1,6 +1,7 @@
 package coumo.server.domain;
 
 import coumo.server.domain.common.BaseEntity;
+import coumo.server.domain.enums.ReceiptState;
 import coumo.server.domain.enums.StoreType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,8 +24,11 @@ public class DesignReceipt extends BaseEntity {
     @JoinColumn(name = "owner_id")
     private Owner owner; //사장님 고유 ID
 
+    @Column(nullable = true, length = 50)
+    private String couponTitle; //쿠폰 이름
+
     @Column(nullable = false, length = 50)
-    private String storeName; //쿠폰 제목
+    private String storeName; //매장명
 
     @Column(nullable = false, length = 16)
     private String phone; //휴대폰
@@ -42,4 +46,13 @@ public class DesignReceipt extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store; //매장 아이디
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(16) default 'APPLIED'")
+    @Builder.Default
+    private ReceiptState receiptState = ReceiptState.APPLIED;
+
+    public void changeReceiptState(ReceiptState newState) {
+        this.receiptState = newState;
+    }
 }
