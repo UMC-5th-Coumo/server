@@ -45,7 +45,7 @@ public class DesignReceiptController {
         if(!response.isEmpty()){
             return ApiResponse.onSuccess(response);
         } else {
-            return ApiResponse.onFailure("404", "사용자를 찾을 수 없습니다.", null);
+            return null;
         }
     }
 
