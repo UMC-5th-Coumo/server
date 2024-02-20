@@ -26,9 +26,9 @@ public class StatisticsController {
     @GetMapping("/{storeId}/customer")
     public ApiResponse<Map<String, Object>> getAllCustomers(@PathVariable Long storeId) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getAllCustomers(storeId));
     }
@@ -36,28 +36,28 @@ public class StatisticsController {
     @GetMapping("/{storeId}/customer/new")
     public ApiResponse<Map<String, Object>> getNewCustomers(@PathVariable Long storeId) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
         return ApiResponse.onSuccess(statisticsService.getNewCustomers(storeId));
     }
 
     @GetMapping("/{storeId}/customer/regular")
     public ApiResponse<Map<String, Object>> getRegularCustomers(@PathVariable Long storeId) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
-        
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
+
         return ApiResponse.onSuccess(statisticsService.getRegularCustomers(storeId));
     }
 
     @GetMapping("/{storeId}/day")
     public ApiResponse<?> getDayStatistics(@PathVariable Long storeId) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getWeekStatistics(storeId));
     }
@@ -65,9 +65,9 @@ public class StatisticsController {
     @GetMapping("/{storeId}/time")
     public ApiResponse<?> getTimeStatistics(@PathVariable Long storeId) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getTimeStatistics(storeId));
     }
@@ -77,9 +77,9 @@ public class StatisticsController {
                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getGenderRatio(storeId, period, startDate, endDate));
     }
@@ -89,9 +89,9 @@ public class StatisticsController {
                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getAgeGroup(storeId, period, startDate, endDate));
     }
@@ -99,9 +99,9 @@ public class StatisticsController {
     @GetMapping("/{storeId}/month-statistics")
     public ApiResponse<?> getMonthStatistics(@PathVariable Long storeId, @RequestParam int year,@RequestParam int month) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getMonthStatistics(storeId, year, month));
     }
@@ -109,9 +109,9 @@ public class StatisticsController {
     @GetMapping("/{storeId}/month-age")
     public ApiResponse<?> getMonthAgeStatistics(@PathVariable Long storeId, @RequestParam int year,@RequestParam int month) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getMonthAgeGroup(storeId, year, month));
     }
@@ -119,9 +119,9 @@ public class StatisticsController {
     @GetMapping("/{storeId}/month-day")
     public ApiResponse<?> getMonthDayStatistics(@PathVariable Long storeId, @RequestParam int year, @RequestParam int month) {
 
-        if (!tokenCheck.isAvailableStoreId(storeId)) {
-            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
-        }
+//        if (!tokenCheck.isAvailableStoreId(storeId)) {
+//            return ApiResponse.onSuccess(Collections.singletonMap("message", "해당 매장에 접근 권한이 없습니다."));
+//        }
 
         return ApiResponse.onSuccess(statisticsService.getMonthDayGroup(storeId, year, month));
     }
