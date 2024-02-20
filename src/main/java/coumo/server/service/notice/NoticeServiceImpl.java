@@ -170,6 +170,7 @@ public class NoticeServiceImpl implements NoticeService {
                 });
 
                 resultList.add(NoticeResponseDTO.NearestNoticeDTO.builder()
+                        .storeId(item.getId())
                         .noticeImages(images)
                         .noticeContent(notice.getNoticeContent())
                         .noticeType(notice.getNoticeType())

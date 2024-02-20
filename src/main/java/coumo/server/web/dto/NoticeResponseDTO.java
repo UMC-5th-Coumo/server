@@ -59,6 +59,7 @@ public class NoticeResponseDTO {
     @NoArgsConstructor
     // 고객 주변 동네 소식 (NoticeType 3가지)
     public static class NearestNoticeDTO{
+        Long storeId;               // 매장Id
         String title;               // 게시글 제목
         NoticeType noticeType;      // 게시글 종류
         String noticeContent;       // 게시글 내용
