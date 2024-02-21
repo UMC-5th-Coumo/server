@@ -80,7 +80,8 @@ public class QRServiceImpl implements QRService{
             Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow();
             Store store = storeRepository.findById(dto.getStoreId()).orElseThrow();
             Owner owner = ownerRepository.findById(dto.getOwnerId()).orElseThrow();
-            StampMax stampMax = (ownerCouponRepository.findByOwnerId(owner.getId())).get().getStampMax();
+            //StampMax stampMax = (ownerCouponRepository.findByOwnerId(owner.getId())).get().getStampMax();
+            StampMax stampMax = StampMax.TEN;
 
             CustomerStore updateCustomerStore = CustomerStore.builder()
                     .customer(customer)
