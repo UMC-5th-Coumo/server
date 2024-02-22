@@ -60,6 +60,7 @@
 <br>
 
 # 💜 ERD 
+![7YXtgpXtnXmRSnSfy](https://github.com/UMC-5th-Coumo/server/assets/23547185/72a55ba3-339f-4c8e-97c5-8b452c802d33)
 
 <br>
 
