@@ -65,6 +65,18 @@
 
 <br>
 
+# 💜 구현 화면
+![2024-02-237 39 28-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/b0f72b96-ea3c-44ca-b876-b40cdfd78e6a)
+
+![2024-02-237 42 17-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/09e96c22-8fb4-4873-90a6-4ef79c65b978)
+
+![2024-02-237 41 46-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/9412af0c-6df2-4aa5-bb35-feb7d38776a1)
+
+![2024-02-237 42 56-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/8a658bde-3d0f-4356-904d-154ba1848096)
+
+![2024-02-237 44 24-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/2876dab3-7198-4c0d-bfb8-a2f2ff35282e)
+
+
 
 # 💜 API 명세서 
 <img width="970" alt="스크린샷 2024-02-20 오후 11 37 39" src="https://github.com/UMC-5th-Coumo/server/assets/23547185/94ade641-e416-40cb-860d-e07d26f91700">
