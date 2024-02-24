@@ -55,12 +55,13 @@
 <br>
 
 # 💜 시스템 아키텍쳐 
-![coumo drawio (2)](https://github.com/UMC-5th-Coumo/server/assets/23547185/8c57dffd-bb34-4fde-8929-df7d3a4f2be1)
+![coumo drawio (5)](https://github.com/UMC-5th-Coumo/server/assets/23547185/69a4763e-27b7-4841-bcd5-eb74857a84af)
 
 <br>
 
 # 💜 ERD 
-![coumo drawio (5)](https://github.com/UMC-5th-Coumo/server/assets/23547185/69a4763e-27b7-4841-bcd5-eb74857a84af)
+![13](https://github.com/UMC-5th-Coumo/server/assets/23547185/1e1f22c4-b1e6-4ed3-9e1a-310701a0ce0e)
+
 
 
 
