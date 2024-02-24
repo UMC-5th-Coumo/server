@@ -78,6 +78,10 @@
 
 ![2024-02-237 44 24-ezgif com-video-to-gif-converter](https://github.com/UMC-5th-Coumo/server/assets/23547185/2876dab3-7198-4c0d-bfb8-a2f2ff35282e)
 
+![2024-02-247 49 19-ezgif com-resize (1)](https://github.com/UMC-5th-Coumo/server/assets/23547185/0f603e2a-03ef-48a8-940b-6390972cf173)
+
+![2024-02-247 50 02-ezgif com-resize](https://github.com/UMC-5th-Coumo/server/assets/23547185/6e53caee-8f2c-406a-92ac-bda0286f2540)
+
 
 
 # 💜 API 명세서 
