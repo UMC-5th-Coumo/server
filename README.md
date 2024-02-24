@@ -60,7 +60,8 @@
 <br>
 
 # 💜 ERD 
-![asd](https://github.com/UMC-5th-Coumo/server/assets/23547185/8b91ed6b-b307-4227-bb6f-4e625120dcb5)
+![coumo drawio (5)](https://github.com/UMC-5th-Coumo/server/assets/23547185/69a4763e-27b7-4841-bcd5-eb74857a84af)
+
 
 
 <br>
